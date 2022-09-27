@@ -1,11 +1,10 @@
-package com.keithalcock.sbt
+package org.clulab.sbt
 
 import sbt.IO
 import sbt.MavenRepository
 
 import java.io.File
 import java.util.Properties
-import scala.io.{Codec, Source}
 
 object BuildUtils {
 

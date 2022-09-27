@@ -1,4 +1,4 @@
-name: Habitus CI
+name: Scala-Transformers CI
 
 on:
   push:

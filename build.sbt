@@ -4,12 +4,17 @@ val scala213 = "2.13.8"  // up to 2.13.8
 val scala30  = "3.0.2"   // up to 3.0.2
 val scala31  = "3.1.3"   // up to 3.1.3
 
-name := "tokenizer"
-
+ThisBuild / crossScalaVersions := Seq(scala212, scala211, scala213)
 ThisBuild / scalaVersion := scala212
 
+name := "tokenizer"
+
 lazy val root = (project in file("."))
+  .aggregate(common, tokenizer)
   .dependsOn(common % "compile -> compile; test -> test")
+  .settings(
+    publish / skip := true
+  )
 
 lazy val common = project
 
