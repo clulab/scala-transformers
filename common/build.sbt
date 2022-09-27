@@ -1,5 +1,5 @@
 name := "scala-transformers-common"
-description := ""
+description := "Supports subprojects with common code"
 
 resolvers ++= Seq(
 //  Resolvers.localResolver, // Reserve for Two Six.
