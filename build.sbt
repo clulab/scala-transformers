@@ -10,7 +10,6 @@ ThisBuild / scalaVersion := scala212
 
 lazy val root = (project in file("."))
   .dependsOn(common % "compile -> compile; test -> test")
-  .dependsOn(scalapy)
 
 lazy val common = project
 

@@ -23,7 +23,8 @@ fn destroy_tokenizer(tokenizer_id: i64) {
     return;
 }
 
-#[call_from_java("org.clulab.transformers.tokenizer.j4rs.JavaJ4rsTokenizer.create")]
+// The underscore must be escaped and becomes _1.
+#[call_from_java("org.clulab.scala_1transformers.tokenizer.j4rs.JavaJ4rsTokenizer.create")]
 fn create_rust_tokenizer(name_instance: Instance) -> Result<Instance, String> {
     let jvm: Jvm = Jvm::attach_thread().unwrap();
     let name: String = jvm.to_rust(name_instance).unwrap();
@@ -36,7 +37,7 @@ fn create_rust_tokenizer(name_instance: Instance) -> Result<Instance, String> {
     return tokenizer_id_result;
 }
 
-#[call_from_java("org.clulab.transformers.tokenizer.j4rs.JavaJ4rsTokenizer.destroy")]
+#[call_from_java("org.clulab.scala_1transformers.tokenizer.j4rs.JavaJ4rsTokenizer.destroy")]
 fn destroy_rust_tokenizer(tokenizer_id_instance: Instance) {
     let jvm: Jvm = Jvm::attach_thread().unwrap();
     let tokenizer_id: i64 = jvm.to_rust(tokenizer_id_instance).unwrap();
@@ -46,7 +47,7 @@ fn destroy_rust_tokenizer(tokenizer_id_instance: Instance) {
     return;
 }
 
-#[call_from_java("org.clulab.transformers.tokenizer.j4rs.JavaJ4rsTokenizer.tokenize")]
+#[call_from_java("org.clulab.scala_1transformers.tokenizer.j4rs.JavaJ4rsTokenizer.tokenize")]
 fn rust_tokenizer_tokenize(tokenizer_id_instance: Instance, words_instance: Instance) -> Result<Instance, String> {
     let jvm: Jvm = Jvm::attach_thread().unwrap();
     let tokenizer_id: i64 = jvm.to_rust(tokenizer_id_instance).unwrap();
@@ -69,7 +70,8 @@ fn rust_tokenizer_tokenize(tokenizer_id_instance: Instance, words_instance: Inst
        })
        .collect::<Vec<_>>()[..];
     let tokens = encoding.get_tokens();
-    let java_tokenization_instance = jvm.create_instance("org.clulab.transformers.tokenizer.j4rs.JavaJ4rsTokenization", &[
+    // The underscore does not need to be escaped here.
+    let java_tokenization_instance = jvm.create_instance("org.clulab.scala_transformers.tokenizer.j4rs.JavaJ4rsTokenization", &[
         InvocationArg::try_from(token_id_i32s).unwrap(),
         InvocationArg::try_from(word_id_i32s).unwrap(),
         InvocationArg::try_from(tokens).unwrap()
