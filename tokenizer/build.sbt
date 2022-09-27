@@ -1,5 +1,5 @@
 name := "scala-transformers-tokenizer"
-description := ""
+description := "Provides a Scala interface to huggingface tokenizers written in Rust"
 
 resolvers ++= Seq(
 //  Resolvers.localResolver, // Reserve for Two Six.
