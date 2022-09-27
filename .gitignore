@@ -1,0 +1,18 @@
+# Java
+*.class
+
+# IntelliJ
+.idea
+.idea/*
+
+# VS code
+.bloop/
+.metals/
+.vscode/
+
+# sbt
+.bsp
+target/
+
+# Mac
+.DS_Store

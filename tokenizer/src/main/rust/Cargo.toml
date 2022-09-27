@@ -1,0 +1,16 @@
+[package]
+name = "rust_tokenizer"
+version = "0.1.0"
+authors = ["Keith <keith@keithalcock.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/rust_tokenizer.rs"
+
+[dependencies]
+j4rs = "0.13"
+j4rs_derive = "0.1"
+lazy_static = "1.4.0"
+serde = { version = "1.0", features = ["derive"] }
+tokenizers = "0.11.3"
