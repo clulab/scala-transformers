@@ -19,7 +19,7 @@ class TokenizerTest extends Test {
 
   it should "tokenize with the xlm-robert-base tokenizer" in {
     val expectedTokens = Array("<s>", "_EU", "_re", "ject", "s", "_German", "_call", "_to", "_boy", "cot", "t", "_British", "_la", "mb", "_", ".", "</s>")
-        .map(word => word.replace('_', '▁'))
+        .map(word => word.replace('_', '\u2581'))
     val tokenizer = ScalaJ4rsTokenizer("xlm-roberta-base")
     val tokenization = tokenizer.tokenize(words)
     val actualTokens = tokenization.tokens
