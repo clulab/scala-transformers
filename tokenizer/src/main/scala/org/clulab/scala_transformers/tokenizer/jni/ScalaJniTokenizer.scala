@@ -1,4 +1,4 @@
-package org.clulab.scala_transformers.tokenizer.j4rs
+package org.clulab.scala_transformers.tokenizer.jni
 
 import org.clulab.scala_transformers.tokenizer.LibraryLoader
 import org.clulab.scala_transformers.tokenizer.Tokenization
@@ -7,29 +7,29 @@ import org.clulab.scala_transformers.tokenizer.Tokenizer
 import scala.collection.mutable.{HashMap => MutableHashMap}
 import scala.ref.WeakReference
 
-class ScalaJ4rsTokenizer(name: String) extends Tokenizer(name) {
-  val tokenizerId = JavaJ4rsTokenizer.create(name)
+class ScalaJniTokenizer(name: String) extends Tokenizer(name) {
+  val tokenizerId = JavaJniTokenizer.create(name)
 
   override def finalize: Unit = {
-    JavaJ4rsTokenizer.destroy(tokenizerId)
+    JavaJniTokenizer.destroy(tokenizerId)
   }
 
   override def tokenize(words: Array[String]): Tokenization = {
-    val javaJ4rsTokenization = JavaJ4rsTokenizer.tokenize(tokenizerId, words)
+    val javaJniTokenization = JavaJniTokenizer.tokenize(tokenizerId, words)
 
     Tokenization(
-      javaJ4rsTokenization.tokenIds,
-      javaJ4rsTokenization.wordIds,
-      javaJ4rsTokenization.tokens
+      javaJniTokenization.tokenIds,
+      javaJniTokenization.wordIds,
+      javaJniTokenization.tokens
     )
   }
 }
 
-object ScalaJ4rsTokenizer {
+object ScalaJniTokenizer {
   val rustLibrary = LibraryLoader.load("rust_tokenizer")
-  val map = new MutableHashMap[String, WeakReference[ScalaJ4rsTokenizer]]()
+  val map = new MutableHashMap[String, WeakReference[ScalaJniTokenizer]]()
 
-  def apply(name: String): ScalaJ4rsTokenizer = synchronized {
+  def apply(name: String): ScalaJniTokenizer = synchronized {
     // If the key is known and the weak reference is valid, then the result is
     // Some(scalaTokenizer) with a strong reference that will remain valid.
     val scalaTokenizerOpt = map.get(name).flatMap(_.get)
@@ -37,7 +37,7 @@ object ScalaJ4rsTokenizer {
     if (scalaTokenizerOpt.isDefined)
       scalaTokenizerOpt.get
     else {
-      val scalaTokenizer = new ScalaJ4rsTokenizer(name)
+      val scalaTokenizer = new ScalaJniTokenizer(name)
       map(name) = WeakReference(scalaTokenizer)
       scalaTokenizer
     }

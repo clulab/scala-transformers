@@ -1,6 +1,6 @@
-package org.clulab.scala_transformers.tokenizer.j4rs
+package org.clulab.scala_transformers.tokenizer.jni
 
-object ScalaJ4rsTokenizerApp extends App {
+object ScalaJniTokenizerApp extends App {
   val words = Array("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
   val names = Array(
     "distilbert-base-cased",
@@ -9,7 +9,7 @@ object ScalaJ4rsTokenizerApp extends App {
 
   println(s"words: ${words.mkString(" ")}")
   names.foreach { name =>
-    val tokenizer = ScalaJ4rsTokenizer(name)
+    val tokenizer = ScalaJniTokenizer(name)
     val tokenization = tokenizer.tokenize(words)
 
     println(tokenization)
