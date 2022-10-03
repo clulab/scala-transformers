@@ -11,7 +11,7 @@ object ScalaJniTimeTokenizerApp extends App {
   val tokenizer = ScalaJniTokenizer(name)
 
   def loop(): Unit = {
-    1.until(10000).par.foreach { _ =>
+    1.until(10000).foreach { _ =>
       sentences.foreach { words =>
         val tokenization = tokenizer.tokenize(words)
         // println(tokenization.tokens.mkString(" "))
