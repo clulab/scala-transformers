@@ -8,5 +8,5 @@ Scala interfaces to huggingface transformers and tokenizers
 To use the tokenizer subproject as a Scala library dependency, you'll need to add something like this to your `build.sbt` file:
 
 ```scala
-libraryDependencies += "org.clulab" %% "scala-transformers-tokenizer" % "0.1.0"
+libraryDependencies += "org.clulab" %% "scala-transformers-tokenizer" % "0.2.0"
 ```
