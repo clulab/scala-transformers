@@ -41,9 +41,9 @@ object LibraryLoader {
     // The Mac reports a libname ending with .dylib, but Java needs .jnilib instead.
     val jniName = replaceSuffix(libName, ".dylib", ".jnilib");
     val resourceName =
-      if (!isMac) jniName
-      else if (isApple) "apple-" + jniName
-      else "intel-" + jniName
+        if (!isMac) jniName
+        else if (isApple) "apple-" + jniName
+        else "intel-" + jniName
 
     resourceName
   }
