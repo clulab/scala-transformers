@@ -9,7 +9,7 @@ resolvers ++= Seq(
 libraryDependencies ++= {
   Seq(
     "com.microsoft.onnxruntime"  % "onnxruntime" % "1.13.1",
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6",
+    "org.scalanlp" %% "breeze" % "2.1.0",
   )
 }
 

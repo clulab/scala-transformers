@@ -12,7 +12,9 @@ object LoadExample extends App {
   // we can add paddings here like ++ Array.fill(padded_length)(0) before grouped
   // I use group here to reshape the 1-D array to 2-D, we do not need it if we have batched inputs.
   val input_ids = tokenization.tokenIds.map(x => x.toLong).grouped(l).toArray
+  println("input_ids.length = " + input_ids.length)
   for(i <- 0 until input_ids.length) {
+    println("row length = " + input_ids(i).length)
     for(j <- 0 until input_ids(i).length) {
       print(input_ids(i)(j) + " ")
     }
