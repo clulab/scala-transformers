@@ -20,7 +20,7 @@ object LoadExample extends App {
   }
 
   val ortEnvironment = OrtEnvironment.getEnvironment
-  val modelpath1 = "encoder.onnx"
+  val modelpath1 = "/Users/msurdeanu/github/scala-transformers/encoder.onnx"
   val session1 = ortEnvironment.createSession(modelpath1, new OrtSession.SessionOptions)
   val inputs = new java.util.HashMap[String, OnnxTensor]()
   inputs.put("token_ids", OnnxTensor.createTensor(ortEnvironment, input_ids))

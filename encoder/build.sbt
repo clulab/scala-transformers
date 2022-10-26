@@ -8,7 +8,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= {
   Seq(
-    "com.microsoft.onnxruntime"  % "onnxruntime" % "1.8.1",
+    "com.microsoft.onnxruntime"  % "onnxruntime" % "1.13.1",
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6",
   )
 }
