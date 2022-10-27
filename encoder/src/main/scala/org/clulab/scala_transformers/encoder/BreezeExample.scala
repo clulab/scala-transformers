@@ -4,7 +4,7 @@ import breeze.linalg._
 
 object BreezeExample extends App {
   val a = Array(1, 2, 3)
-  val dv = Transpose(DenseVector(a))
+  val dv = DenseMatrix.create(rows = 1, cols = 3, a)
   println(dv)
 
   val m = Array(1, 2, 3, 4, 5, 6)
