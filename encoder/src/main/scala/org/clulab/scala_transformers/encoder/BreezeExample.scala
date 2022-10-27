@@ -11,6 +11,8 @@ object BreezeExample extends App {
   val dm = DenseMatrix.create(rows = 3, cols = 2, m)
   println(dm)
 
-  val prod = dv * dm
+  val bias = DenseVector(1, 1)
+
+  val prod = dv * dm + Transpose(bias)
   print(prod)
 }
