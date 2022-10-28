@@ -4,7 +4,7 @@ import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
 
 import breeze.linalg._
 
-class Encoder(encoderEnvironment: OrtEnvironment, encoderSession: OrtSession) {
+class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession) {
   /**
     * Runs the inference using a transformer encoder over a batch of sentences
     *

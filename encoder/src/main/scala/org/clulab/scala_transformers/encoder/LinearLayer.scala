@@ -29,21 +29,24 @@ object LinearLayer {
       throw new RuntimeException(s"ERROR: you need at least a weights file for linear layer $name!")
     } 
     val weights = loadWeights(weightsFileName)
-    println("Found weights with dimension ${weights.rows} x ${weights.cols}")
+    println(s"Found weights with dimension ${weights.rows} x ${weights.cols}")
 
     val biases = if(new File(biasesFileName).exists()) 
       Some(loadBiases(biasesFileName)) else None
     if(biases.isDefined) {
-      println("Found biases with dimension ${biases.rows}")
+      println(s"Found biases with dimension ${biases.get.length}")
     }
 
     val labels = if(new File(labelsFileName).exists())
       Some(loadLabels(labelsFileName)) else None
+    if(labels.isDefined) {
+      println(s"Using the following labels: ${labels.get.mkString(", ")}")
+    }
     
     new LinearLayer(name, weights, biases, labels)
   }
 
-  def loadWeights(fn: String): DenseMatrix[Float] = {
+  private def loadWeights(fn: String): DenseMatrix[Float] = {
     val source = io.Source.fromFile(fn)
     val values = new ArrayBuffer[Array[Float]]
     for(line <- source.getLines() if ! line.startsWith("#")) {
@@ -58,7 +61,7 @@ object LinearLayer {
     BreezeUtils.mkRowMatrix(values.toArray)
   }
 
-  def loadBiases(fn: String): DenseVector[Float] = {
+  private def loadBiases(fn: String): DenseVector[Float] = {
     val source = io.Source.fromFile(fn)
     val values = new ArrayBuffer[Float]
     for(line <- source.getLines() if ! line.startsWith("#")) {
@@ -71,7 +74,7 @@ object LinearLayer {
     DenseVector(values.toArray)
   }
 
-  def loadLabels(fn: String): Array[String] = {
+  private def loadLabels(fn: String): Array[String] = {
     val source = io.Source.fromFile(fn)
     val labels = new ArrayBuffer[String]
     for(line <- source.getLines()) {
