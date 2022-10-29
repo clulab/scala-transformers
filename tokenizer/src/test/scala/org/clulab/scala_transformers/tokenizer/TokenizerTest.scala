@@ -26,4 +26,16 @@ class TokenizerTest extends Test {
 
     actualTokens should contain theSameElementsInOrderAs expectedTokens
   }
+
+  behavior of "LongTokenization"
+
+  it should "have the same values as regular Tokenization" in {
+    val tokenizer = ScalaJniTokenizer("xlm-roberta-base")
+    val tokenization = tokenizer.tokenize(words)
+    val longTokenization = LongTokenization(tokenization)
+
+    longTokenization.tokenIds should contain theSameElementsInOrderAs tokenization.tokenIds
+    longTokenization.wordIds should contain theSameElementsInOrderAs tokenization.wordIds
+    longTokenization.tokens should contain theSameElementsInOrderAs tokenization.tokens
+  }
 }
