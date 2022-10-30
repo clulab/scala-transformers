@@ -25,8 +25,11 @@ class LinearLayer (name: String,
   def forward(inputBatch: Array[DenseMatrix[Float]]): Array[DenseMatrix[Float]] = {
     val outputBatch = new ArrayBuffer[DenseMatrix[Float]]()
     for(input <- inputBatch) {
+      //println("INPUT:\n" + input)
       val output = input * weights
+      //println("OUTPUT before bias:\n" + output)
       for(b <- biases) output(*, ::) :+= b
+      //println("OUTPUT after bias:\n" + output)
       outputBatch += output
     }
     outputBatch.toArray

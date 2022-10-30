@@ -14,7 +14,6 @@ object TokenClassifierExample extends App {
   val tokenization = LongTokenization(tokenizer.tokenize(words))
   val inputIds = tokenization.tokenIds
   
-
   val encOutput = encoder.forward(inputIds)
   println(s"encOutput: ${encOutput.rows} x ${encOutput.cols}")
 
