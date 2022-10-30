@@ -15,6 +15,7 @@ class LinearLayer (name: String, weights: DenseMatrix[Float], biases: Option[Den
 
   /** Forward pass for a batch of sentences */
   def forward(inputBatch: Array[DenseMatrix[Float]]): Array[DenseMatrix[Float]] = {
+    // AICI
     null
   }  
 }
@@ -58,7 +59,7 @@ object LinearLayer {
       values += row.toArray
     }
     source.close()
-    BreezeUtils.mkRowMatrix(values.toArray)
+    BreezeUtils.mkRowMatrix(values.toArray).t
   }
 
   private def loadBiases(fn: String): DenseVector[Float] = {
