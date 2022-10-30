@@ -21,5 +21,6 @@ object TokenClassifierExample extends App {
   println(s"taskOutput: ${taskOutput.rows} x ${taskOutput.cols}")
 
   val labels = task.predict(encOutput)
+  println("Tokens: " + tokenization.tokens.mkString(", "))
   println("Predicted labels: " + labels.mkString(", "))
 }
