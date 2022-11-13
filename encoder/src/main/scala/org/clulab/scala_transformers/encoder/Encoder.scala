@@ -9,7 +9,7 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
     * Runs the inference using a transformer encoder over a batch of sentences
     *
     * @param batchInputIds First dimension is batch size (1 for a single sentence); second is sentence size
-    * @return Hidden states for the whole batch. The matrix rows = sentence size; columns = hidden state size
+    * @return Hidden states for the whole batch. The matrix dimension: rows = sentence size; columns = hidden state size
     */
   def forward(batchInputIds: Array[Array[Long]]): Array[DenseMatrix[Float]] = {
     val inputs = new java.util.HashMap[String, OnnxTensor]()
@@ -24,7 +24,11 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
     outputs
   }
 
-  /** Runs inference over a single sentence */
+  /** 
+   * Runs inference over a single sentence 
+   * @param inputIds Array of token ids for this sentence
+   * @return Hidden states for this sentence. The matrix dimension: rows = sentence size; columns = hidden state size 
+   */
   def forward(inputIds: Array[Long]): DenseMatrix[Float] = {
     val batchInputIds = new Array[Array[Long]](1)
     batchInputIds(0) = inputIds

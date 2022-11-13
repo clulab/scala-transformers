@@ -10,7 +10,7 @@ object LoadExample extends App {
   // TODO: tokenizer should produce an Array[Long] not Int (ONNX expects Long)
   val inputIds = tokenization.tokenIds.map(x => x.toLong).toArray
 
-  val enc = Encoder("/Users/msurdeanu/github/scala-transformers/encoder.onnx")
+  val enc = Encoder("/Users/msurdeanu/github/scala-transformers/tcmodel/encoder.onnx")
   val encOutput = enc.forward(inputIds)
 
   println(encOutput)

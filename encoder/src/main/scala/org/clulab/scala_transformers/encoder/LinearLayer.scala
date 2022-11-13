@@ -5,10 +5,10 @@ import java.io.File
 import scala.collection.mutable.ArrayBuffer
 
 /** Implements one linear layer */
-class LinearLayer (name: String, 
-  weights: DenseMatrix[Float], // dimensions (hidden state size x labels size)
-  biases: Option[DenseVector[Float]], // column vector with length = labels size
-  labels: Option[Array[String]]){
+class LinearLayer (val name: String, 
+  val weights: DenseMatrix[Float], // dimensions (hidden state size x labels size)
+  val biases: Option[DenseVector[Float]], // column vector with length = labels size
+  val labels: Option[Array[String]]){
 
   /** Forward pass for a single sentence */
   def forward(inputSentence: DenseMatrix[Float]): DenseMatrix[Float] = {
