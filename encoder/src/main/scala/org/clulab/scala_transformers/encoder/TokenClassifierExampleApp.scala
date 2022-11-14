@@ -1,19 +1,20 @@
 package org.clulab.scala_transformers.encoder
 
+/*
 import java.io.File
 
 import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.scala_transformers.tokenizer.LongTokenization
+*/
 
-object TokenClassifierExample extends App {
+object TokenClassifierExampleApp extends App {
   val tokenClassifier = TokenClassifier("../tcmodel")
 
   val words = Array("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
   println(s"Words: ${words.mkString(", ")}")
   val allLabels = tokenClassifier.predict(words)
-  for(labels <- allLabels) {
+  for (labels <- allLabels)
     println(s"Labels: ${labels.mkString(", ")}")
-  }
 
   /*
   val encoder = Encoder(new File("../encoder.onnx").getAbsolutePath().toString)
