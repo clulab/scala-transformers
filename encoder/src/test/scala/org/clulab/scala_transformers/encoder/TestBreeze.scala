@@ -2,7 +2,9 @@ package org.clulab.scala_transformers.encoder
 
 import org.clulab.transformers.test.Test
 
-import breeze.linalg._
+import breeze.linalg.`*`
+import breeze.linalg.DenseMatrix
+import breeze.linalg.DenseVector
 
 class TestBreeze extends Test {
   behavior of "Breeze"

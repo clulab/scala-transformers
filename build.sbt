@@ -5,6 +5,7 @@ val scala30  = "3.0.2"   // up to 3.0.2
 val scala31  = "3.1.3"   // up to 3.1.3
 val scala32  = "3.2.0"   // up to 3.2.0
 
+// Breeze 1.1+ is not available for scala211.
 ThisBuild / crossScalaVersions := Seq(scala212, scala211, scala213)
 ThisBuild / scalaVersion := scala212
 
@@ -12,7 +13,6 @@ name := "scala-transformers"
 
 lazy val root = (project in file("."))
   .aggregate(common, tokenizer, encoder)
-  .dependsOn(common, tokenizer, encoder % "compile -> compile; test -> test")
   .settings(
     publish / skip := true
   )
@@ -24,4 +24,3 @@ lazy val tokenizer = project
 
 lazy val encoder = project
   .dependsOn(tokenizer % "compile -> compile; test -> test")
-

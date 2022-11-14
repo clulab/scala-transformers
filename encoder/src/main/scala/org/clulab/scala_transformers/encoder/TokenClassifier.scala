@@ -3,8 +3,10 @@ package org.clulab.scala_transformers.encoder
 import org.clulab.scala_transformers.tokenizer.Tokenizer
 import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.scala_transformers.tokenizer.LongTokenization
-import scala.collection.mutable.ArrayBuffer
+import org.slf4j.{Logger, LoggerFactory}
+
 import java.io.File
+import scala.io.{Codec, Source}
 
 /** 
  * Implements the inference step of a token classifier for multi-task learning
@@ -28,14 +30,15 @@ import java.io.File
 class TokenClassifier(
   val encoder: Encoder, 
   val tasks: Array[LinearLayer],
-  val tokenizer: Tokenizer) {
+  val tokenizer: Tokenizer
+) {
 
   /** 
    * Predict labels for all tasks for a given sentence 
    * @param words Words in this sentence
    * @return Sequnce of labels for each task, for each token
    */
-  def predict(words: Seq[String]): Seq[Seq[String]] = {
+  def predict(words: Seq[String]): Array[Array[String]] = {
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
@@ -44,54 +47,57 @@ class TokenClassifier(
     val encOutput = encoder.forward(inputIds)
 
     // now generate token label predictions for each task
-    val allLabels = new ArrayBuffer[Seq[String]]
-    for(task <- tasks) {
+    val allLabels = tasks.map { task =>
       val tokenLabels = task.predict(encOutput)
       val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
-      allLabels += wordLabels
+
+      wordLabels
     }
 
-    return allLabels.toSeq
+    allLabels
   }
 }
 
 object TokenClassifier {
+  lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
+
   def apply(modelDir: String): TokenClassifier = {
-    println(s"Loading TokenClassifier from directory $modelDir...")
-    val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath().toString)
+    logger.info(s"Loading TokenClassifier from directory $modelDir...")
+    val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
     val encName = readLine(new File(s"$modelDir/encoder.name"))
     val tokenizer = ScalaJniTokenizer(encName)
 
     val taskParentDir = new File(s"$modelDir/tasks")
     val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
-    val tasks = new ArrayBuffer[LinearLayer]()
-    for(taskDir <- taskDirs) {
-      println(s"Loading task from directory $taskDir...")
-      tasks += LinearLayer(readLine(new File(s"$taskDir/name")), taskDir)
+    val tasks = taskDirs.map { taskDir =>
+      logger.info(s"Loading task from directory $taskDir...")
+      LinearLayer(readLine(new File(s"$taskDir/name")), taskDir)
     }
 
-    println("Load complete.")
-    new TokenClassifier(encoder, tasks.toArray, tokenizer)
+    logger.info("Load complete.")
+    new TokenClassifier(encoder, tasks, tokenizer)
   }
 
-  private def readLine(f: File): String = {
-    val s = scala.io.Source.fromFile(f)
-    val firstLine = s.getLines().next().trim()
-    s.close()
-    firstLine
-  }
+  protected def readLine(file: File): String = {
+    val source = Source.fromFile(file)(Codec.UTF8)
 
-  private def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Seq[String] = {
-    assert(tokenLabels.length == wordIds.length)
-    val wordLabels = new ArrayBuffer[String]()
-    var prevWordId = -1l
-    for(i <- tokenLabels.indices) {
-      val wordId = wordIds(i)
-      if(wordId >= 0 && wordId != prevWordId) {
-        wordLabels += tokenLabels(i)
-      }
-      prevWordId = wordId
+    try {
+      source.getLines.next.trim()
     }
-    wordLabels.toSeq
+    finally {
+      source.close()
+    }
+  }
+
+  protected def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
+    require(tokenLabels.length == wordIds.length)
+    val wordLabelOpts = tokenLabels.zip(wordIds).zipWithIndex.map { case ((tokenLabel, wordId), index) =>
+      val valid = wordId >= 0 && (index == 0 || wordId != wordIds(index - 1))
+
+      if (valid) Some(tokenLabel)
+      else None
+    }
+
+    wordLabelOpts.flatten
   }
 }
