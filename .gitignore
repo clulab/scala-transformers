@@ -1,6 +1,9 @@
 # Java
 *.class
 
+# Python
+__pycache__
+
 # IntelliJ
 .idea
 .idea/*
@@ -18,6 +21,7 @@ project/
 # Mac
 .DS_Store
 
-# custom folders that should not be committed
+# custom files and folders that should not be committed
 data/
+epoch_stats.txt
 
