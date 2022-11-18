@@ -8,7 +8,7 @@ import org.clulab.scala_transformers.tokenizer.LongTokenization
 */
 
 object TokenClassifierExampleApp extends App {
-  val tokenClassifier = TokenClassifier("../tcmodel")
+  val tokenClassifier = TokenClassifier("../bert-base-cased-mtl/mtl_model_epoch2_export")
 
   val words = Array("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
   println(s"Words: ${words.mkString(", ")}")

@@ -26,7 +26,7 @@ def compute_metrics(eval_pred):
 
 # compute accuracy
 def evaluation_classification_report(trainer, task, name, useTest=False):
-    print(f"Test classification report for task {name}:")
+    print(f"Classification report (useTest = {useTest}) for task {name}:")
     num_labels = task.num_labels
     df = task.dev_df if useTest == False else task.test_df
     ds = Dataset.from_pandas(df)
@@ -54,7 +54,7 @@ def evaluation_classification_report(trainer, task, name, useTest=False):
         target_names=target_names
     )
     print(report)
-    print(f'locally computed accuracy: {accuracy}')
+    print(f'Locally computed accuracy: {accuracy}')
     return accuracy
 
 # compute loss and accuracy
