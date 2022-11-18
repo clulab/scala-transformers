@@ -158,7 +158,6 @@ class TokenClassificationHead(nn.Module):
         self.dropout = nn.Dropout(dropout_p)
         self.classifier = nn.Linear(hidden_size, num_labels)
         self.num_labels = num_labels
-
         self._init_weights()
 
     def _init_weights(self):
