@@ -24,8 +24,8 @@ def main():
   config = AutoConfig.from_pretrained(cf.transformer_name)
 
   # the tasks to learn
-  ner_task = Task(0, "NER", "data/conll-ner/train_small.txt", "data/conll-ner/dev.txt", "data/conll-ner/test.txt", tokenizer)
-  pos_task = Task(1, "POS", "data/pos/train_small.txt", "data/pos/dev.txt", "data/pos/test.txt", tokenizer)
+  ner_task = Task(0, "NER", "data/conll-ner/train.txt", "data/conll-ner/dev.txt", "data/conll-ner/test.txt", tokenizer)
+  pos_task = Task(1, "POS", "data/pos/train.txt", "data/pos/dev.txt", "data/pos/test.txt", tokenizer)
   tasks = [ner_task, pos_task]
 
   # our own token classifier
@@ -91,13 +91,6 @@ def main():
     
     # export for JVM
     model.export_model(tasks, tokenizer, last_checkpoint + "_export")
-
-  # evaluate on test using the latest model
-  print("Evaluating on test...")
-  ner_acc = evaluation_classification_report(trainer, ner_task, "NER", useTest = True)
-  pos_acc = evaluation_classification_report(trainer, pos_task, "POS", useTest = True)
-  macro_acc = (ner_acc + pos_acc)/2
-  print(f"MTL macro accuracy on test: {macro_acc}")
 
 def save_stats(fn, tasks, accuracies, epoch):
   f = open(fn, 'a')
