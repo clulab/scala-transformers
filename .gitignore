@@ -17,3 +17,7 @@ project/
 
 # Mac
 .DS_Store
+
+# custom folders that should not be committed
+data/
+
