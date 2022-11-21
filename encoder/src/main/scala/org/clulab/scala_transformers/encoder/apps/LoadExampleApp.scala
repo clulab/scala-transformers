@@ -1,5 +1,6 @@
-package org.clulab.scala_transformers.encoder
+package org.clulab.scala_transformers.encoder.apps
 
+import org.clulab.scala_transformers.encoder.{Encoder, TokenClassifier}
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 

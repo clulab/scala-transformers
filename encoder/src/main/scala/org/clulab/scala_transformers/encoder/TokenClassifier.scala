@@ -89,7 +89,7 @@ object TokenClassifier {
     }
   }
 
-  protected def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
+  def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
     require(tokenLabels.length == wordIds.length)
     val wordLabelOpts = tokenLabels.zip(wordIds).zipWithIndex.map { case ((tokenLabel, wordId), index) =>
       val valid = wordId >= 0 && (index == 0 || wordId != wordIds(index - 1))

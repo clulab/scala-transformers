@@ -1,4 +1,6 @@
-package org.clulab.scala_transformers.tokenizer.jni
+package org.clulab.scala_transformers.tokenizer.jni.apps
+
+import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 
 object ScalaJniTimeTokenizerApp extends App {
   val sentences = Array(

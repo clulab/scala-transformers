@@ -1,4 +1,6 @@
-package org.clulab.scala_transformers.encoder
+package org.clulab.scala_transformers.encoder.apps
+
+import org.clulab.scala_transformers.encoder.TokenClassifier
 
 /*
 import java.io.File
