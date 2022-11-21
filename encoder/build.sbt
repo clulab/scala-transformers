@@ -8,7 +8,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= {
   Seq(
-    "org.scalanlp"              %% "breeze"      % "1.0", //  "2.1.0",
+    "org.scalanlp"              %% "breeze"      % "2.1.0", // 1.0", //  "2.1.0",
     "com.microsoft.onnxruntime"  % "onnxruntime" % "1.13.1",
     "org.slf4j"                  % "slf4j-api"   % "1.7.10"
   )
