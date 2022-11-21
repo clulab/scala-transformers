@@ -50,7 +50,7 @@ object TokenClassifierTimerApp extends App {
   val tokenClassifier = new TimedTokenClassifier(TokenClassifier("../tcmodel"))
   val lines = {
     val source = Source.fromFile(fileName)
-    val lines = source.getLines.take(100).toArray
+    val lines = source.getLines.toArray
 
     source.close
     lines
@@ -58,14 +58,16 @@ object TokenClassifierTimerApp extends App {
   val elapsedTimer = Timers.getOrNew("Elapsed")
 
   elapsedTimer.time {
-    lines.zipWithIndex.foreach { case (line, index) =>
+    lines.zipWithIndex.par.foreach { case (line, index) =>
       println(s"$index $line")
-      val words = line.split(" ")
+      if (index != 1382) {
+        val words = line.split(" ")
 
-      //    println(s"Words: ${words.mkString(", ")}")
-      val allLabels = tokenClassifier.predict(words)
-      //    for (labels <- allLabels)
-      //      println(s"Labels: ${labels.mkString(", ")}")
+        //    println(s"Words: ${words.mkString(", ")}")
+        val allLabels = tokenClassifier.predict(words)
+        //    for (labels <- allLabels)
+        //      println(s"Labels: ${labels.mkString(", ")}")
+      }
     }
   }
   Timers.summarize
