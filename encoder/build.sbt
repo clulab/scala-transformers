@@ -7,8 +7,13 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= {
+  val breezeVersion = CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, minor)) if minor < 12 => "1.0"
+    case _ => "2.1.0"
+  }
+
   Seq(
-    "org.scalanlp"              %% "breeze"      % "2.1.0", // 1.0", //  "2.1.0",
+    "org.scalanlp"              %% "breeze"      % breezeVersion,
     "com.microsoft.onnxruntime"  % "onnxruntime" % "1.13.1",
     "org.slf4j"                  % "slf4j-api"   % "1.7.10"
   )

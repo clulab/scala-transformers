@@ -1,8 +1,6 @@
 package org.clulab.scala_transformers.encoder.apps
 
-import dev.ludovic.netlib.blas.NativeBLAS
-import dev.ludovic.netlib.blas.JavaBLAS
-import dev.ludovic.netlib.blas.BLAS
+import dev.ludovic.netlib.blas.{BLAS, JavaBLAS, NativeBLAS}
 
 import scala.util.Try
 
