@@ -6,9 +6,9 @@ from sklearn.metrics import accuracy_score, classification_report
 
 from datasets import Dataset
 
-from configuration import ignore_index
+from configuration import config
 
-def compute_metrics(eval_pred):
+def compute_metrics(eval_pred) -> dict[str, float]:
     # gold labels
     label_ids = eval_pred.label_ids
     # predictions
@@ -18,14 +18,14 @@ def compute_metrics(eval_pred):
     batch_size, seq_len = pred_ids.shape
     for i in range(batch_size):
         for j in range(seq_len):
-            if label_ids[i, j] != ignore_index:
+            if label_ids[i, j] != config.ignore_index:
                 y_true.append(label_ids[i][j]) #index_to_label[label_ids[i][j]])
                 y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
     # return computed metrics
     return {'accuracy': accuracy_score(y_true, y_pred)}
 
 # compute accuracy
-def evaluation_classification_report(trainer, task, name, useTest=False):
+def evaluation_classification_report(trainer, task, name, useTest: bool = False) -> float:
     print(f"Classification report (useTest = {useTest}) for task {name}:")
     num_labels = task.num_labels
     df = task.dev_df if useTest == False else task.test_df
@@ -34,7 +34,7 @@ def evaluation_classification_report(trainer, task, name, useTest=False):
     label_ids = output.label_ids.reshape(-1)
     predictions = output.predictions.reshape(-1, num_labels)
     predictions = np.argmax(predictions, axis=-1)
-    mask = label_ids != ignore_index
+    mask = label_ids != config.ignore_index
     
     y_true = label_ids[mask]
     y_pred = predictions[mask]
@@ -58,7 +58,7 @@ def evaluation_classification_report(trainer, task, name, useTest=False):
     return accuracy
 
 # compute loss and accuracy
-def evaluate(trainer, task, name):
+def evaluate(trainer, task, name) -> float:
     print(f"Evaluating on the validation dataset for task {name}:")
     # uncomment these two lines if you want to compute loss on dev
     #ds = Dataset.from_pandas(task.dev_df)

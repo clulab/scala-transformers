@@ -10,11 +10,11 @@ from transformers import AutoConfig
 
 import os
 
-from configuration import device, transformer_name
+from configuration import config
 from task import Task
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
-class TokenClassificationModel(BertPreTrainedModel):    
+class TokenClassificationModel(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -118,7 +118,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
-        token_ids = token_input['input_ids'].to(device)
+        token_ids = token_input['input_ids'].to(config.device)
         
         inputs = (token_ids) 
         input_names = ["token_ids"] 
@@ -149,7 +149,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         # save the encoder as an ONNX model
         onnx_checkpoint = checkpoint_dir + '/encoder.onnx'
         self.onnx_save(onnx_checkpoint, tokenizer)
-        self.save_name(checkpoint_dir + '/encoder.name', transformer_name)
+        self.save_name(checkpoint_dir + '/encoder.name', config.transformer_name)
         
 
 class TokenClassificationHead(nn.Module):

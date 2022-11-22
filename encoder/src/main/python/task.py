@@ -2,9 +2,10 @@
 # coding: utf-8
 
 from data_wrangling import read_label_set, read_dataframe
+from transformers import AutoTokenizer
 
 class Task():
-    def __init__(self, task_id, task_name, train_file_name, dev_file_name, test_file_name, tokenizer):
+    def __init__(self, task_id: int, task_name: str, train_file_name: str, dev_file_name: str, test_file_name: str, tokenizer: AutoTokenizer):
         self.task_id = task_id
         self.task_name = task_name
         # we need an index of labels first
