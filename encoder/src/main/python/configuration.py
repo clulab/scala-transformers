@@ -36,7 +36,7 @@ batch_size = 8 # this batch size works with both bert-large and bert-base
 weight_decay = 0.01
 
 # which transformer to use
-transformer_name = "bert-large-cased" # "bert-large-cased" # 'xlm-roberta-base' # 'distilbert-base-cased'
+transformer_name = "bert-base-cased" # "bert-large-cased" # 'xlm-roberta-base' # 'distilbert-base-cased'
 model_name = f'{transformer_name.replace("/", "-")}-mtl' 
 
 
