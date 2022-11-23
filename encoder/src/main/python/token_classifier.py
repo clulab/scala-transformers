@@ -131,7 +131,7 @@ class TokenClassificationModel(BertPreTrainedModel):
             do_constant_folding=True,
             input_names = input_names,
             output_names = output_names,
-            opset_version=10, 
+            opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
             dynamic_axes = {"token_ids": {1: 'sent length'}}
         )
     

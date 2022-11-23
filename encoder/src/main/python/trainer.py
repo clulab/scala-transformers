@@ -20,16 +20,18 @@ from evaluation_metrics import evaluation_classification_report, evaluate
 # main function for training the MTL classifier
 def main():
   # which transformer to use
+  print(f'Loading tokenizer named "{cf.transformer_name}"...')
   tokenizer = AutoTokenizer.from_pretrained(cf.transformer_name)
   config = AutoConfig.from_pretrained(cf.transformer_name)
 
   # the tasks to learn
   ner_task = Task(0, "NER", "data/conll-ner/train.txt", "data/conll-ner/dev.txt", "data/conll-ner/test.txt", tokenizer)
   pos_task = Task(1, "POS", "data/pos/train.txt", "data/pos/dev.txt", "data/pos/test.txt", tokenizer)
+  #chunk_task = Task(1, "Chunking", "data/chunking/train.txt", "data/chunking/test.txt", "data/chunking/test.txt", tokenizer)
   tasks = [ner_task, pos_task]
 
   # our own token classifier
-  model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config).add_heads(tasks)
+  model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
   model.summarize_heads()
 
   # create the formal train/validation/test HF dataset
@@ -79,11 +81,12 @@ def main():
     # evaluate on validation (dev)
     ner_acc = evaluate(trainer, ner_task, "NER")
     pos_acc = evaluate(trainer, pos_task, "POS")
+    #chunk_acc = evaluate(trainer, chunk_task, "Chunking")
     macro_acc = (ner_acc + pos_acc)/2
     print(f'Dev macro accuracy for epoch {epoch}: {macro_acc}')
 
     # keep track of validation scores per epoch
-    save_stats("epoch_stats.txt", tasks, [ner_acc, pos_acc], epoch)
+    save_stats("epoch_stats.txt", tasks, [ner_acc, pos_acc], macro_acc, epoch)
 
     # save the transformer encoder + the head for each task
     last_checkpoint = training_args.output_dir + '/mtl_model_epoch' + str(epoch)
@@ -92,11 +95,12 @@ def main():
     # export for JVM
     model.export_model(tasks, tokenizer, last_checkpoint + "_export")
 
-def save_stats(fn, tasks, accuracies, epoch):
+def save_stats(fn, tasks, accuracies, macro_acc, epoch):
   f = open(fn, 'a')
   f.write(f'{epoch}')
   for i in range(0, len(tasks)):
     f.write(f'\t{tasks[i].task_name}\t{accuracies[i]}')
+  f.write(f'\tmacro\t{macro_acc}')
   f.write('\n')
   f.close()
 

@@ -31,13 +31,15 @@ if seed is not None:
 ignore_index = -100
 
 # training settings
-epochs = 2
-batch_size = 32
+epochs = 10
+batch_size = 8 # this batch size works with both bert-large and bert-base
 weight_decay = 0.01
 
 # which transformer to use
-transformer_name = "bert-base-cased" # 'xlm-roberta-base' # 'distilbert-base-cased'
-model_name = f'{transformer_name}-mtl'
+transformer_name = "bert-large-cased" # "bert-large-cased" # 'xlm-roberta-base' # 'distilbert-base-cased'
+model_name = f'{transformer_name.replace("/", "-")}-mtl' 
+
+
 
 
 
