@@ -114,7 +114,7 @@ class TokenClassificationModel(BertPreTrainedModel):
       f.write(f'{name}\n')
       f.close()
 
-    def onnx_save(self, checkpoint, tokenizer):
+    def save_encoder(self, checkpoint, tokenizer):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
@@ -148,7 +148,7 @@ class TokenClassificationModel(BertPreTrainedModel):
     
         # save the encoder as an ONNX model
         onnx_checkpoint = checkpoint_dir + '/encoder.onnx'
-        self.onnx_save(onnx_checkpoint, tokenizer)
+        self.save_encoder(onnx_checkpoint, tokenizer)
         self.save_name(checkpoint_dir + '/encoder.name', transformer_name)
         
 
