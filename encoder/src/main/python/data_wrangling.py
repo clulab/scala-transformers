@@ -22,8 +22,11 @@ def align_labels(word_ids, labels, label_to_index):
             label_ids.append(ignore_index)
         else:
             # get label id for corresponding word
-            label_id = label_to_index[labels[word_id]]
-            label_ids.append(label_id)
+            if labels[word_id] in label_to_index.keys():
+              label_id = label_to_index[labels[word_id]]
+              label_ids.append(label_id)
+            else:
+              raise Exception(f'Can not find index for label {labels[word_id]}!')
         # remember this word id
         previous_word_id = word_id
     
@@ -37,7 +40,7 @@ def read_label_set(fn):
             line = line.strip()
             tokens = line.split()
             if tokens != []:
-                label = tokens[-1]
+                label = tokens[1] # labels are always on the second position
                 labels.add(label)
     return labels
 
@@ -48,6 +51,7 @@ def read_dataframe(fn, label_to_index, task_id, tokenizer):
     with open(fn) as f:
         sent_words = []
         sent_labels = [] 
+        head_positions = []
         for index, line in tqdm(enumerate(f)):
             line = line.strip()
             tokens = line.split()
@@ -70,6 +74,8 @@ def read_dataframe(fn, label_to_index, task_id, tokenizer):
                 sent_words = []
                 sent_labels = [] 
             else:
-                sent_words.append(tokens[0])
-                sent_labels.append(tokens[1])
+                sent_words.append(tokens[0]) # tokens 
+                sent_labels.append(tokens[1]) # labels
+                if(len(tokens) > 2):
+                  head_positions.append(int(tokens[2])) # absolute position of head token 
     return pd.DataFrame(data)

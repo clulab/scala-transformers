@@ -51,7 +51,8 @@ def evaluation_classification_report(trainer, task, name, useTest=False):
     
     report = classification_report(
         y_true, y_pred,
-        target_names=target_names
+        target_names=target_names,
+        labels = range(0, len(task.index_to_label))
     )
     print(report)
     print(f'Locally computed accuracy: {accuracy}')

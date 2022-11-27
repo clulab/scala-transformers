@@ -16,5 +16,8 @@ class Task():
         self.train_df = read_dataframe(train_file_name, self.label_to_index, self.task_id, tokenizer)
         self.dev_df = read_dataframe(dev_file_name, self.label_to_index, self.task_id, tokenizer)
         self.test_df = read_dataframe(test_file_name, self.label_to_index, self.task_id, tokenizer)
+
+        print(f"DF for task {self.task_id}")
+        print(self.train_df)
                 
 

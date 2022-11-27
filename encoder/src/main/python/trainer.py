@@ -27,8 +27,9 @@ def main():
   # the tasks to learn
   ner_task = Task(0, "NER", "data/conll-ner/train.txt", "data/conll-ner/dev.txt", "data/conll-ner/test.txt", tokenizer)
   pos_task = Task(1, "POS", "data/pos/train.txt", "data/pos/dev.txt", "data/pos/test.txt", tokenizer)
-  #chunk_task = Task(1, "Chunking", "data/chunking/train.txt", "data/chunking/test.txt", "data/chunking/test.txt", tokenizer)
-  tasks = [ner_task, pos_task]
+  chunk_task = Task(2, "Chunking", "data/chunking/train.txt", "data/chunking/test.txt", "data/chunking/test.txt", tokenizer)
+  deph_task = Task(3, "Deps Head", "data/deps-wsj/train.heads", "data/deps-wsj/dev.heads", "data/deps-wsj/test.heads", tokenizer)
+  tasks = [ner_task, pos_task, chunk_task, deph_task]
 
   # our own token classifier
   model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
@@ -36,9 +37,9 @@ def main():
 
   # create the formal train/validation/test HF dataset
   ds = DatasetDict()
-  ds['train'] = Dataset.from_pandas(pd.concat([ner_task.train_df, pos_task.train_df]))
-  ds['validation'] = Dataset.from_pandas(pd.concat([ner_task.dev_df, pos_task.dev_df]))
-  ds['test'] = Dataset.from_pandas(pd.concat([ner_task.test_df, pos_task.test_df]))
+  ds['train'] = Dataset.from_pandas(pd.concat([ner_task.train_df, pos_task.train_df, chunk_task.train_df, deph_task.train_df]))
+  ds['validation'] = Dataset.from_pandas(pd.concat([ner_task.dev_df, pos_task.dev_df, chunk_task.dev_df, deph_task.dev_df]))
+  ds['test'] = Dataset.from_pandas(pd.concat([ner_task.test_df, pos_task.test_df, chunk_task.test_df, deph_task.test_df]))
 
   data_collator = DataCollatorForTokenClassification(tokenizer)
   last_checkpoint = None
@@ -79,14 +80,17 @@ def main():
     print(f"Elapsed time for epoch {epoch}: {timedelta(seconds=end_time - start_time)}")
 
     # evaluate on validation (dev)
+    model.training_mode = False
     ner_acc = evaluate(trainer, ner_task, "NER")
     pos_acc = evaluate(trainer, pos_task, "POS")
-    #chunk_acc = evaluate(trainer, chunk_task, "Chunking")
-    macro_acc = (ner_acc + pos_acc)/2
+    chunk_acc = evaluate(trainer, chunk_task, "Chunking")
+    deph_acc = evaluate(trainer, deph_task, "Deps Head")
+    macro_acc = (ner_acc + pos_acc + chunk_acc + deph_acc)/4
     print(f'Dev macro accuracy for epoch {epoch}: {macro_acc}')
+    model.training_mode = True
 
     # keep track of validation scores per epoch
-    save_stats("epoch_stats.txt", tasks, [ner_acc, pos_acc], macro_acc, epoch)
+    save_stats("epoch_stats.txt", tasks, [ner_acc, pos_acc, chunk_acc, deph_acc], macro_acc, epoch)
 
     # save the transformer encoder + the head for each task
     last_checkpoint = training_args.output_dir + '/mtl_model_epoch' + str(epoch)
