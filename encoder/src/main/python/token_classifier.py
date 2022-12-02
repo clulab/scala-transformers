@@ -25,7 +25,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         
     def add_heads(self, tasks):
         for task in tasks:
-            head = TokenClassificationHead(self.bert.config.hidden_size, task.num_labels, task.task_id, self.config.hidden_dropout_prob)
+            head = TokenClassificationHead(self.bert.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, self.config.hidden_dropout_prob)
             # ModuleDict requires keys to be strings
             self.output_heads[str(task.task_id)] = head
         return self
@@ -35,7 +35,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         for task_id in self.output_heads:
             self.output_heads[task_id].summarize(task_id)
         
-    def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, labels=None, task_ids=None, **kwargs):
+    def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, labels=None, head_positionszzz=None, task_ids=None, **kwargs):
         outputs = self.bert(
             input_ids,
             attention_mask=attention_mask,
@@ -43,6 +43,10 @@ class TokenClassificationModel(BertPreTrainedModel):
             **kwargs,
         )
         sequence_output = outputs[0]
+
+        #print("Keys in kwargs:")
+        #for key in kwargs:
+        #    print(f'key = {key}')
         
         #print(f'batch size = {len(input_ids)}')
         #print(f'task_ids in this batch: {task_ids}')
@@ -55,21 +59,22 @@ class TokenClassificationModel(BertPreTrainedModel):
         for unique_task_id in unique_task_ids_list:
             task_id_filter = task_ids == unique_task_id
             filtered_sequence_output = sequence_output[task_id_filter]
+            #filtered_head_positions = None if head_positions is None else head_positions[task_id_filter]
+            filtered_labels = None if labels is None else labels[task_id_filter]
+            filtered_attention_mask = None if attention_mask is None else attention_mask[task_id_filter]
+            #print(f'size of batch for task {unique_task_id} is: {len(filtered_sequence_output)}')
+            #print(f'running forward for task {unique_task_id}')
+            #print(f'Using task {self.output_heads[str(unique_task_id)].task_id}')
 
-            if len(filtered_sequence_output) > 0:
-              filtered_labels = None if labels is None else labels[task_id_filter]
-              filtered_attention_mask = None if attention_mask is None else attention_mask[task_id_filter]
-              #print(f'size of batch for task {unique_task_id} is: {len(filtered_sequence_output)}')
-              #print(f'running forward for task {unique_task_id}')
-              #print(f'Using task {self.output_heads[str(unique_task_id)].task_id}')
-              logits, task_loss = self.output_heads[str(unique_task_id)].forward(
-                  filtered_sequence_output, None,
-                  filtered_labels,
-                  filtered_attention_mask,
-              )
-              #print(f'done forward for task {unique_task_id}')
-              if filtered_labels is not None:
-                  loss_list.append(task_loss)
+            logits, task_loss = self.output_heads[str(unique_task_id)].forward(
+                filtered_sequence_output, None,
+                # filtered_head_positions, 
+                filtered_labels,
+                filtered_attention_mask,
+            )
+            #print(f'done forward for task {unique_task_id}')
+            if filtered_labels is not None:
+                loss_list.append(task_loss)
                 
         loss = None if len(loss_list) == 0 else torch.stack(loss_list)
         #print("batch done")
@@ -163,10 +168,14 @@ class TokenClassificationModel(BertPreTrainedModel):
         
 
 class TokenClassificationHead(nn.Module):
-    def __init__(self, hidden_size, num_labels, task_id, dropout_p=0.1):
+    def __init__(self, hidden_size, num_labels, task_id, dual_mode, dropout_p=0.1):
         super().__init__()
         self.dropout = nn.Dropout(dropout_p)
-        self.classifier = nn.Linear(hidden_size, num_labels)
+        self.dual_mode = dual_mode
+        self.classifier = nn.Linear(
+          hidden_size, # if self.dual_mode == False else hidden_size * 2, 
+          num_labels
+        )
         self.num_labels = num_labels
         self.task_id = task_id
         self._init_weights()
@@ -181,8 +190,15 @@ class TokenClassificationHead(nn.Module):
         print(f'Dropout is {self.dropout}')
         print(f'Classifier layer is {self.classifier}')
 
+    def concatenate(self, sequence_output, head_positions):
+      # TODO
+      return sequence_output
+
     def forward(self, sequence_output, pooled_output, labels=None, attention_mask=None, **kwargs):
-        sequence_output_dropout = self.dropout(sequence_output)
+        #print(f"sequence_output size = {sequence_output.size()}")
+        sequence_output_for_classification = sequence_output # if self.dual_mode == False else concatenate(sequence_output, head_positions)
+
+        sequence_output_dropout = self.dropout(sequence_output_for_classification)
         logits = self.classifier(sequence_output_dropout)
         
         loss = None

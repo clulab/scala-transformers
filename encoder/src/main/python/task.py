@@ -4,9 +4,10 @@
 from data_wrangling import read_label_set, read_dataframe
 
 class Task():
-    def __init__(self, task_id, task_name, train_file_name, dev_file_name, test_file_name, tokenizer):
+    def __init__(self, task_id, task_name, train_file_name, dev_file_name, test_file_name, tokenizer, dual_mode = False):
         self.task_id = task_id
         self.task_name = task_name
+        self.dual_mode = dual_mode
         # we need an index of labels first
         self.labels = read_label_set(train_file_name)
         self.index_to_label = {i:t for i,t in enumerate(self.labels)}

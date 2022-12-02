@@ -84,12 +84,13 @@ def read_label_set(fn):
             if tokens != []:
                 label = tokens[1] # labels are always on the second position
                 labels.add(label)
+    print(f'label size = {len(labels)}')
     return labels
 
 # converts a two-column file in the basic MTL format ("word \t label") into a dataframe
 def read_dataframe(fn, label_to_index, task_id, tokenizer):
     # now build the actual dataframe for this dataset
-    data = {'words': [], 'str_labels': [], 'input_ids': [], 'word_ids': [], 'labels': [], 'head_positions': [], 'task_ids': []}
+    data = {'words': [], 'str_labels': [], 'input_ids': [], 'word_ids': [], 'labels': [], 'head_positionszzz': [], 'task_ids': []}
     with open(fn) as f:
         sent_words = []
         sent_labels = [] 
@@ -106,20 +107,25 @@ def read_dataframe(fn, label_to_index, task_id, tokenizer):
                 token_input = tokenizer(sent_words, is_split_into_words = True)  
                 token_ids = token_input['input_ids']
                 word_ids = token_input.word_ids(batch_index = 0)
+                assert len(word_ids) == len(token_ids)
                 
                 # map labels to the first token in each word
                 token_labels = align_labels(word_ids, sent_labels, label_to_index)
+                assert len(token_labels) == len(token_ids)
 
                 # if present, map head offsets to the first token in each word
                 token_head_positions = align_head_positions(word_ids, head_positions) if len(head_positions) > 0 else None
+                if token_head_positions != None:
+                  assert len(token_head_positions) == len(token_ids)
                 
                 data['input_ids'].append(token_ids)
                 data['word_ids'].append(word_ids)
                 data['labels'].append(token_labels)
                 if token_head_positions != None:
-                  data['head_positions'].append(token_head_positions)
+                  data['head_positionszzz'].append(token_head_positions)
                 else:
-                  data['head_positions'].append(make_empty_list(len(word_ids), ignore_index))
+                  assert False
+                  data['head_positionszzz'].append(make_empty_list(len(word_ids), ignore_index))
                 data['task_ids'].append(task_id)
 
                 #if task_id == 4:
