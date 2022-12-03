@@ -21,6 +21,8 @@ class OurDataCollator(DataCollatorForTokenClassification):
   def torch_call(self, features):
         import torch
 
+        #print('Inside our own collator!')
+
         label_name = "label" if "label" in features[0].keys() else "labels"
         labels = [feature[label_name] for feature in features] if label_name in features[0].keys() else None
         batch = self.tokenizer.pad(
@@ -90,7 +92,7 @@ def main():
     #deph_task.test_df,
     depl_task.test_df]))
 
-  data_collator = DataCollatorForTokenClassification(tokenizer)
+  data_collator = OurDataCollator(tokenizer)
   # print(ds['train'][0])
   # print(data_collator(ds['train'][:1]))
   # exit()
