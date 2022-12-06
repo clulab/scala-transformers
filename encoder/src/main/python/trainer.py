@@ -18,13 +18,20 @@ from token_classifier import TokenClassificationModel
 from evaluation_metrics import evaluation_classification_report, evaluate
 
 class OurDataCollator(DataCollatorForTokenClassification):
+  def make_head_features(self, features):
+    head_feats = []
+    for feature in features:
+      head_dict = {}
+      head_dict['input_ids'] = feature[cf.HEAD_POSITIONS]
+      head_feats.append(head_dict)
+    return head_feats
+
   def torch_call(self, features):
         import torch
 
-        #print('Inside our own collator!')
-
         label_name = "label" if "label" in features[0].keys() else "labels"
         labels = [feature[label_name] for feature in features] if label_name in features[0].keys() else None
+
         batch = self.tokenizer.pad(
             features,
             padding=self.padding,
@@ -33,6 +40,17 @@ class OurDataCollator(DataCollatorForTokenClassification):
             # Conversion to tensors will fail if we have labels as they are not of the same length yet.
             return_tensors="pt" if labels is None else None,
         )
+        # HF does not batch head_positions, so we have to fake it by masquerading them as input_ids
+        heads = self.make_head_features(features)
+        batch_heads = self.tokenizer.pad(
+            heads,
+            padding=self.padding,
+            max_length=self.max_length,
+            pad_to_multiple_of=self.pad_to_multiple_of,
+            # Conversion to tensors will fail if we have labels as they are not of the same length yet.
+            return_tensors="pt" if labels is None else None,
+        )
+        batch[cf.HEAD_POSITIONS] = batch_heads['input_ids']
 
         if labels is None:
             return batch
@@ -49,14 +67,14 @@ class OurDataCollator(DataCollatorForTokenClassification):
             ]
 
         batch = {k: torch.tensor(v, dtype=torch.int64) for k, v in batch.items()}
+
         return batch
 
 # main function for training the MTL classifier
 def main():
   # which transformer to use
   print(f'Loading tokenizer named "{cf.transformer_name}"...')
-  tokenizer = AutoTokenizer.from_pretrained(cf.transformer_name, model_input_names=["input_ids", "token_type_ids", "attention_mask", "head_positionszzz"])
-  # tokenizer.model_input_names = ["input_ids", "token_type_ids", "attention_mask", "head_positionszzz"]
+  tokenizer = AutoTokenizer.from_pretrained(cf.transformer_name, model_input_names=["input_ids", "token_type_ids", "attention_mask"])
   config = AutoConfig.from_pretrained(cf.transformer_name)
 
   # the tasks to learn

@@ -7,7 +7,7 @@ import random
 
 from tqdm.notebook import tqdm
 
-from configuration import device, seed, ignore_index
+from configuration import device, seed, ignore_index, HEAD_POSITIONS
 
 # enable tqdm in pandas
 # tqdm.pandas()
@@ -90,7 +90,7 @@ def read_label_set(fn):
 # converts a two-column file in the basic MTL format ("word \t label") into a dataframe
 def read_dataframe(fn, label_to_index, task_id, tokenizer):
     # now build the actual dataframe for this dataset
-    data = {'words': [], 'str_labels': [], 'input_ids': [], 'word_ids': [], 'labels': [], 'head_positionszzz': [], 'task_ids': []}
+    data = {'words': [], 'str_labels': [], 'input_ids': [], 'word_ids': [], 'labels': [], HEAD_POSITIONS: [], 'task_ids': []}
     with open(fn) as f:
         sent_words = []
         sent_labels = [] 
@@ -122,10 +122,9 @@ def read_dataframe(fn, label_to_index, task_id, tokenizer):
                 data['word_ids'].append(word_ids)
                 data['labels'].append(token_labels)
                 if token_head_positions != None:
-                  data['head_positionszzz'].append(token_head_positions)
+                  data[HEAD_POSITIONS].append(token_head_positions)
                 else:
-                  assert False
-                  data['head_positionszzz'].append(make_empty_list(len(word_ids), ignore_index))
+                  data[HEAD_POSITIONS].append(make_empty_list(len(word_ids), ignore_index))
                 data['task_ids'].append(task_id)
 
                 #if task_id == 4:

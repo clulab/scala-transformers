@@ -35,7 +35,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         for task_id in self.output_heads:
             self.output_heads[task_id].summarize(task_id)
         
-    def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, labels=None, task_ids=None, **kwargs):
+    def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, labels=None, head_positions=None, task_ids=None, **kwargs):
         outputs = self.bert(
             input_ids,
             attention_mask=attention_mask,
