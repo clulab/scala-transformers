@@ -59,7 +59,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         for unique_task_id in unique_task_ids_list:
             task_id_filter = task_ids == unique_task_id
             filtered_sequence_output = sequence_output[task_id_filter]
-            #filtered_head_positions = None if head_positions is None else head_positions[task_id_filter]
+            filtered_head_positions = None if head_positions is None else head_positions[task_id_filter]
             filtered_labels = None if labels is None else labels[task_id_filter]
             filtered_attention_mask = None if attention_mask is None else attention_mask[task_id_filter]
             #print(f'size of batch for task {unique_task_id} is: {len(filtered_sequence_output)}')
@@ -68,7 +68,7 @@ class TokenClassificationModel(BertPreTrainedModel):
 
             logits, task_loss = self.output_heads[str(unique_task_id)].forward(
                 filtered_sequence_output, None,
-                # filtered_head_positions, 
+                filtered_head_positions, 
                 filtered_labels,
                 filtered_attention_mask,
             )
@@ -173,7 +173,7 @@ class TokenClassificationHead(nn.Module):
         self.dropout = nn.Dropout(dropout_p)
         self.dual_mode = dual_mode
         self.classifier = nn.Linear(
-          hidden_size, # if self.dual_mode == False else hidden_size * 2, 
+          hidden_size if self.dual_mode == False else hidden_size * 2, 
           num_labels
         )
         self.num_labels = num_labels
@@ -191,12 +191,16 @@ class TokenClassificationHead(nn.Module):
         print(f'Classifier layer is {self.classifier}')
 
     def concatenate(self, sequence_output, head_positions):
-      # TODO
-      return sequence_output
+      #print(f'in concat. sequence_output.size = {sequence_output.size()}; head_positions.size = {head_positions.size()}')
+      head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), head_positions]
+      #print(f'head_states.size = {head_states.size()}')
+      modifier_head_states = torch.cat([sequence_output, head_states], dim = 2)
+      #print(f'modifier_head_states.size = {modifier_head_states.size()}')
+      return modifier_head_states
 
-    def forward(self, sequence_output, pooled_output, labels=None, attention_mask=None, **kwargs):
+    def forward(self, sequence_output, pooled_output, head_positions, labels=None, attention_mask=None, **kwargs):
         #print(f"sequence_output size = {sequence_output.size()}")
-        sequence_output_for_classification = sequence_output # if self.dual_mode == False else concatenate(sequence_output, head_positions)
+        sequence_output_for_classification = sequence_output if self.dual_mode == False else self.concatenate(sequence_output, head_positions)
 
         sequence_output_dropout = self.dropout(sequence_output_for_classification)
         logits = self.classifier(sequence_output_dropout)

@@ -50,18 +50,21 @@ def align_head_positions(word_ids, word_heads):
   # stores the position of the token that is the head for each word
   token_head_positions = []
   previous_word_id = None
-  for word_id in word_ids:
+  for i in range(0, len(word_ids)):
+      word_id = word_ids[i]
+
       # we are inside an existing word or looking at [CLS]
       if word_id is None or word_id == previous_word_id:
-          token_head_positions.append(ignore_index)
+          # the position of this head does not matter since it's not used in the loss
+          token_head_positions.append(0)
       # beginning of a word whose head is root (-1)
       elif word_heads[word_id] == -1: 
-          token_head_positions.append(-1)
+          # we append the current position here
+          # this means that in dual mode we concatenate the same embedding to itself
+          token_head_positions.append(i)
       # beginning of a word whose head is not root
       else:
           # get head position for corresponding word
-          #print(f'\tword_id = {word_id}')
-          #print(f'\tword_heads[word_id] = {word_heads[word_id]}')
           token_head_positions.append(word_to_token_map[word_heads[word_id]])
       # remember this word id
       previous_word_id = word_id
