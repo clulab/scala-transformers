@@ -32,7 +32,7 @@ ignore_index = -100
 
 # training settings
 epochs = 10
-batch_size = 8 # batch size of 8 works with both bert-large and bert-base
+batch_size = 2 # batch size of 8 works with both bert-large and bert-base
 weight_decay = 0.01
 
 # which transformer to use
