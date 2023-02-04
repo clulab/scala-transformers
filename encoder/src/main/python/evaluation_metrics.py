@@ -9,6 +9,8 @@ from datasets import Dataset
 from configuration import ignore_index
 
 def compute_metrics(eval_pred):
+    print("GOLDS: ", eval_pred.label_ids)
+    print("PREDS: ", eval_pred.predictions)
     # gold labels
     label_ids = eval_pred.label_ids
     # predictions

@@ -89,6 +89,12 @@ class TokenClassificationModel(BertPreTrainedModel):
             attentions = outputs.attentions,
         )
     
+    def save_pretrained(self, save_directory, is_main_process = True, state_dict = None, save_function = torch.save, push_to_hub = False, max_shard_size = "10GB", safe_serialization = False, **kwargs):
+        print(f"SAVING EPOCH to folder {save_directory}")
+        # https://pytorch.org/tutorials/beginner/saving_loading_models.html
+        torch.save(self.state_dict(), save_directory + "/pytorch_full_model.bin")
+        #super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
+    
 
     def save_task(self, task_head, task, task_checkpoint):
         numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
