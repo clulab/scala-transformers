@@ -58,6 +58,8 @@ class TokenClassificationModel(BertPreTrainedModel):
         loss_list = []
         for unique_task_id in unique_task_ids_list:
             task_id_filter = task_ids == unique_task_id
+            #print(f'sequence_output = {sequence_output}')
+            #print(f'task_id_filter = {task_id_filter}')
             filtered_sequence_output = sequence_output[task_id_filter]
             filtered_head_positions = None if head_positions is None else head_positions[task_id_filter]
             filtered_labels = None if labels is None else labels[task_id_filter]
@@ -83,7 +85,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         # logits are only used for eval, so we don't save them in training (different task dimensions confuse HF) 
         # at testing time we run one task at a time, so we need to save them then 
         return TokenClassifierOutput(
-            loss = loss.mean(),
+            loss = None if labels is None else loss.mean(),
             logits = None if self.training_mode else logits,
             hidden_states = outputs.hidden_states,
             attentions = outputs.attentions,
@@ -94,6 +96,10 @@ class TokenClassificationModel(BertPreTrainedModel):
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
         torch.save(self.state_dict(), save_directory + "/pytorch_full_model.bin")
         #super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
+        for i in range(5):
+          key = f'output_heads.{i}.classifier.weight'
+          print(f'{key} = {self.state_dict()[key]}')
+        quit()
     
 
     def save_task(self, task_head, task, task_checkpoint):

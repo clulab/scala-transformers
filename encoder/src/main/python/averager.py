@@ -36,7 +36,17 @@ tasks = [ner_task, pos_task, chunk_task, deph_task, depl_task]
 # our own token classifier
 model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
 
-checkpoint = torch.load("bert-base-cased-mtl/checkpoint-180/pytorch_full_model.bin", map_location='cpu')
+# load model from disk
+checkpoint = torch.load("bert-base-cased-mtl/checkpoint-413556/pytorch_full_model.bin", map_location='cpu')
 model.load_state_dict(checkpoint)
 model.summarize_heads()
+
+# evaluate on validation (dev)
+ner_acc = evaluate(model, ner_task, "NER")
+pos_acc = evaluate(model, pos_task, "POS")
+chunk_acc = evaluate(model, chunk_task, "Chunking")
+deph_acc = evaluate(model, deph_task, "Deps Head")
+depl_acc = evaluate(model, depl_task, "Deps Label")
+macro_acc = (ner_acc + pos_acc + chunk_acc + deph_acc + depl_acc)/5
+print(f'Dev macro accuracy for epoch {epoch}: {macro_acc}')
 

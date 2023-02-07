@@ -123,12 +123,12 @@ def main():
     # model.save_pretrained(last_checkpoint + "_direct")
 
     # https://pytorch.org/tutorials/beginner/saving_loading_models.html
-    torch.save(model.state_dict(), last_checkpoint + "_torch")
+    # torch.save(model.state_dict(), last_checkpoint + "_torch")
     # checkpoint = torch.load(model_path, map_location='cpu')
     # model.load_state_dict(checkpoint)
     
     # export for JVM
-    model.export_model(tasks, tokenizer, last_checkpoint + "_export")
+    # model.export_model(tasks, tokenizer, last_checkpoint + "_export")
 
 def save_stats(fn, tasks, accuracies, macro_acc, epoch):
   f = open(fn, 'a')
