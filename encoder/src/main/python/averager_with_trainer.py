@@ -93,7 +93,7 @@ trainer = Trainer(
 
 # zero training epochs
 start_time = time.monotonic()
-#trainer.train()
+trainer.train()
 end_time = time.monotonic()
 print(f"Elapsed time: {timedelta(seconds=end_time - start_time)}")
 

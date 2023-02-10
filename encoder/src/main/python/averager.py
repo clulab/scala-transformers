@@ -17,7 +17,7 @@ import configuration as cf
 from task import Task
 from token_classifier import TokenClassificationModel
 from dual_data_collator import OurDataCollator
-from evaluation_metrics import evaluation_classification_report, evaluate
+from evaluation_metrics import evaluation_classification_report, evaluate, evaluate_with_model
 
 # main function for averaging models coming from different checkpoints
 print(f'Loading tokenizer named "{cf.transformer_name}"...')
@@ -37,12 +37,12 @@ tasks = [ner_task, pos_task, chunk_task, deph_task, depl_task]
 model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
 
 # load model from disk
-checkpoint = torch.load("bert-base-cased-mtl/checkpoint-413556/pytorch_full_model.bin", map_location='cpu')
+checkpoint = torch.load("bert-base-cased-mtl/checkpoint-500/pytorch_full_model.bin", map_location='cpu')
 model.load_state_dict(checkpoint)
 model.summarize_heads()
 
 # evaluate on validation (dev)
-ner_acc = evaluate(model, ner_task, "NER")
+ner_acc = evaluate_with_model(model, ner_task, "NER")
 pos_acc = evaluate(model, pos_task, "POS")
 chunk_acc = evaluate(model, chunk_task, "Chunking")
 deph_acc = evaluate(model, deph_task, "Deps Head")

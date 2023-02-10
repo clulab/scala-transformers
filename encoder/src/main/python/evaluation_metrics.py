@@ -134,3 +134,12 @@ def evaluate(trainer, task, name):
     print(acc)
     return acc
 
+def evaluate_with_model(model, task, name):
+    print(f"Evaluating on the validation dataset for task {name}:")
+    # uncomment these two lines if you want to compute loss on dev
+    #ds = Dataset.from_pandas(task.dev_df)
+    #scores = trainer.evaluate(ds)
+    acc = evaluation_classification_report(model, task, name, useTest = False)
+    print(acc)
+    return acc
+
