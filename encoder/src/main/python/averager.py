@@ -34,15 +34,19 @@ depl_task = Task(4, "Deps Label", "data/deps-wsj/train.labels", "data/deps-wsj/d
 tasks = [ner_task, pos_task, chunk_task, deph_task, depl_task]
 
 # our own token classifier
-model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
+#model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
+model= TokenClassificationModel(config)
+model.add_heads(tasks)
+model.from_pretrained("bert-base-cased-mtl/checkpoint-500b", ignore_mismatched_sizes=True)
 
 # load model from disk
-checkpoint = torch.load("bert-base-cased-mtl/checkpoint-500/pytorch_full_model.bin", map_location='cpu')
-model.load_state_dict(checkpoint)
+#checkpoint = torch.load("bert-base-cased-mtl/checkpoint-500/pytorch_full_model.bin", map_location='cpu')
+#model.load_state_dict(checkpoint)
 model.summarize_heads()
 
 # evaluate on validation (dev)
 ner_acc = evaluate_with_model(model, ner_task, "NER")
+quit()
 pos_acc = evaluate(model, pos_task, "POS")
 chunk_acc = evaluate(model, chunk_task, "Chunking")
 deph_acc = evaluate(model, deph_task, "Deps Head")

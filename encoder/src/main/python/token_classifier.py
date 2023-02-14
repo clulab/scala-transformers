@@ -93,14 +93,25 @@ class TokenClassificationModel(BertPreTrainedModel):
     
     def save_pretrained(self, save_directory, is_main_process = True, state_dict = None, save_function = torch.save, push_to_hub = False, max_shard_size = "10GB", safe_serialization = False, **kwargs):
         print(f"SAVING EPOCH to folder {save_directory}")
+        print("super.save_pretrained started...")
+        super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
+        print("super.save_pretrained done.")
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
         torch.save(self.state_dict(), save_directory + "/pytorch_full_model.bin")
         #super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
         for i in range(5):
           key = f'output_heads.{i}.classifier.weight'
           print(f'{key} = {self.state_dict()[key]}')
-        quit()
-    
+
+    def from_pretrained(self, pretrained_model_name_or_path, *model_args, **kwargs):
+        super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
+        print("Loading full model from pickle...")
+        checkpoint = torch.load(pretrained_model_name_or_path + "/pytorch_model.bin", map_location='cpu')
+        self.load_state_dict(checkpoint)    
+        print("Done loading.")
+        for i in range(5):
+          key = f'output_heads.{i}.classifier.weight'
+          print(f'{key} = {self.state_dict()[key]}')
 
     def save_task(self, task_head, task, task_checkpoint):
         numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
