@@ -97,7 +97,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
         print("super.save_pretrained done.")
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
-        torch.save(self.state_dict(), save_directory + "/pytorch_full_model.bin")
+        torch.save(self.state_dict(), save_directory + "/pytorch_model.bin")
         #super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
         for i in range(5):
           key = f'output_heads.{i}.classifier.weight'

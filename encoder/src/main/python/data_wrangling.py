@@ -77,7 +77,7 @@ def make_empty_list(length, value):
     l.append(value)
   return l
             
-# build a set of labels in the dataset            
+# build a sorted list of labels in the dataset            
 def read_label_set(fn):
     labels = set()
     with open(fn) as f:
@@ -88,7 +88,10 @@ def read_label_set(fn):
                 label = tokens[1] # labels are always on the second position
                 labels.add(label)
     print(f'label size = {len(labels)}')
-    return labels
+    sorted_labels = list(labels)
+    sorted_labels.sort()
+    print(f"Using labels: {sorted_labels}")
+    return sorted_labels
 
 # converts a two-column file in the basic MTL format ("word \t label") into a dataframe
 def read_dataframe(fn, label_to_index, task_id, tokenizer):

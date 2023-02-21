@@ -37,7 +37,7 @@ tasks = [ner_task, pos_task, chunk_task, deph_task, depl_task]
 #model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
 model= TokenClassificationModel(config)
 model.add_heads(tasks)
-model.from_pretrained("bert-base-cased-mtl/checkpoint-500b", ignore_mismatched_sizes=True)
+model.from_pretrained("bert-base-cased-mtl/checkpoint-37596", ignore_mismatched_sizes=True)
 
 # load model from disk
 #checkpoint = torch.load("bert-base-cased-mtl/checkpoint-500/pytorch_full_model.bin", map_location='cpu')
