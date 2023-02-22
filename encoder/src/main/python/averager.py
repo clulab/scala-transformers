@@ -13,6 +13,8 @@ from datasets import Dataset, DatasetDict
 import time
 from datetime import timedelta
 
+import os
+
 import configuration as cf
 from task import Task
 from token_classifier import TokenClassificationModel
@@ -30,27 +32,34 @@ pos_task = Task(1, "POS", "data/pos/train.txt", "data/pos/dev.txt", "data/pos/te
 chunk_task = Task(2, "Chunking", "data/chunking/train.txt", "data/chunking/test.txt", "data/chunking/test.txt", tokenizer)
 deph_task = Task(3, "Deps Head", "data/deps-wsj/train.heads", "data/deps-wsj/dev.heads", "data/deps-wsj/test.heads", tokenizer)
 depl_task = Task(4, "Deps Label", "data/deps-wsj/train.labels", "data/deps-wsj/dev.labels", "data/deps-wsj/test.labels", tokenizer, dual_mode = True)
-
 tasks = [ner_task, pos_task, chunk_task, deph_task, depl_task]
 
-# our own token classifier
-#model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
+# create our own token classifier, including the MTL linear layers (or heads)
 model= TokenClassificationModel(config)
 model.add_heads(tasks)
-model.from_pretrained("bert-base-cased-mtl/checkpoint-37596", ignore_mismatched_sizes=True)
 
-# load model from disk
-#checkpoint = torch.load("bert-base-cased-mtl/checkpoint-500/pytorch_full_model.bin", map_location='cpu')
-#model.load_state_dict(checkpoint)
-model.summarize_heads()
+best_macro_acc = 0
+best_checkpoint = ""
 
-# evaluate on validation (dev)
-ner_acc = evaluate_with_model(model, ner_task, "NER")
-quit()
-pos_acc = evaluate(model, pos_task, "POS")
-chunk_acc = evaluate(model, chunk_task, "Chunking")
-deph_acc = evaluate(model, deph_task, "Deps Head")
-depl_acc = evaluate(model, depl_task, "Deps Label")
-macro_acc = (ner_acc + pos_acc + chunk_acc + deph_acc + depl_acc)/5
-print(f'Dev macro accuracy for epoch {epoch}: {macro_acc}')
+base_dir = "bert-base-cased-mtl/"
+for it in os.scandir(base_dir):
+    if it.is_dir():
+      checkpoint = it
+      model.from_pretrained(checkpoint.path, ignore_mismatched_sizes=True)
+      model.summarize_heads()
+
+      # evaluate on validation (dev)
+      ner_acc = evaluate_with_model(model, ner_task, "NER")
+      pos_acc = evaluate_with_model(model, pos_task, "POS")
+      chunk_acc = evaluate_with_model(model, chunk_task, "Chunking")
+      deph_acc = evaluate_with_model(model, deph_task, "Deps Head")
+      depl_acc = evaluate_with_model(model, depl_task, "Deps Label")
+      macro_acc = (ner_acc['accuracy'] + pos_acc['accuracy'] + chunk_acc['accuracy'] + deph_acc['accuracy'] + depl_acc['accuracy'])/5
+      print(f'Dev macro accuracy for checkpoint {checkpoint}: {macro_acc}')
+
+      if macro_acc > best_macro_acc:
+         best_macro_acc = macro_acc
+         best_checkpoint = checkpoint
+         print(f"Best checkpoint is {best_checkpoint.path} with a macro accuracy of {best_macro_acc}\n\n")
+
 

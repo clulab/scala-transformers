@@ -105,13 +105,16 @@ class TokenClassificationModel(BertPreTrainedModel):
 
     def from_pretrained(self, pretrained_model_name_or_path, *model_args, **kwargs):
         super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
-        print("Loading full model from pickle...")
-        checkpoint = torch.load(pretrained_model_name_or_path + "/pytorch_model.bin", map_location='cpu')
-        self.load_state_dict(checkpoint)    
-        print("Done loading.")
-        for i in range(5):
-          key = f'output_heads.{i}.classifier.weight'
-          print(f'{key} = {self.state_dict()[key]}')
+
+        # HF does not initialize our MTL linear layers, so we have to do it explicitly
+        if(os.path.isdir(pretrained_model_name_or_path)):
+          print("Loading full model from pickle...")
+          checkpoint = torch.load(pretrained_model_name_or_path + "/pytorch_model.bin", map_location='cpu')
+          self.load_state_dict(checkpoint)    
+          print("Done loading.")
+          for i in range(5):
+            key = f'output_heads.{i}.classifier.weight'
+            print(f'{key} = {self.state_dict()[key]}')
 
     def save_task(self, task_head, task, task_checkpoint):
         numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
@@ -191,7 +194,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         
 
 class TokenClassificationHead(nn.Module):
-    def __init__(self, hidden_size, num_labels, task_id, dual_mode, dropout_p=0.1):
+    def __init__(self, hidden_size, num_labels, task_id, dual_mode = False, dropout_p=0.1):
         super().__init__()
         self.dropout = nn.Dropout(dropout_p)
         self.dual_mode = dual_mode
@@ -215,7 +218,9 @@ class TokenClassificationHead(nn.Module):
 
     def concatenate(self, sequence_output, head_positions):
       #print(f'in concat. sequence_output.size = {sequence_output.size()}; head_positions.size = {head_positions.size()}')
-      head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), head_positions]
+      long_head_positions = head_positions.to(torch.long)
+      #print(f'head_positions: {long_head_positions}')
+      head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), long_head_positions]
       #print(f'head_states.size = {head_states.size()}')
       modifier_head_states = torch.cat([sequence_output, head_states], dim = 2)
       #print(f'modifier_head_states.size = {modifier_head_states.size()}')
