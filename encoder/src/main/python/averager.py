@@ -40,6 +40,7 @@ model.add_heads(tasks)
 
 best_macro_acc = 0
 best_checkpoint = ""
+all_checkpoints = [] # keeps track of scores for all checkpoints
 
 base_dir = "bert-base-cased-mtl/"
 for it in os.scandir(base_dir):
@@ -57,9 +58,20 @@ for it in os.scandir(base_dir):
       macro_acc = (ner_acc['accuracy'] + pos_acc['accuracy'] + chunk_acc['accuracy'] + deph_acc['accuracy'] + depl_acc['accuracy'])/5
       print(f'Dev macro accuracy for checkpoint {checkpoint}: {macro_acc}')
 
+      all_checkpoints.append((checkpoint.path, macro_acc))
+      print(f"Current results for all checkpoints: {all_checkpoints}")
+
       if macro_acc > best_macro_acc:
          best_macro_acc = macro_acc
          best_checkpoint = checkpoint
          print(f"Best checkpoint is {best_checkpoint.path} with a macro accuracy of {best_macro_acc}\n\n")
 
+# sort in descending order of macro accuracy and keep top k
+all_checkpoints.sort(reverse=True, key=sort_func)
+checkpoints_to_average = all_checkpoints[0:5]
 
+# average the parameters in the top k models
+# TODO
+
+def sort_func(cp):
+   return cp[1]
