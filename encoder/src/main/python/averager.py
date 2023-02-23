@@ -100,6 +100,11 @@ def average_checkpoints(all_checkpoints, k, config, tasks, path_to_save):
   main_model.from_pretrained(checkpoints[0][0], ignore_mismatched_sizes=True)
   print("Done loading.")
 
+  #print("before averaging:")
+  #for i in range(5):
+  #  key = f'output_heads.{i}.classifier.weight'
+  #  print(f'{key} = {main_model.state_dict()[key]}')
+
   for i in range(1, len(checkpoints)):
     print(f"Loading satellite checkpoint[{i}] {checkpoints[i]}...")
     satellite_model = TokenClassificationModel(config)
@@ -108,7 +113,7 @@ def average_checkpoints(all_checkpoints, k, config, tasks, path_to_save):
     print("Adding its parameter weights to the main model...")
     for key in main_model.state_dict():
       if main_model.state_dict()[key].data.type() != 'torch.LongTensor':
-        main_model.state_dict()[key].data += main_model.state_dict()[key].data.clone()
+        main_model.state_dict()[key].data = main_model.state_dict()[key].data + satellite_model.state_dict()[key].data
     print("Done adding")
   
   if len(checkpoints) > 1:
@@ -117,6 +122,11 @@ def average_checkpoints(all_checkpoints, k, config, tasks, path_to_save):
       if main_model.state_dict()[key].data.type() != 'torch.LongTensor':
         main_model.state_dict()[key].data = main_model.state_dict()[key].data / len(checkpoints)
     print("Done computing.")
+  
+  print("after averaging:")
+  for i in range(5):
+    key = f'output_heads.{i}.classifier.weight'
+    print(f'{key} = {main_model.state_dict()[key]}')
 
   print("Saving averaged model...")
   main_model.save_pretrained(path_to_save)
