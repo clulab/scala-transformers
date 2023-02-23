@@ -117,7 +117,7 @@ class TokenClassificationModel(BertPreTrainedModel):
           #  key = f'output_heads.{i}.classifier.weight'
           #  print(f'{key} = {self.state_dict()[key]}')
 
-    def save_task(self, task_head, task, task_checkpoint):
+    def export_task(self, task_head, task, task_checkpoint):
         numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
         numpy_bias = task_head.classifier.bias.cpu().detach().numpy()
         labels = task.labels
@@ -129,7 +129,7 @@ class TokenClassificationModel(BertPreTrainedModel):
 
         os.makedirs(task_checkpoint, exist_ok = True)
 
-        self.save_name(task_checkpoint + '/name', task.task_name)
+        self.export_name(task_checkpoint + '/name', task.task_name)
         
         lf = open(task_checkpoint + "/labels", "w")
         for label in labels:
@@ -151,12 +151,12 @@ class TokenClassificationModel(BertPreTrainedModel):
         bf.write('\n')
         bf.close()
     
-    def save_name(self, file_name, name):
+    def export_name(self, file_name, name):
       f = open(file_name, 'w')
       f.write(f'{name}\n')
       f.close()
 
-    def save_encoder(self, checkpoint, tokenizer):
+    def export_encoder(self, checkpoint, tokenizer):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
@@ -185,13 +185,13 @@ class TokenClassificationModel(BertPreTrainedModel):
         task_counter = 0
         for task in tasks:
             task_checkpoint = task_folder + f'/{task_counter}'
-            self.save_task(self.output_heads[str(task.task_id)], task, task_checkpoint)
+            self.export_task(self.output_heads[str(task.task_id)], task, task_checkpoint)
             task_counter += 1
     
         # save the encoder as an ONNX model
         onnx_checkpoint = checkpoint_dir + '/encoder.onnx'
-        self.save_encoder(onnx_checkpoint, tokenizer)
-        self.save_name(checkpoint_dir + '/encoder.name', transformer_name)
+        self.export_encoder(onnx_checkpoint, tokenizer)
+        self.export_name(checkpoint_dir + '/encoder.name', transformer_name)
         
 
 class TokenClassificationHead(nn.Module):
