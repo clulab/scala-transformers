@@ -43,7 +43,7 @@ def main():
   #all_checkpoints = [('bert-base-cased-mtl/checkpoint-112788', 0.9609160767081839), ('bert-base-cased-mtl/checkpoint-563940', 0.9755393804639914), ('bert-base-cased-mtl/checkpoint-263172', 0.9689283322957432), ('bert-base-cased-mtl/checkpoint-338364', 0.9714441630119305), ('bert-base-cased-mtl/checkpoint-187980', 0.9656722898890078), ('bert-base-cased-mtl/checkpoint-639132', 0.9765498831853234), ('bert-base-cased-mtl/checkpoint-526344', 0.9755484633714315), ('bert-base-cased-mtl/checkpoint-601536', 0.9761621421054925), ('bert-base-cased-mtl/checkpoint-413556', 0.9736679839344381), ('bert-base-cased-mtl/checkpoint-75192', 0.9576241024527834), ('bert-base-cased-mtl/checkpoint-225576', 0.9676488217187262), ('bert-base-cased-mtl/checkpoint-751920', 0.9773871674484382), ('bert-base-cased-mtl/checkpoint-300768', 0.9706321234813376), ('bert-base-cased-mtl/checkpoint-789516', 0.9776340092350553), ('bert-base-cased-mtl/checkpoint-150384', 0.9632114643167207), ('bert-base-cased-mtl/checkpoint-488748', 0.9746556698249005), ('bert-base-cased-mtl/checkpoint-451152', 0.9741960558691349), ('bert-base-cased-mtl/checkpoint-37596', 0.9480660393679876), ('bert-base-cased-mtl/checkpoint-714324', 0.9773336477345376), ('bert-base-cased-mtl/checkpoint-676728', 0.9770617046439647), ('bert-base-cased-mtl/checkpoint-375960', 0.9728387337126444)]
 
   # average the parameters in the top k models
-  avg_model = average_checkpoints(all_checkpoints, 5, config, tasks, "avg/avg_model", "avg/avg_model_export")
+  avg_model = average_checkpoints(all_checkpoints, 5, config, tasks, tokenizer, "avg/avg_model", "avg/avg_model_export")
 
   # evaluate the averaged model to be sure it works
   ner_acc = evaluate_with_model(avg_model, tasks[0])
@@ -88,7 +88,7 @@ def evaluate_checkpoints(model, tasks):
 def sort_func(cp):
   return cp[1]
 
-def average_checkpoints(all_checkpoints, k, config, tasks, path_to_save, path_to_export):
+def average_checkpoints(all_checkpoints, k, config, tasks, tokenizer, path_to_save, path_to_export):
   # sort in descending order of macro accuracy and keep top k
   all_checkpoints.sort(reverse=True, key=sort_func)
   checkpoints = all_checkpoints[0:k]
@@ -126,7 +126,7 @@ def average_checkpoints(all_checkpoints, k, config, tasks, path_to_save, path_to
   print_some_params(main_model, "after averaging:")
   print("Saving averaged model...")
   main_model.save_pretrained(path_to_save)
-  main_model.export_model(path_to_export)
+  #main_model.export_model(tasks, tokenizer, path_to_export)
   print("Done saving.")
   return main_model
 
