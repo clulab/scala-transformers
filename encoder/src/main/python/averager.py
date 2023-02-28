@@ -126,7 +126,7 @@ def average_checkpoints(all_checkpoints, k, config, tasks, tokenizer, path_to_sa
   print_some_params(main_model, "after averaging:")
   print("Saving averaged model...")
   main_model.save_pretrained(path_to_save)
-  #main_model.export_model(tasks, tokenizer, path_to_export)
+  main_model.export_model(tasks, tokenizer, path_to_export)
   print("Done saving.")
   return main_model
 

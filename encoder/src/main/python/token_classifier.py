@@ -156,11 +156,11 @@ class TokenClassificationModel(BertPreTrainedModel):
       f.write(f'{name}\n')
       f.close()
 
-    def export_encoder(self, checkpoint, tokenizer):
+    def export_encoder(self, checkpoint, tokenizer, export_device):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
-        token_ids = token_input['input_ids'].to(device)
+        token_ids = token_input['input_ids'].to(export_device) 
         
         inputs = (token_ids) 
         input_names = ["token_ids"] 
@@ -179,6 +179,10 @@ class TokenClassificationModel(BertPreTrainedModel):
     
     # exports model in a format friendly for ingestion on the JVM
     def export_model(self, tasks, tokenizer, checkpoint_dir):
+        # send the entire model to CPU for this export
+        export_device = 'cpu'
+        self.to(export_device)
+
         # save the weights/bias in each linear layer
         task_folder = checkpoint_dir + '/tasks'
         os.makedirs(task_folder, exist_ok = True)
@@ -190,7 +194,7 @@ class TokenClassificationModel(BertPreTrainedModel):
     
         # save the encoder as an ONNX model
         onnx_checkpoint = checkpoint_dir + '/encoder.onnx'
-        self.export_encoder(onnx_checkpoint, tokenizer)
+        self.export_encoder(onnx_checkpoint, tokenizer, export_device)
         self.export_name(checkpoint_dir + '/encoder.name', transformer_name)
         
 
