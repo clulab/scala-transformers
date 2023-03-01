@@ -19,7 +19,7 @@ import configuration as cf
 from task import Task
 from token_classifier import TokenClassificationModel
 from dual_data_collator import OurDataCollator
-from evaluation_metrics import evaluation_classification_report, evaluate, evaluate_with_model
+from evaluation_metrics import evaluate_with_model
 
 # main function for averaging models coming from different checkpoints
 def main():

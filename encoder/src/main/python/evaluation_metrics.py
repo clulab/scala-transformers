@@ -3,7 +3,7 @@
 
 import numpy as np
 import torch
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score
 
 from datasets import Dataset
 
@@ -12,8 +12,8 @@ from configuration import ignore_index, device
 from tqdm.notebook import tqdm
 
 def compute_metrics(eval_pred):
-    print("GOLDS: ", eval_pred.label_ids)
-    print("PREDS: ", eval_pred.predictions)
+    #print("GOLDS: ", eval_pred.label_ids)
+    #print("PREDS: ", eval_pred.predictions)
     # gold labels
     label_ids = eval_pred.label_ids
     # predictions
@@ -75,8 +75,8 @@ def evaluation_classification_report(model, task, name, useTest=False):
     ds = Dataset.from_pandas(df)
 
     golds, predictions = predict(model, ds)
-    print("GOLDS: ", len(golds))
-    print("PREDS: ", len(predictions))
+    #print("GOLDS: ", len(golds))
+    #print("PREDS: ", len(predictions))
 
     correct = 0
     total = 0
@@ -90,55 +90,9 @@ def evaluation_classification_report(model, task, name, useTest=False):
     print(f"correct = {correct}, total = {total}")
     return {'accuracy': acc}
     
-# compute accuracy using a trainer
-def evaluation_classification_report_with_trainer(trainer, task, name, useTest=False):
-    print(f"Classification report (useTest = {useTest}) for task {name}:")
-    num_labels = task.num_labels
-    df = task.dev_df if useTest == False else task.test_df
-    ds = Dataset.from_pandas(df)
-    output = trainer.predict(ds)
-    label_ids = output.label_ids.reshape(-1)
-    predictions = output.predictions.reshape(-1, num_labels)
-    predictions = np.argmax(predictions, axis=-1)
-    mask = label_ids != ignore_index
-
-    y_true = label_ids[mask]
-    y_pred = predictions[mask]
-    target_names = [task.index_to_label.get(ele, "") for ele in range(num_labels)]
-    print(target_names)
-    
-    total = 0
-    correct = 0
-    for(t, p) in zip(y_true, y_pred):
-        total = total + 1
-        if t == p:
-            correct = correct + 1
-    accuracy = correct / total
-    
-    report = classification_report(
-        y_true, y_pred,
-        target_names=target_names,
-        labels = range(0, len(task.index_to_label))
-    )
-    print(report)
-    print(f'Locally computed accuracy: {accuracy}')
-    return accuracy    
-
-# compute loss and accuracy
-def evaluate(trainer, task, name):
-    print(f"Evaluating on the validation dataset for task {name}:")
-    # uncomment these two lines if you want to compute loss on dev
-    #ds = Dataset.from_pandas(task.dev_df)
-    #scores = trainer.evaluate(ds)
-    acc = evaluation_classification_report_with_trainer(trainer, task, name, useTest = False)
-    print(acc)
-    return acc
-
+# compute accuracy on dev or test partition using the given model
 def evaluate_with_model(model, task):
     print(f"Evaluating on the validation dataset for task {task.task_name}:")
-    # uncomment these two lines if you want to compute loss on dev
-    #ds = Dataset.from_pandas(task.dev_df)
-    #scores = trainer.evaluate(ds)
     acc = evaluation_classification_report(model, task, task.task_name, useTest = False)
     print(acc)
     return acc

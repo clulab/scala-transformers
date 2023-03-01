@@ -17,7 +17,7 @@ import configuration as cf
 from task import Task
 from token_classifier import TokenClassificationModel
 from dual_data_collator import OurDataCollator
-from evaluation_metrics import evaluation_classification_report, evaluate, compute_metrics
+from evaluation_metrics import compute_metrics
 
 # main function for training the MTL classifier
 def main():
@@ -27,12 +27,6 @@ def main():
   config = AutoConfig.from_pretrained(cf.transformer_name)
 
   # the tasks to learn
-  #ner_task = Task(0, "NER", "data/conll-ner/train_small.txt", "data/conll-ner/train_small.txt", "data/conll-ner/train_small.txt", tokenizer)
-  #pos_task = Task(1, "POS", "data/pos/train_small.txt", "data/pos/train_small.txt", "data/pos/train_small.txt", tokenizer)
-  #chunk_task = Task(2, "Chunking", "data/chunking/train_small.txt", "data/chunking/train_small.txt", "data/chunking/train_small.txt", tokenizer)
-  #deph_task = Task(3, "Deps Head", "data/deps-wsj/train_small.heads", "data/deps-wsj/train_small.heads", "data/deps-wsj/train_small.heads", tokenizer)
-  #depl_task = Task(4, "Deps Label", "data/deps-wsj/train_small.labels", "data/deps-wsj/train_small.labels", "data/deps-wsj/train_small.labels", tokenizer, dual_mode = True)
-
   ner_task = Task(0, "NER", "data/conll-ner/train.txt", "data/conll-ner/dev.txt", "data/conll-ner/test.txt", tokenizer)
   pos_task = Task(1, "POS", "data/pos/train.txt", "data/pos/dev.txt", "data/pos/test.txt", tokenizer)
   chunk_task = Task(2, "Chunking", "data/chunking/train.txt", "data/chunking/test.txt", "data/chunking/test.txt", tokenizer)
