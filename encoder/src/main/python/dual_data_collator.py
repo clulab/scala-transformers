@@ -4,6 +4,7 @@ from transformers import DataCollatorForTokenClassification
 
 import configuration as cf
 
+# A custom data collator that creates correct batches for all tasks by including the cf.HEAD_POSITIONS column as well
 class OurDataCollator(DataCollatorForTokenClassification):
   def make_head_features(self, features):
     head_feats = []
