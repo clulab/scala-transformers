@@ -61,6 +61,9 @@ def main():
     depl_task.test_df]))
 
   data_collator = OurDataCollator(tokenizer)
+
+  # Evaluating the intermediate models in this MTL setting is tricky, so we do not do it
+  # Instead, the evaluations are handled in averager.py, where tasks are individually evaluated
   training_args = TrainingArguments(
       output_dir=cf.model_name,
       log_level='error',
