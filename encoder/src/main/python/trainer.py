@@ -36,7 +36,7 @@ def main():
   tasks = [ner_task, pos_task, chunk_task, deph_task, depl_task]
 
   # our own token classifier
-  model= TokenClassificationModel.from_pretrained(cf.transformer_name, config=config, ignore_mismatched_sizes=True).add_heads(tasks)
+  model = TokenClassificationModel(config, cf.transformer_name).add_heads(tasks)
   model.summarize_heads()
 
   # create the formal train/validation/test HF dataset

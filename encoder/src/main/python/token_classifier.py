@@ -5,8 +5,7 @@ import torch
 from torch import nn
 
 from transformers.modeling_outputs import TokenClassifierOutput
-from transformers.models.bert.modeling_bert import BertModel, BertPreTrainedModel
-from transformers import AutoConfig
+from transformers import AutoConfig, AutoModel, PreTrainedModel
 
 import os
 
@@ -14,29 +13,34 @@ from configuration import device, transformer_name
 from task import Task
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
-class TokenClassificationModel(BertPreTrainedModel):    
-    def __init__(self, config):
+class TokenClassificationModel(PreTrainedModel):    
+    def __init__(self, config, transformer_name):
         super().__init__(config)
-        self.bert = BertModel(config, add_pooling_layer=False)
+        self.encoder = AutoModel.from_pretrained(transformer_name, config = config) 
         self.config = config
         self.output_heads = nn.ModuleDict() # these are initialized in add_heads
         self.training_mode = True
-        self.init_weights()
         
     def add_heads(self, tasks):
         for task in tasks:
-            head = TokenClassificationHead(self.bert.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, self.config.hidden_dropout_prob)
+            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, self.config.hidden_dropout_prob)
             # ModuleDict requires keys to be strings
             self.output_heads[str(task.task_id)] = head
+        # initialize the weights in all heads
+        self._init_weights()
         return self
     
     def summarize_heads(self):
         print(f'Found {len(self.output_heads)} heads')
         for task_id in self.output_heads:
             self.output_heads[task_id].summarize(task_id)
+
+    def _init_weights(self):
+        for task_id in self.output_heads:
+          self.output_heads[task_id]._init_weights()
         
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, labels=None, head_positions=None, task_ids=None, **kwargs):
-        outputs = self.bert(
+        outputs = self.encoder(
             input_ids,
             attention_mask=attention_mask,
             token_type_ids=token_type_ids,
@@ -92,10 +96,11 @@ class TokenClassificationModel(BertPreTrainedModel):
         )
     
     def save_pretrained(self, save_directory, is_main_process = True, state_dict = None, save_function = torch.save, push_to_hub = False, max_shard_size = "10GB", safe_serialization = False, **kwargs):
-        print(f"SAVING EPOCH to folder {save_directory}")
+        print(f"Saving model to folder {save_directory}")
         print("super.save_pretrained started...")
         super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
         print("super.save_pretrained done.")
+        print("Saving pickle of complete model...")
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
         torch.save(self.state_dict(), save_directory + "/pytorch_model.bin")
         print("pickle saving done.")
@@ -113,9 +118,6 @@ class TokenClassificationModel(BertPreTrainedModel):
           checkpoint = torch.load(pretrained_model_name_or_path + "/pytorch_model.bin", map_location='cpu')
           self.load_state_dict(checkpoint)    
           print("Done loading.")
-          #for i in range(5):
-          #  key = f'output_heads.{i}.classifier.weight'
-          #  print(f'{key} = {self.state_dict()[key]}')
 
     def export_task(self, task_head, task, task_checkpoint):
         numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
@@ -166,7 +168,7 @@ class TokenClassificationModel(BertPreTrainedModel):
         input_names = ["token_ids"] 
         output_names = ["sequence_output"]
         
-        torch.onnx.export(self.bert,
+        torch.onnx.export(self.encoder,
             inputs,
             checkpoint,
             export_params=True,
@@ -213,8 +215,9 @@ class TokenClassificationHead(nn.Module):
 
     def _init_weights(self):
         self.classifier.weight.data.normal_(mean=0.0, std=0.02)
+        # torch.nn.init.xavier_normal_(self.classifier.weight.data)
         if self.classifier.bias is not None:
-            self.classifier.bias.data.zero_()
+            self.classifier.bias.data.zero_()    
             
     def summarize(self, task_id):
         print(f"Task {self.task_id} with {self.num_labels} labels.")
