@@ -110,7 +110,8 @@ class TokenClassificationModel(PreTrainedModel):
         #  print(f'{key} = {self.state_dict()[key]}')
 
     def from_pretrained(self, pretrained_model_name_or_path, *model_args, **kwargs):
-        super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
+        # the line below is not needed. We initialize the weights from the pickle; the rest are default values
+        # super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
 
         # HF does not initialize our MTL linear layers, so we have to do it explicitly
         if(os.path.isdir(pretrained_model_name_or_path)):
