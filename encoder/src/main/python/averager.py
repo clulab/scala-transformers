@@ -19,7 +19,7 @@ import configuration as cf
 from task import Task
 from token_classifier import TokenClassificationModel
 from dual_data_collator import OurDataCollator
-from evaluation_metrics import evaluate_with_model
+from evaluation_metrics import evaluate_model
 
 # main function for averaging models coming from different checkpoints
 def main():
@@ -43,15 +43,10 @@ def main():
   #all_checkpoints = [('bert-base-cased-mtl/checkpoint-789516', 0.9775049530664692), ('bert-base-cased-mtl/checkpoint-751920', 0.9773593525256891), ('bert-base-cased-mtl/checkpoint-714324', 0.9770666005353906), ('bert-base-cased-mtl/checkpoint-639132', 0.976699004893387), ('bert-base-cased-mtl/checkpoint-676728', 0.9766412444593294)]
 
   # average the parameters in the top k models
-  avg_model = average_checkpoints(all_checkpoints, 5, config, tasks, tokenizer, "avg/avg_model", "avg/avg_model_export")
+  avg_model = average_checkpoints(all_checkpoints, 5, config, tasks, tokenizer, "avg", "avg_export")
 
   # evaluate the averaged model to be sure it works
-  ner_acc = evaluate_with_model(avg_model, tasks[0])
-  pos_acc = evaluate_with_model(avg_model, tasks[1])
-  chunk_acc = evaluate_with_model(avg_model, tasks[2])
-  deph_acc = evaluate_with_model(avg_model, tasks[3])
-  depl_acc = evaluate_with_model(avg_model, tasks[4])
-  macro_acc = (ner_acc['accuracy'] + pos_acc['accuracy'] + chunk_acc['accuracy'] + deph_acc['accuracy'] + depl_acc['accuracy'])/5
+  macro_acc = evaluate_model(avg_model, tasks)
   print(f'Dev macro accuracy for the averaged model: {macro_acc}')
 
 def evaluate_checkpoints(model, tasks):
@@ -59,7 +54,7 @@ def evaluate_checkpoints(model, tasks):
   best_checkpoint = ""
   all_checkpoints = [] # keeps track of scores for all checkpoints
 
-  base_dir = "bert-base-cased-mtl/"
+  base_dir = cf.model_name
   for it in os.scandir(base_dir):
     if it.is_dir():
       checkpoint = it
@@ -67,12 +62,7 @@ def evaluate_checkpoints(model, tasks):
       model.summarize_heads()
   
       # evaluate on validation (dev)
-      ner_acc = evaluate_with_model(model, tasks[0])
-      pos_acc = evaluate_with_model(model, tasks[1])
-      chunk_acc = evaluate_with_model(model, tasks[2])
-      deph_acc = evaluate_with_model(model, tasks[3])
-      depl_acc = evaluate_with_model(model, tasks[4])
-      macro_acc = (ner_acc['accuracy'] + pos_acc['accuracy'] + chunk_acc['accuracy'] + deph_acc['accuracy'] + depl_acc['accuracy'])/5
+      macro_acc = evaluate_model(model, tasks)
       print(f'Dev macro accuracy for checkpoint {checkpoint}: {macro_acc}')
   
       all_checkpoints.append((checkpoint.path, macro_acc))
@@ -88,11 +78,15 @@ def evaluate_checkpoints(model, tasks):
 def sort_func(cp):
   return cp[1]
 
-def average_checkpoints(all_checkpoints, k, config, tasks, tokenizer, path_to_save, path_to_export):
+def average_checkpoints(all_checkpoints, k, config, tasks, tokenizer, dir_to_save, dir_to_export):
   # sort in descending order of macro accuracy and keep top k
   all_checkpoints.sort(reverse=True, key=sort_func)
   checkpoints = all_checkpoints[0:k]
   print(f"The top {len(checkpoints)} checkpoints are: {checkpoints}")
+
+  base_dir = cf.model_name
+  path_to_save = base_dir + "/" + dir_to_save
+  path_to_export = base_dir + "/" + dir_to_export
 
   print(f"Loading main checkpoint[0] {checkpoints[0]}...")
   main_model = TokenClassificationModel(config, cf.transformer_name)
