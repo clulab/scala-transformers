@@ -36,7 +36,8 @@ batch_size = 2 # batch size of 8 works with both bert-large and bert-base
 weight_decay = 0.01
 
 # which transformer to use
-transformer_name = "bert-base-cased" # "bert-large-cased" # 'xlm-roberta-base' # 'distilbert-base-cased'
+# see this page for other options: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
+transformer_name = 'bert-base-cased' # 'bert-large-cased' # 'xlm-roberta-base' # 'distilbert-base-cased'
 model_name = f'{transformer_name.replace("/", "-")}-mtl' 
 
 # for dependency parsing, this dataset column indicates where the positions of the heads are stored

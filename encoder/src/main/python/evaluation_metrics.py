@@ -97,3 +97,12 @@ def evaluate_with_model(model, task):
     print(acc)
     return acc
 
+# evaluates the given model and returns macro accuracy on all tasks
+def evaluate_model(model, tasks):
+  ner_acc = evaluate_with_model(model, tasks[0])
+  pos_acc = evaluate_with_model(model, tasks[1])
+  chunk_acc = evaluate_with_model(model, tasks[2])
+  deph_acc = evaluate_with_model(model, tasks[3])
+  depl_acc = evaluate_with_model(model, tasks[4])
+  macro_acc = (ner_acc['accuracy'] + pos_acc['accuracy'] + chunk_acc['accuracy'] + deph_acc['accuracy'] + depl_acc['accuracy'])/5
+  return macro_acc
