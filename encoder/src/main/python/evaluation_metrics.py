@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 
 from datasets import Dataset
 
-from configuration import ignore_index, device
+from configuration import ignore_index
 
 from tqdm.notebook import tqdm
 

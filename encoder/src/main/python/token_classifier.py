@@ -5,7 +5,7 @@ import torch
 from torch import nn
 
 from transformers.modeling_outputs import TokenClassifierOutput
-from transformers import AutoConfig, AutoModel, PreTrainedModel
+from transformers import AutoModel, PreTrainedModel
 
 import os
 
