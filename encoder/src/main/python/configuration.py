@@ -32,12 +32,12 @@ ignore_index = -100
 
 # training settings
 epochs = 20
-batch_size = 2 # batch size of 8 works with both bert-large and bert-base
+batch_size = 8 # batch size of 8 works with both bert-large and bert-base
 weight_decay = 0.01
 
 # which transformer to use
 # see this page for other options: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
-transformer_name = 'bert-base-cased' # 'bert-large-cased' # 'xlm-roberta-base' # 'distilbert-base-cased'
+transformer_name = 'google/bert_uncased_L-4_H-512_A-8' # 'bert-base-cased' # 'bert-large-cased' # 'xlm-roberta-base' # 'distilbert-base-cased'
 model_name = f'{transformer_name.replace("/", "-")}-mtl' 
 
 # for dependency parsing, this dataset column indicates where the positions of the heads are stored
