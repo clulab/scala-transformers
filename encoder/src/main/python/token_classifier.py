@@ -133,6 +133,7 @@ class TokenClassificationModel(PreTrainedModel):
         os.makedirs(task_checkpoint, exist_ok = True)
 
         self.export_name(task_checkpoint + '/name', task.task_name)
+        self.export_dual(task_checkpoint + '/dual', task.dual_mode)
         
         lf = open(task_checkpoint + "/labels", "w")
         for label in labels:
@@ -157,6 +158,14 @@ class TokenClassificationModel(PreTrainedModel):
     def export_name(self, file_name, name):
       f = open(file_name, 'w')
       f.write(f'{name}\n')
+      f.close()
+
+    def export_dual(self, file_name, dual_mode):
+      f = open(file_name, 'w')
+      if(dual_mode):
+        f.write(f'1\n')
+      else:
+        f.write(f'0\n')
       f.close()
 
     def export_encoder(self, checkpoint, tokenizer, export_device):
