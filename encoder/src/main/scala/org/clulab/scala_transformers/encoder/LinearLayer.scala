@@ -12,6 +12,7 @@ import scala.io.{Codec, Source}
 /** Implements one linear layer */
 class LinearLayer(
   val name: String,
+  val dual: Boolean, 
   val weights: DenseMatrix[Float], // dimensions (hidden state size x labels size)
   val biasesOpt: Option[DenseVector[Float]], // column vector with length = labels size
   val labelsOpt: Option[Array[String]]
@@ -69,7 +70,7 @@ class LinearLayer(
 object LinearLayer {
   lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  def apply(name: String, modelDir: String): LinearLayer = {
+  def apply(name: String, dual: Boolean, modelDir: String): LinearLayer = {
     val weightsFileName = modelDir + "/weights"
     val  biasesFileName = modelDir + "/biases"
     val  labelsFileName = modelDir + "/labels"
@@ -95,7 +96,7 @@ object LinearLayer {
         }
         else None
 
-    new LinearLayer(name, weights, biasesOpt, labelsOpt)
+    new LinearLayer(name, dual, weights, biasesOpt, labelsOpt)
   }
 
   protected def loadWeights(fileName: String): DenseMatrix[Float] = {

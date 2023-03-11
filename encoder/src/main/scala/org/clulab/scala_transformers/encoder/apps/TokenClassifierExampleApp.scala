@@ -15,8 +15,11 @@ object TokenClassifierExampleApp extends App {
   val words = Array("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
   println(s"Words: ${words.mkString(", ")}")
   val allLabels = tokenClassifier.predict(words)
-  for (labels <- allLabels)
-    println(s"Labels: ${labels.mkString(", ")}")
+  for (labels <- allLabels) {
+    if(labels != null) {
+      println(s"Labels: ${labels.mkString(", ")}")
+    }
+  }
 
   /*
   val encoder = Encoder(new File("../encoder.onnx").getAbsolutePath().toString)

@@ -48,10 +48,13 @@ class TokenClassifier(
 
     // now generate token label predictions for each task
     val allLabels = tasks.map { task =>
-      val tokenLabels = task.predict(encOutput)
-      val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
-
-      wordLabels
+      if(task.dual == false) {
+        val tokenLabels = task.predict(encOutput)
+        val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+        wordLabels
+      } else {
+        null // TODO!
+      }
     }
 
     allLabels
@@ -71,7 +74,7 @@ object TokenClassifier {
     val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
     val tasks = taskDirs.map { taskDir =>
       logger.info(s"Loading task from directory $taskDir...")
-      LinearLayer(readLine(new File(s"$taskDir/name")), taskDir)
+      LinearLayer(readLine(new File(s"$taskDir/name")), readBoolean(new File(s"$taskDir/dual")), taskDir)
     }
 
     logger.info("Load complete.")
@@ -87,6 +90,11 @@ object TokenClassifier {
     finally {
       source.close()
     }
+  }
+
+  def readBoolean(file: File): Boolean = {
+    val s = readLine(file)
+    if (s == "1") true else false
   }
 
   def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
