@@ -66,10 +66,10 @@ if __name__ == "__main__":
     tokenizer = Tokenizer.get_pretrained()
     # the tasks to learn
     tasks = Task.mk_tasks("data/", tokenizer, [
-        ShortTaskDef("NER",       "conll-ner/", "train_small.txt",    "dev.txt",          "test.txt"),
-        ShortTaskDef("POS",             "pos/", "train_small.txt",    "dev.txt",          "test.txt"),
-        ShortTaskDef("Chunking",   "chunking/", "train_small.txt",    "test_small.txt",   "test_small.txt"),
-        ShortTaskDef("Deps Head",  "deps-wsj/", "train_small.heads",  "dev_small.heads",  "test_small.heads"),
-        ShortTaskDef("Deps Label", "deps-wsj/", "train_small.labels", "dev_small.labels", "test_small.labels", dual_mode = True)
+        ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
+        ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
+        ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"),
+        ShortTaskDef("Deps Head",  "deps-wsj/", "train.heads",  "dev.heads",  "test.heads"),
+        ShortTaskDef("Deps Label", "deps-wsj/", "train.labels", "dev.labels", "test.labels", dual_mode = True)
     ])
     OurTrainer(tokenizer).train(tasks)
