@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import configuration as cf
 import pandas as pd
 
+from configuration import configuration
 from datasets import Dataset
 from dual_data_collator import OurDataCollator
 from evaluation_metrics import compute_metrics
@@ -16,13 +16,13 @@ from transformers import AutoTokenizer, AutoConfig, TrainingArguments, Trainer
 class OurTrainer():
 
     def __init__(self, tokenizer: AutoTokenizer) -> None:
-        self.config = AutoConfig.from_pretrained(cf.transformer_name)
-        self.tokenizer = tokenizer
+        self.config: AutoConfig = AutoConfig.from_pretrained(configuration.transformer_name)
+        self.tokenizer: AutoTokenizer = tokenizer
 
     # main function for training the MTL classifier
     def train(self, tasks: list[Task]) -> None:
         # our own token classifier
-        model = TokenClassificationModel(self.config, cf.transformer_name).add_heads(tasks)
+        model = TokenClassificationModel(self.config, configuration.transformer_name).add_heads(tasks)
         model.summarize_heads()
 
         # create the formal train/validation/test HF dataset
@@ -35,16 +35,16 @@ class OurTrainer():
         # Evaluating the intermediate models in this MTL setting is tricky, so we do not do it
         # Instead, the evaluations are handled in averager.py, where tasks are individually evaluated
         training_args = TrainingArguments(
-            output_dir=cf.model_name,
+            output_dir=configuration.model_name,
             log_level='error',
-            num_train_epochs=cf.epochs + 1,
-            per_device_train_batch_size=cf.batch_size,
-            per_device_eval_batch_size=cf.batch_size,
+            num_train_epochs=configuration.epochs + 1,
+            per_device_train_batch_size=configuration.batch_size,
+            per_device_eval_batch_size=configuration.batch_size,
             save_strategy='epoch',
             #evaluation_strategy='epoch',
             #do_eval=True, 
-            weight_decay=cf.weight_decay,
-            use_mps_device = cf.use_mps_device
+            weight_decay=configuration.weight_decay,
+            use_mps_device = configuration.use_mps_device
         )
         
         trainer = Trainer(

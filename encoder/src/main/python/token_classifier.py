@@ -4,7 +4,7 @@
 import os
 import torch
 
-from configuration import device, transformer_name
+from configuration import config # device, transformer_name
 from task import Task
 from torch import nn
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
@@ -103,8 +103,8 @@ class TokenClassificationModel(PreTrainedModel):
             attentions = outputs.attentions
         )
     
-    def save_pretrained(
-        self, save_directory: str, is_main_process: bool = True, state_dict = None, save_function = torch.save,
+    def save_pretrained(self,
+        save_directory: str, is_main_process: bool = True, state_dict = None, save_function = torch.save,
         push_to_hub: bool = False, max_shard_size: str = "10GB", safe_serialization: bool = False, **kwargs
     ) -> None:
         print(f"Saving model to folder {save_directory}")
