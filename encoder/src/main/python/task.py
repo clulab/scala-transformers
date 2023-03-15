@@ -36,7 +36,10 @@ class ShortTaskDef:
         )
 
 class Task():
-    def __init__(self, task_id, task_name, train_file_name, dev_file_name, test_file_name, tokenizer, dual_mode = False):
+    def __init__(
+        self, task_id: int, task_name: str, train_file_name: str, dev_file_name: str,
+        test_file_name: str, tokenizer: AutoTokenizer, dual_mode: bool = False
+    ) -> None:
         self.task_id = task_id
         self.task_name = task_name
         self.dual_mode = dual_mode
