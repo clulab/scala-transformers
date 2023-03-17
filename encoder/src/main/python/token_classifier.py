@@ -4,18 +4,13 @@
 import os
 import torch
 
-from configuration import config # device, transformer_name
+from file_utils import FileUtils
+from none_filter import NoneFilter
+from parameters import parameters
 from task import Task
 from torch import nn
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
-
-class Filter():
-    def __init__(self, key) -> None:
-        self.key = key
-
-    def atOrNone(self, collection):
-        None if collection is None else collection[self.key]
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
 class TokenClassificationModel(PreTrainedModel):    
@@ -25,7 +20,6 @@ class TokenClassificationModel(PreTrainedModel):
         self.config = config
         self.output_heads = nn.ModuleDict() # these are initialized in add_heads
         self.training_mode = True
-        self.encoding = "UTF-8"
 
     def add_heads(self, tasks: list[Task]) -> "TokenClassificationModel":
         for task in tasks:
@@ -69,13 +63,13 @@ class TokenClassificationModel(PreTrainedModel):
         for unique_task_id in unique_task_ids:
             #TODO: How can this ids ever equal an id?
             task_id_filter = task_ids == unique_task_id
-            filter = Filter(task_id_filter)
+            none_filter = NoneFilter(task_id_filter)
             #print(f"sequence_output = {sequence_output}")
             #print(f"task_id_filter = {task_id_filter}")
             filtered_sequence_output = sequence_output[task_id_filter]
-            filtered_head_positions = filter.atOrNone(head_positions)
-            filtered_labels = filter.atOrNone(labels)
-            filtered_attention_mask = filter.atOrNone(attention_mask)
+            filtered_head_positions = none_filter.at(head_positions)
+            filtered_labels = none_filter.at(labels)
+            filtered_attention_mask = none_filter.at(attention_mask)
             #print(f"size of batch for task {unique_task_id} is: {len(filtered_sequence_output)}")
             #print(f"running forward for task {unique_task_id}")
             #print(f"Using task {self.output_heads[str(unique_task_id)].task_id}")
@@ -145,22 +139,22 @@ class TokenClassificationModel(PreTrainedModel):
 
         self.export_name(f"{task_checkpoint}/name", task.task_name)
         
-        with open(f"{task_checkpoint}/labels", "w", encoding=self.encoding) as lf:
+        with FileUtils.for_writing(f"{task_checkpoint}/labels") as file:
             for label in labels:
-                lf.write(f"{label}\n")
+                file.write(f"{label}\n")
         
-        with open(f"{task_checkpoint}/weights", "w", encoding=self.encoding) as wf:
-            wf.write(f"# {numpy_weights.shape[0]} {numpy_weights.shape[1]}\n")
+        with FileUtils.for_writing(f"{task_checkpoint}/weights") as file:
+            file.write(f"# {numpy_weights.shape[0]} {numpy_weights.shape[1]}\n")
             for x in numpy_weights:
                 for y in x:
-                    wf.write(f"{y} ")
-                wf.write("\n")
+                    file.write(f"{y} ")
+                file.write("\n")
         
-        with open(f"{task_checkpoint}/biases", "w", encoding=self.encoding) as bf:
-            bf.write(f"# {numpy_bias.shape[0]}\n")
+        with FileUtils.for_writing(f"{task_checkpoint}/biases") as file:
+            file.write(f"# {numpy_bias.shape[0]}\n")
             for x in numpy_bias:
-                bf.write(f"{x} ")
-            bf.write("\n")
+                file.write(f"{x} ")
+            file.write("\n")
     
     def export_name(self, file_name: str, name: str) -> None:
         with open(file_name, "w", encoding=self.encoding) as file:
@@ -187,8 +181,6 @@ class TokenClassificationModel(PreTrainedModel):
             opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
             dynamic_axes = {"token_ids": {1: "sent length"}}
         )
-    
-    # TODO think about string addition
 
     # exports model in a format friendly for ingestion on the JVM
     def export_model(self, tasks: list[Task], tokenizer: AutoTokenizer, checkpoint_dir: str) -> None:
@@ -206,7 +198,7 @@ class TokenClassificationModel(PreTrainedModel):
         # save the encoder as an ONNX model
         onnx_checkpoint = f"{checkpoint_dir}/encoder.onnx"
         self.export_encoder(onnx_checkpoint, tokenizer, export_device)
-        self.export_name(f"{checkpoint_dir}/encoder.name", transformer_name)
+        self.export_name(f"{checkpoint_dir}/encoder.name", parameters.transformer_name)
         
 
 class TokenClassificationHead(nn.Module):

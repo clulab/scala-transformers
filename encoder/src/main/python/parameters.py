@@ -6,7 +6,7 @@ import platform
 import random
 import torch 
 
-class Configuration:
+class Parameters:
     def __init__(self) -> None:
         # select device
         if torch.cuda.is_available():
@@ -43,5 +43,6 @@ class Configuration:
 
         # for dependency parsing, this dataset column indicates where the positions of the heads are stored
         self.HEAD_POSITIONS = "head_positions"
-
-configuration = Configuration()
+        self.encoding = "UTF-8"
+        
+parameters = Parameters()

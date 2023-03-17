@@ -1,12 +1,11 @@
 
-from configuration import config
+from parameters import parameters
 from transformers import AutoTokenizer
 
-class Tokenizer():
-
+class CluTokenizer:
     @classmethod
     def get_pretrained(cls) -> AutoTokenizer:
         # which transformer to use
-        print(f'Loading tokenizer named "{config.transformer_name}"...')
-        tokenizer = AutoTokenizer.from_pretrained(config.transformer_name, model_input_names=["input_ids", "token_type_ids", "attention_mask"])
+        print(f'Loading tokenizer named "{parameters.transformer_name}"...')
+        tokenizer = AutoTokenizer.from_pretrained(parameters.transformer_name, model_input_names=["input_ids", "token_type_ids", "attention_mask"])
         return tokenizer

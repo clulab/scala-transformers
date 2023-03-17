@@ -3,26 +3,25 @@
 
 import pandas as pd
 
-from configuration import configuration
 from datasets import Dataset
-from dual_data_collator import OurDataCollator
+from dual_data_collator import DualDataCollator
 from evaluation_metrics import compute_metrics
+from parameters import parameters
 from task import ShortTaskDef, Task
 from timer import Timer
 from token_classifier import TokenClassificationModel
-from tokenizer import Tokenizer
+from tokenizer import CluTokenizer
 from transformers import AutoTokenizer, AutoConfig, TrainingArguments, Trainer
 
-class OurTrainer():
-
+class CluTrainer:
     def __init__(self, tokenizer: AutoTokenizer) -> None:
-        self.config: AutoConfig = AutoConfig.from_pretrained(configuration.transformer_name)
+        self.config: AutoConfig = AutoConfig.from_pretrained(parameters.transformer_name)
         self.tokenizer: AutoTokenizer = tokenizer
 
     # main function for training the MTL classifier
     def train(self, tasks: list[Task]) -> None:
         # our own token classifier
-        model = TokenClassificationModel(self.config, configuration.transformer_name).add_heads(tasks)
+        model = TokenClassificationModel(self.config, parameters.transformer_name).add_heads(tasks)
         model.summarize_heads()
 
         # create the formal train/validation/test HF dataset
@@ -30,21 +29,21 @@ class OurTrainer():
         #validation_ds = Dataset.from_pandas(pd.concat([task.dev_df for task in tasks]))
         #test_ds = Dataset.from_pandas(pd.concat([task.test_df for task in tasks]))
 
-        data_collator = OurDataCollator(self.tokenizer)
+        data_collator = DualDataCollator(self.tokenizer)
 
         # Evaluating the intermediate models in this MTL setting is tricky, so we do not do it
         # Instead, the evaluations are handled in averager.py, where tasks are individually evaluated
         training_args = TrainingArguments(
-            output_dir=configuration.model_name,
+            output_dir=parameters.model_name,
             log_level='error',
-            num_train_epochs=configuration.epochs + 1,
-            per_device_train_batch_size=configuration.batch_size,
-            per_device_eval_batch_size=configuration.batch_size,
+            num_train_epochs=parameters.epochs + 1,
+            per_device_train_batch_size=parameters.batch_size,
+            per_device_eval_batch_size=parameters.batch_size,
             save_strategy='epoch',
             #evaluation_strategy='epoch',
             #do_eval=True, 
-            weight_decay=configuration.weight_decay,
-            use_mps_device = configuration.use_mps_device
+            weight_decay=parameters.weight_decay,
+            use_mps_device = parameters.use_mps_device
         )
         
         trainer = Trainer(
@@ -63,7 +62,7 @@ class OurTrainer():
 
 
 if __name__ == "__main__":
-    tokenizer = Tokenizer.get_pretrained()
+    tokenizer = CluTokenizer.get_pretrained()
     # the tasks to learn
     tasks = Task.mk_tasks("data/", tokenizer, [
         ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
@@ -72,4 +71,4 @@ if __name__ == "__main__":
         ShortTaskDef("Deps Head",  "deps-wsj/", "train.heads",  "dev.heads",  "test.heads"),
         ShortTaskDef("Deps Label", "deps-wsj/", "train.labels", "dev.labels", "test.labels", dual_mode=True)
     ])
-    OurTrainer(tokenizer).train(tasks)
+    CluTrainer(tokenizer).train(tasks)
