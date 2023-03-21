@@ -3,20 +3,20 @@
 
 import pandas as pd
 
+from basic_trainer import BasicTrainer
+from clu_tokenizer import CluTokenizer
 from datasets import Dataset
 from dual_data_collator import DualDataCollator
-from evaluation_metrics import compute_metrics
+from evaluator import compute_metrics
 from parameters import parameters
 from task import ShortTaskDef, Task
-from timer import Timer
+from clu_timer import CluTimer
 from token_classifier import TokenClassificationModel
-from tokenizer import CluTokenizer
 from transformers import AutoTokenizer, AutoConfig, TrainingArguments, Trainer
 
-class CluTrainer:
+class CluTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
-        self.config: AutoConfig = AutoConfig.from_pretrained(parameters.transformer_name)
-        self.tokenizer: AutoTokenizer = tokenizer
+        super().__init__(tokenizer)
 
     # main function for training the MTL classifier
     def train(self, tasks: list[Task]) -> None:
@@ -35,12 +35,12 @@ class CluTrainer:
         # Instead, the evaluations are handled in averager.py, where tasks are individually evaluated
         training_args = TrainingArguments(
             output_dir=parameters.model_name,
-            log_level='error',
+            log_level="error",
             num_train_epochs=parameters.epochs + 1,
             per_device_train_batch_size=parameters.batch_size,
             per_device_eval_batch_size=parameters.batch_size,
-            save_strategy='epoch',
-            #evaluation_strategy='epoch',
+            save_strategy="epoch",
+            #evaluation_strategy="epoch",
             #do_eval=True, 
             weight_decay=parameters.weight_decay,
             use_mps_device = parameters.use_mps_device
@@ -56,7 +56,7 @@ class CluTrainer:
             tokenizer=self.tokenizer
         )
         
-        Timer.time(
+        CluTimer.time(
             lambda: trainer.train()
         )
 

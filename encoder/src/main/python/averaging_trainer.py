@@ -3,12 +3,13 @@
 
 import os
 
+from basic_trainer import BasicTrainer
+from clu_tokenizer import CluTokenizer
 from dataclasses import dataclass
 from evaluator import Evaluator
 from parameters import parameters
 from task import ShortTaskDef, Task
 from token_classifier import TokenClassificationModel
-from tokenizer import CluTokenizer
 from transformers import AutoTokenizer, AutoConfig
 
 @dataclass
@@ -16,10 +17,9 @@ class Checkpoint:
     path: str
     acc: float
 
-class AveragingTrainer:
+class AveragingTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
-        self.config: AutoConfig = AutoConfig.from_pretrained(parameters.transformer_name)
-        self.tokenizer: AutoTokenizer = tokenizer
+        super().__init__(tokenizer)
 
     # main function for averaging models coming from different checkpoints
     def train(self, tasks: list[Task]) -> None:

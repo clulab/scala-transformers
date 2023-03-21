@@ -3,7 +3,7 @@ import time
 from datetime import timedelta
 from typing import Callable
 
-class Timer:
+class CluTimer:
     @classmethod
     def time(cls, func: Callable[[], None]) -> None:
         start_time = time.monotonic()

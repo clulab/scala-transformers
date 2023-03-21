@@ -5,6 +5,7 @@ import os
 import torch
 
 from file_utils import FileUtils
+from names import names
 from none_filter import NoneFilter
 from parameters import parameters
 from task import Task
@@ -164,7 +165,7 @@ class TokenClassificationModel(PreTrainedModel):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
-        token_ids = token_input["input_ids"].to(export_device) 
+        token_ids = token_input[names.INPUT_IDS].to(export_device) 
         
         inputs = (token_ids) 
         input_names = ["token_ids"] 

@@ -1,15 +1,16 @@
 import torch
 
+from names import names
 from parameters import parameters
-from transformers import DataCollatorForTokenClassification
+from transformers import AutoTokenizer, DataCollatorForTokenClassification
 
-# A custom data collator that creates correct batches for all tasks by including the cf.HEAD_POSITIONS column as well
+# A custom data collator that creates correct batches for all tasks by including the names.HEAD_POSITIONS column as well
 class DualDataCollator(DataCollatorForTokenClassification):
-    def __init__(self) -> None:
-        self.input_ids = "input_ids"
+    def __init__(self, tokenizer: AutoTokenizer) -> None:
+        super().__init__(tokenizer)
 
     def make_head_features(self, features) -> list[dict[str, "feature"]]:
-        return [{self.input_ids: feature[parameters.HEAD_POSITIONS]} for feature in features]
+        return [{names.INPUT_IDS: feature[names.HEAD_POSITIONS]} for feature in features]
 
     def torch_call(self, features):
         label_name = "label" if "label" in features[0].keys() else "labels"
@@ -33,13 +34,13 @@ class DualDataCollator(DataCollatorForTokenClassification):
             # Conversion to tensors will fail if we have labels as they are not of the same length yet.
             return_tensors="pt" if labels is None else None
         )
-        #print(f"batched head positions: {batch_heads[input_ids]}")
-        batch[parameters.HEAD_POSITIONS] = batch_heads[self.input_ids]
+        #print(f"batched head positions: {batch_heads[names.INPUT_IDS]}")
+        batch[names.HEAD_POSITIONS] = batch_heads[names.INPUT_IDS]
 
         if labels is None:
             return batch
 
-        sequence_length = torch.tensor(batch[self.input_ids]).shape[1]
+        sequence_length = torch.tensor(batch[names.INPUT_IDS]).shape[1]
         padding_side = self.tokenizer.padding_side
         if padding_side == "right":
             batch[label_name] = [

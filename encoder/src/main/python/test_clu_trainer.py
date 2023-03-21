@@ -1,6 +1,6 @@
+from clu_tokenizer import CluTokenizer
+from clu_trainer import CluTrainer
 from task import ShortTaskDef, Task
-from tokenizer import CluTokenizer
-from trainer import CluTrainer
 
 def test_true() -> None:
     assert True == True

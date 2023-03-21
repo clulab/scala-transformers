@@ -3,12 +3,11 @@
 
 import numpy as np
 import torch
-from sklearn.metrics import accuracy_score
 
 from datasets import Dataset
-
-from configuration import ignore_index
-
+from names import names
+from parameters import parameters
+from sklearn.metrics import accuracy_score
 from tqdm.notebook import tqdm
 
 def compute_metrics(eval_pred):
@@ -23,24 +22,24 @@ def compute_metrics(eval_pred):
     batch_size, seq_len = pred_ids.shape
     for i in range(batch_size):
         for j in range(seq_len):
-            if label_ids[i, j] != ignore_index:
+            if label_ids[i, j] != parameters.ignore_index:
                 y_true.append(label_ids[i][j]) #index_to_label[label_ids[i][j]])
                 y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
     # return computed metrics
-    return {'accuracy': accuracy_score(y_true, y_pred)}
+    return {"accuracy": accuracy_score(y_true, y_pred)}
 
 def data_to_tensor(dict): 
     predict_dict = {}
     for key in dict:
-        if key in {'input_ids', 'head_positions'}:
+        if key in {names.INPUT_IDS, "head_positions"}:
             predict_dict[key] = torch.IntTensor(dict[key]).view(1, len(dict[key]))
             # torch.tensor(torch.IntTensor(dict[key])).view(1, len(dict[key]))
-        elif key in {'task_ids'}:
+        elif key in {"task_ids"}:
             predict_dict[key] = torch.tensor(dict[key]).view(1)
     return predict_dict
 
 def labels_to_tensor(dict): 
-    return torch.tensor(dict['labels'])
+    return torch.tensor(dict["labels"])
 
 def predict(model, dataset):
     model.eval()
@@ -50,11 +49,11 @@ def predict(model, dataset):
     with torch.no_grad():
         for _, data in tqdm(enumerate(dataset, 0)):
             predict_dict = data_to_tensor(data)
-            #print('INPUT:')
+            #print("INPUT:")
             #print(predict_dict)
             model_output = model(**predict_dict)
             logits = model_output.logits[0]
-            #print('PREDICTIONS:')
+            #print("PREDICTIONS:")
             #print(logits)
             #print(logits.size())
             pred_labels = torch.argmax(logits, axis = -1)
@@ -81,14 +80,14 @@ def evaluation_classification_report(model, task, name, useTest=False):
     correct = 0
     total = 0
     for i in range(len(golds)):
-        if golds[i] != ignore_index:
+        if golds[i] != parameters.ignore_index:
             total = total + 1
             if golds[i] == predictions[i]:
                 correct = correct + 1
     
     acc = correct / total
     print(f"correct = {correct}, total = {total}")
-    return {'accuracy': acc}
+    return {"accuracy": acc}
     
 # compute accuracy on dev or test partition using the given model
 def evaluate_with_model(model, task):
@@ -99,10 +98,6 @@ def evaluate_with_model(model, task):
 
 # evaluates the given model and returns macro accuracy on all tasks
 def evaluate_model(model, tasks):
-  ner_acc = evaluate_with_model(model, tasks[0])
-  pos_acc = evaluate_with_model(model, tasks[1])
-  chunk_acc = evaluate_with_model(model, tasks[2])
-  deph_acc = evaluate_with_model(model, tasks[3])
-  depl_acc = evaluate_with_model(model, tasks[4])
-  macro_acc = (ner_acc['accuracy'] + pos_acc['accuracy'] + chunk_acc['accuracy'] + deph_acc['accuracy'] + depl_acc['accuracy'])/5
-  return macro_acc
+    accuracies = [evaluate_with_model(model, task)["accuracy"] for task in tasks]
+    macro_acc = sum(accuracies) / len(accuracies)
+    return macro_acc
