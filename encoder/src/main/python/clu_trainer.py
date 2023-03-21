@@ -12,7 +12,7 @@ from parameters import parameters
 from task import ShortTaskDef, Task
 from clu_timer import CluTimer
 from token_classifier import TokenClassificationModel
-from transformers import AutoTokenizer, AutoConfig, TrainingArguments, Trainer
+from transformers import AutoTokenizer, TrainingArguments, Trainer
 
 class CluTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:

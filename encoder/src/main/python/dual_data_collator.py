@@ -1,7 +1,6 @@
 import torch
 
 from names import names
-from parameters import parameters
 from transformers import AutoTokenizer, DataCollatorForTokenClassification
 
 # A custom data collator that creates correct batches for all tasks by including the names.HEAD_POSITIONS column as well

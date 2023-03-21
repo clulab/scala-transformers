@@ -6,10 +6,10 @@ import torch
 
 from file_utils import FileUtils
 from names import names
-from none_filter import NoneFilter
+from tensor_filter import TensorFilter
 from parameters import parameters
 from task import Task
-from torch import nn
+from torch import nn, Tensor
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
 
@@ -17,10 +17,10 @@ from transformers.modeling_outputs import TokenClassifierOutput
 class TokenClassificationModel(PreTrainedModel):    
     def __init__(self, config: AutoConfig, transformer_name: str) -> None:
         super().__init__(config)
-        self.encoder = AutoModel.from_pretrained(transformer_name, config = config) 
-        self.config = config
-        self.output_heads = nn.ModuleDict() # these are initialized in add_heads
-        self.training_mode = True
+        self.encoder: AutoModel = AutoModel.from_pretrained(transformer_name, config = config) 
+        self.config: AutoConfig = config
+        self.output_heads: nn.ModuleDict = nn.ModuleDict() # these are initialized in add_heads
+        self.training_mode: bool = True
 
     def add_heads(self, tasks: list[Task]) -> "TokenClassificationModel":
         for task in tasks:
@@ -40,7 +40,10 @@ class TokenClassificationModel(PreTrainedModel):
         for head in self.output_heads.values():
             head._init_weights()
     
-    def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, labels=None, head_positions=None, task_ids=None, **kwargs):
+    def forward(self,
+        input_ids: Tensor = None, attention_mask: Tensor = None, token_type_ids: Tensor = None,
+        labels: Tensor = None, head_positions: Tensor = None, task_ids: Tensor = None, **kwargs: str
+    ) -> TokenClassifierOutput:
         outputs = self.encoder(
             input_ids,
             attention_mask=attention_mask,
@@ -62,15 +65,13 @@ class TokenClassificationModel(PreTrainedModel):
         logits = None
         loss_list = []
         for unique_task_id in unique_task_ids:
-            #TODO: How can this ids ever equal an id?
-            task_id_filter = task_ids == unique_task_id
-            none_filter = NoneFilter(task_id_filter)
+            task_id_filter = TensorFilter(task_ids == unique_task_id)
             #print(f"sequence_output = {sequence_output}")
             #print(f"task_id_filter = {task_id_filter}")
-            filtered_sequence_output = sequence_output[task_id_filter]
-            filtered_head_positions = none_filter.at(head_positions)
-            filtered_labels = none_filter.at(labels)
-            filtered_attention_mask = none_filter.at(attention_mask)
+            filtered_sequence_output = task_id_filter.filter(sequence_output)
+            filtered_head_positions = task_id_filter.filter(head_positions)
+            filtered_labels = task_id_filter.filter(labels)
+            filtered_attention_mask = task_id_filter.filter(attention_mask)
             #print(f"size of batch for task {unique_task_id} is: {len(filtered_sequence_output)}")
             #print(f"running forward for task {unique_task_id}")
             #print(f"Using task {self.output_heads[str(unique_task_id)].task_id}")
@@ -83,7 +84,7 @@ class TokenClassificationModel(PreTrainedModel):
             )
             #print(f"done forward for task {unique_task_id}")
             if filtered_labels is not None:
-                loss_list.append(task_loss)
+                loss_list.append(task_loss) #lost_list is empty, so loss becomes empty
                 
         loss = None if len(loss_list) == 0 else torch.stack(loss_list)
         #print("batch done")
@@ -92,15 +93,15 @@ class TokenClassificationModel(PreTrainedModel):
         # logits are only used for eval, so we don't save them in training (different task dimensions confuse HF) 
         # at testing time we run one task at a time, so we need to save them then 
         return TokenClassifierOutput(
-            loss = None if labels is None else loss.mean(),
-            logits = None if self.training_mode else logits,
-            hidden_states = outputs.hidden_states,
-            attentions = outputs.attentions
+            loss=None if labels is None else loss.mean(),
+            logits=None if self.training_mode else logits,
+            hidden_states=outputs.hidden_states,
+            attentions=outputs.attentions
         )
     
     def save_pretrained(self,
-        save_directory: str, is_main_process: bool = True, state_dict = None, save_function = torch.save,
-        push_to_hub: bool = False, max_shard_size: str = "10GB", safe_serialization: bool = False, **kwargs
+        save_directory: str, is_main_process: bool = True, state_dict:  Optional[dict] = None, save_function: Callable = torch.save,
+        push_to_hub: bool = False, max_shard_size: str = "10GB", safe_serialization: bool = False, **kwargs: str
     ) -> None:
         print(f"Saving model to folder {save_directory}")
         print("super.save_pretrained started...")
