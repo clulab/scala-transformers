@@ -36,7 +36,7 @@ class DataWrangler:
 
     # map word-level head positions to subword tokens
     @classmethod
-    def align_head_positions(cls, word_ids: list[int], word_heads) -> list[int]:
+    def align_head_positions(cls, word_ids: list[int], word_heads: list[int]) -> list[int]:
         # map from word positions to first-in-word token positions 
         #print(f"word_ids = {word_ids}")
         #print(f"word_heads = {word_heads}")
@@ -73,10 +73,6 @@ class DataWrangler:
             previous_word_id = word_id
 
         return token_head_positions
-
-    @classmethod
-    def make_empty_list(cls, length: int, value: int) -> list[int]:
-        return [value] * length
                 
     # build a sorted list of labels in the dataset            
     @classmethod
@@ -136,7 +132,7 @@ class DataWrangler:
                     if token_head_positions != None:
                         data[names.HEAD_POSITIONS].append(token_head_positions)
                     else:
-                        data[names.HEAD_POSITIONS].append(DataWrangler.make_empty_list(len(word_ids), parameters.ignore_index))
+                        data[names.HEAD_POSITIONS].append([parameters.ignore_index] * len(word_ids))
                     data["task_ids"].append(task_id)
 
                     #if task_id == 4:
