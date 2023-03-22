@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import numpy as np
 import pandas as pd
 
 from basic_trainer import BasicTrainer
+from clu_timer import CluTimer
 from clu_tokenizer import CluTokenizer
 from datasets import Dataset
 from dual_data_collator import DualDataCollator
-from evaluator import compute_metrics
 from parameters import parameters
 from task import ShortTaskDef, Task
-from clu_timer import CluTimer
+from sklearn.metrics import accuracy_score
 from token_classifier import TokenClassificationModel
-from transformers import AutoTokenizer, TrainingArguments, Trainer
+from transformers import AutoTokenizer, EvalPrediction, TrainingArguments, Trainer
 
 class CluTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
@@ -50,7 +51,7 @@ class CluTrainer(BasicTrainer):
             model=model,
             args=training_args,
             data_collator=data_collator,
-            compute_metrics=compute_metrics, # TODO this had been commented out
+            compute_metrics=lambda eval_pred: self.compute_metrics(eval_pred), # TODO this had been commented out
             train_dataset=train_ds,
             #eval_dataset=validation_ds,
             tokenizer=self.tokenizer
@@ -59,6 +60,25 @@ class CluTrainer(BasicTrainer):
         CluTimer.time(
             lambda: trainer.train()
         )
+
+    def compute_metrics(self, eval_pred: EvalPrediction) -> dict[str, float]:
+        #print("GOLDS: ", eval_pred.label_ids)
+        #print("PREDS: ", eval_pred.predictions)
+        # gold labels
+        label_ids = eval_pred.label_ids
+        # predictions
+        pred_ids = np.argmax(eval_pred.predictions, axis=-1)
+        # collect gold and predicted labels, ignoring ignore_index label
+        y_true, y_pred = [], []
+        batch_size, seq_len = pred_ids.shape
+        for i in range(batch_size):
+            for j in range(seq_len):
+                if label_ids[i, j] != parameters.ignore_index:
+                    y_true.append(label_ids[i][j]) #index_to_label[label_ids[i][j]])
+                    y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
+        # return computed metrics
+        result = accuracy_score(y_true, y_pred) # TODO remove
+        return {"accuracy": accuracy_score(y_true, y_pred)}
 
 
 if __name__ == "__main__":

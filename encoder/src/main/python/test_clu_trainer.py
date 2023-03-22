@@ -19,3 +19,7 @@ def test_trainer() -> None:
     ])
     CluTrainer(tokenizer).train(tasks)
     assert 42 == 42
+
+
+if __name__ == "__main__":
+    test_trainer()
