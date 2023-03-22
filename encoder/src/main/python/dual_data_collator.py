@@ -12,7 +12,7 @@ class DualDataCollator(DataCollatorForTokenClassification):
         return [{names.INPUT_IDS: feature[names.HEAD_POSITIONS]} for feature in features]
 
     def torch_call(self, features: dict[str, object]) -> dict[str, object]:
-        label_name = "label" if "label" in features[0].keys() else "labels"
+        label_name = "label" if "label" in features[0].keys() else names.LABELS
         labels = [feature[label_name] for feature in features] if label_name in features[0].keys() else None
 
         batch = self.tokenizer.pad(

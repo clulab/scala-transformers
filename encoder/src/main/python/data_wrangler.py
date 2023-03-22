@@ -113,7 +113,7 @@ class DataWrangler:
     @classmethod
     def read_dataframe(cls, filename: str, label_to_index: dict[str, int], task_id: int, tokenizer: AutoTokenizer) -> pd.DataFrame:
         # now build the actual dataframe for this dataset
-        data = {"words": [], "str_labels": [], names.INPUT_IDS: [], "word_ids": [], "labels": [], names.HEAD_POSITIONS: [], "task_ids": []}
+        data = {"words": [], "str_labels": [], names.INPUT_IDS: [], "word_ids": [], names.LABELS: [], names.HEAD_POSITIONS: [], names.TASK_IDS: []}
         
         def add_sentence(sentence: Sentence) -> None:           
             data["words"].append(sentence.words)
@@ -129,19 +129,19 @@ class DataWrangler:
             data["word_ids"].append(word_ids)
             
             # map labels to the first token in each word
-            token_labels = DataWrangler.align_labels(word_ids, sentence.labels, label_to_index)
+            token_labels = cls.align_labels(word_ids, sentence.labels, label_to_index)
             assert len(token_labels) == len(token_ids)
-            data["labels"].append(token_labels)
+            data[names.LABELS].append(token_labels)
 
             # if present, map head offsets to the first token in each word
             if len(sentence.head_positions) > 0:
-                token_head_positions = DataWrangler.align_head_positions(word_ids, sentence.head_positions)
+                token_head_positions = cls.align_head_positions(word_ids, sentence.head_positions)
             else:
                 token_head_positions = [parameters.ignore_index] * len(word_ids)
             assert len(token_head_positions) == len(token_ids)            
             data[names.HEAD_POSITIONS].append(token_head_positions)
             
-            data["task_ids"].append(task_id)
+            data[names.TASK_IDS].append(task_id)
 
             #if task_id == 4:
             #  print(f"sent_words = {sentence.words}")

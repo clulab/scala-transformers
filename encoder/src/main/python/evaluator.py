@@ -21,12 +21,12 @@ class Evaluator:
             if key in {names.INPUT_IDS, "head_positions"}:
                 predict_dict[key] = IntTensor(dict[key]).view(1, len(dict[key]))
                 # torch.tensor(IntTensor(dict[key])).view(1, len(dict[key]))
-            elif key in {"task_ids"}:
+            elif key in {names.TASKS_IDS}:
                 predict_dict[key] = torch.tensor(dict[key]).view(1)
         return predict_dict
 
     def labels_to_tensor(self, dict: dict[str, Tensor]) -> Tensor: 
-        return torch.tensor(dict["labels"])
+        return torch.tensor(dict[names.LABELS])
 
     def predict(self, dataset: Dataset) -> tuple[list[float], list[float]]:
         self.model.eval()

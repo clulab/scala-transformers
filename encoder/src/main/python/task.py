@@ -45,8 +45,8 @@ class Task:
         self.dual_mode: bool = long_task_def.dual_mode
         # we need an index of labels first
         self.labels: list[str] = DataWrangler.read_label_set(long_task_def.train_file_name)
-        self.index_to_label: dict[int, str] = {i:t for i,t in enumerate(self.labels)} 
-        self.label_to_index: dict[str, int] = {t:i for i,t in enumerate(self.labels)} 
+        self.index_to_label: dict[int, str] = {i: t for i,t in enumerate(self.labels)} 
+        self.label_to_index: dict[str, int] = {t: i for i,t in enumerate(self.labels)} 
         self.num_labels: int = len(self.index_to_label)
         # create data frames for the datasets
         self.train_df: pd.DataFrame = DataWrangler.read_dataframe(long_task_def.train_file_name, self.label_to_index, self.task_id, long_task_def.tokenizer)
