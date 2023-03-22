@@ -12,6 +12,7 @@ from task import Task
 from torch import nn, Tensor
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
+from typing import Callable, Optional, Union
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
 class TokenClassificationModel(PreTrainedModel):    

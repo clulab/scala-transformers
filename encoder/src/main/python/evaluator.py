@@ -8,9 +8,13 @@ from datasets import Dataset
 from names import names
 from parameters import parameters
 from sklearn.metrics import accuracy_score
+from task import Task
+from token_classifier import TokenClassificationModel
+from torch import IntTensor, Tensor
 from tqdm.notebook import tqdm
+from transformers import EvalPrediction
 
-def compute_metrics(eval_pred):
+def compute_metrics(eval_pred: EvalPrediction) -> dict[str, float]:
     #print("GOLDS: ", eval_pred.label_ids)
     #print("PREDS: ", eval_pred.predictions)
     # gold labels
@@ -26,22 +30,23 @@ def compute_metrics(eval_pred):
                 y_true.append(label_ids[i][j]) #index_to_label[label_ids[i][j]])
                 y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
     # return computed metrics
+    result = accuracy_score(y_true, y_pred) # TODO remove
     return {"accuracy": accuracy_score(y_true, y_pred)}
 
-def data_to_tensor(dict): 
+def data_to_tensor(dict: dict[str, int]) -> IntTensor: 
     predict_dict = {}
     for key in dict:
         if key in {names.INPUT_IDS, "head_positions"}:
-            predict_dict[key] = torch.IntTensor(dict[key]).view(1, len(dict[key]))
-            # torch.tensor(torch.IntTensor(dict[key])).view(1, len(dict[key]))
+            predict_dict[key] = IntTensor(dict[key]).view(1, len(dict[key]))
+            # torch.tensor(IntTensor(dict[key])).view(1, len(dict[key]))
         elif key in {"task_ids"}:
             predict_dict[key] = torch.tensor(dict[key]).view(1)
     return predict_dict
 
-def labels_to_tensor(dict): 
+def labels_to_tensor(dict: dict[str, Tensor]) -> Tensor: 
     return torch.tensor(dict["labels"])
 
-def predict(model, dataset):
+def predict(model: TokenClassificationModel, dataset: Dataset) -> tuple[list[float], list[float]]:
     model.eval()
     model.training_mode = False
     predictions = []
@@ -67,7 +72,7 @@ def predict(model, dataset):
     return (golds, predictions)
 
 # compute accuracy using the model directly
-def evaluation_classification_report(model, task, name, useTest=False):
+def evaluation_classification_report(model: TokenClassificationModel, task: Task, name: str, useTest: bool = False) -> dict[str, float]:
     print(f"Classification report (useTest = {useTest}) for task {name}:")
     num_labels = task.num_labels
     df = task.dev_df if useTest == False else task.test_df
@@ -90,14 +95,14 @@ def evaluation_classification_report(model, task, name, useTest=False):
     return {"accuracy": acc}
     
 # compute accuracy on dev or test partition using the given model
-def evaluate_with_model(model, task):
+def evaluate_with_model(model: TokenClassificationModel, task: Task) -> float:
     print(f"Evaluating on the validation dataset for task {task.task_name}:")
     acc = evaluation_classification_report(model, task, task.task_name, useTest = False)
     print(acc)
     return acc
 
 # evaluates the given model and returns macro accuracy on all tasks
-def evaluate_model(model, tasks):
+def evaluate_model(model: TokenClassificationModel, tasks: list[Task]) -> float:
     accuracies = [evaluate_with_model(model, task)["accuracy"] for task in tasks]
     macro_acc = sum(accuracies) / len(accuracies)
     return macro_acc

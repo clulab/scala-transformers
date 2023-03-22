@@ -8,10 +8,10 @@ class DualDataCollator(DataCollatorForTokenClassification):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
         super().__init__(tokenizer)
 
-    def make_head_features(self, features) -> list[dict[str, "feature"]]:
+    def make_head_features(self, features: dict[str, object]) -> list[dict[str, object]]:
         return [{names.INPUT_IDS: feature[names.HEAD_POSITIONS]} for feature in features]
 
-    def torch_call(self, features):
+    def torch_call(self, features: dict[str, object]) -> dict[str, object]:
         label_name = "label" if "label" in features[0].keys() else "labels"
         labels = [feature[label_name] for feature in features] if label_name in features[0].keys() else None
 

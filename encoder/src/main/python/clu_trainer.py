@@ -50,7 +50,7 @@ class CluTrainer(BasicTrainer):
             model=model,
             args=training_args,
             data_collator=data_collator,
-            #compute_metrics=compute_metrics,
+            compute_metrics=compute_metrics, # TODO this had been commented out
             train_dataset=train_ds,
             #eval_dataset=validation_ds,
             tokenizer=self.tokenizer
