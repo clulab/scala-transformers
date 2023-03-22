@@ -8,9 +8,28 @@ from names import names
 from parameters import parameters
 from tqdm.notebook import tqdm
 from transformers import AutoTokenizer
+from typing import Union
 
 # enable tqdm in pandas
 # tqdm.pandas()
+
+
+class Sentence:
+    def __init__(self) -> None:
+        self.words = []
+        self.labels = [] 
+        self.head_positions = []
+
+    def clear(self) -> None:
+        self.words.clear
+        self.labels.clear
+        self.head_positions.clear
+
+    def add_line(self, word: str, label: str, head_position: Union[int, None]) -> None:
+        self.words.append(word)
+        self.labels.append(label)
+        if head_position is not None:
+            self.head_positions.append(head_position)
 
 class DataWrangler:
     # map labels to the first token in each word
@@ -95,55 +114,52 @@ class DataWrangler:
     def read_dataframe(cls, filename: str, label_to_index: dict[str, int], task_id: int, tokenizer: AutoTokenizer) -> pd.DataFrame:
         # now build the actual dataframe for this dataset
         data = {"words": [], "str_labels": [], names.INPUT_IDS: [], "word_ids": [], "labels": [], names.HEAD_POSITIONS: [], "task_ids": []}
-        with FileUtils.for_reading(filename) as file:
-            sent_words = []
-            sent_labels = [] 
-            head_positions = []
+        
+        def add_sentence(sentence: Sentence) -> None:           
+            data["words"].append(sentence.words)
+            data["str_labels"].append(sentence.labels)
 
+            # tokenize each sentence
+            token_input = tokenizer(sentence.words, is_split_into_words=True)  
+            token_ids = token_input[names.INPUT_IDS]
+            data[names.INPUT_IDS].append(token_ids)
+
+            word_ids = token_input.word_ids(batch_index=0)
+            assert len(word_ids) == len(token_ids)
+            data["word_ids"].append(word_ids)
+            
+            # map labels to the first token in each word
+            token_labels = DataWrangler.align_labels(word_ids, sentence.labels, label_to_index)
+            assert len(token_labels) == len(token_ids)
+            data["labels"].append(token_labels)
+
+            # if present, map head offsets to the first token in each word
+            if len(sentence.head_positions) > 0:
+                token_head_positions = DataWrangler.align_head_positions(word_ids, sentence.head_positions)
+            else:
+                token_head_positions = [parameters.ignore_index] * len(word_ids)
+            assert len(token_head_positions) == len(token_ids)            
+            data[names.HEAD_POSITIONS].append(token_head_positions)
+            
+            data["task_ids"].append(task_id)
+
+            #if task_id == 4:
+            #  print(f"sent_words = {sentence.words}")
+            #  print(f"input_ids = {token_ids}")
+            #  print(f"word_ids = {word_ids}")
+            #  print(f"head_positions = {sentence.head_positions}")
+            #  print(f"token_head_positions = {token_head_positions}")                  
+        
+        with FileUtils.for_reading(filename) as file:
+            sentence = Sentence()
             for line in tqdm(file):
                 tokens = line.strip().split()
                 if tokens:
-                    sent_words.append(tokens[0]) # tokens 
-                    sent_labels.append(tokens[1]) # labels
-                    if len(tokens) > 2:
-                        head_positions.append(int(tokens[2])) # absolute position of head token 
+                    word = tokens[0] # tokens
+                    label = tokens[1] # labels
+                    head_position = int(tokens[2]) if len(tokens) > 2 else None
+                    sentence.add_line(word, label, head_position)
                 else:
-                    data["words"].append(sent_words)
-                    data["str_labels"].append(sent_labels)
-                    
-                    # tokenize each sentence
-                    token_input = tokenizer(sent_words, is_split_into_words=True)  
-                    token_ids = token_input[names.INPUT_IDS]
-                    word_ids = token_input.word_ids(batch_index=0)
-                    assert len(word_ids) == len(token_ids)
-                    
-                    # map labels to the first token in each word
-                    token_labels = DataWrangler.align_labels(word_ids, sent_labels, label_to_index)
-                    assert len(token_labels) == len(token_ids)
-
-                    # if present, map head offsets to the first token in each word
-                    token_head_positions = DataWrangler.align_head_positions(word_ids, head_positions) if len(head_positions) > 0 else None
-                    if token_head_positions != None:
-                        assert len(token_head_positions) == len(token_ids)
-                    
-                    data[names.INPUT_IDS].append(token_ids)
-                    data["word_ids"].append(word_ids)
-                    data["labels"].append(token_labels)
-                    if token_head_positions != None:
-                        data[names.HEAD_POSITIONS].append(token_head_positions)
-                    else:
-                        data[names.HEAD_POSITIONS].append([parameters.ignore_index] * len(word_ids))
-                    data["task_ids"].append(task_id)
-
-                    #if task_id == 4:
-                    #  print(f"sent_words = {sent_words}")
-                    #  print(f"input_ids = {token_ids}")
-                    #  print(f"word_ids = {word_ids}")
-                    #  print(f"head_positions = {head_positions}")
-                    #  print(f"token_head_positions = {token_head_positions}")                  
-
-                    sent_words = []
-                    sent_labels = [] 
-                    head_positions = []
-
+                    add_sentence(sentence)
+                    sentence.clear()
         return pd.DataFrame(data)
