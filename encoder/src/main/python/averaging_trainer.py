@@ -15,7 +15,7 @@ from transformers import AutoTokenizer, AutoConfig
 @dataclass
 class Checkpoint:
     path: str
-    acc: float
+    accuracy: float
 
 class AveragingTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
@@ -34,8 +34,8 @@ class AveragingTrainer(BasicTrainer):
         avg_model = self.average_checkpoints(all_checkpoints, 5, self.config, tasks, tokenizer, "avg", "avg_export")
 
         # evaluate the averaged model to be sure it works
-        macro_acc = self.evaluate_model(avg_model, tasks)
-        print(f"Dev macro accuracy for the averaged model: {macro_acc}")
+        macro_accuracy = self.evaluate_model(avg_model, tasks)
+        print(f"Dev macro accuracy for the averaged model: {macro_accuracy}")
 
     def evaluate_checkpoints(self, model: TokenClassificationModel, tasks: list[Task]) -> list[Checkpoint]:
         best_checkpoint = Checkpoint("", 0)
@@ -47,15 +47,15 @@ class AveragingTrainer(BasicTrainer):
             model.summarize_heads()
             
             # evaluate on validation (dev)
-            macro_acc = Evaluator.evaluate_model(model, tasks)
-            print(f"Dev macro accuracy for checkpoint {directory}: {macro_acc}")
+            macro_accuracy = Evaluator.evaluate_model(model, tasks)
+            print(f"Dev macro accuracy for checkpoint {directory}: {macro_accuracy}")
             
-            all_checkpoints.append(Checkpoint(directory.path, macro_acc))
+            all_checkpoints.append(Checkpoint(directory.path, macro_accuracy))
             print(f"Current results for all checkpoints: {all_checkpoints}")
 
-            if macro_acc > best_checkpoint.acc:
-                best_checkpoint = Checkpoint(directory.path, macro_acc)
-                print(f"Best checkpoint is {best_checkpoint.path} with a macro accuracy of {best_checkpoint.acc}\n\n")
+            if macro_accuracy > best_checkpoint.accuracy:
+                best_checkpoint = Checkpoint(directory.path, macro_accuracy)
+                print(f"Best checkpoint is {best_checkpoint.path} with a macro accuracy of {best_checkpoint.accuracy}\n\n")
         
         return all_checkpoints
 
@@ -70,7 +70,7 @@ class AveragingTrainer(BasicTrainer):
         tokenizer: AutoTokenizer, dir_to_save: str, dir_to_export: str
     ) -> TokenClassificationModel:
         # sort in descending order of macro accuracy and keep top k
-        all_checkpoints.sort(reverse=True, key=lambda checkpoint: checkpoint.acc)
+        all_checkpoints.sort(reverse=True, key=lambda checkpoint: checkpoint.accuracy)
         checkpoints = all_checkpoints[0:k]
         print(f"The top {len(checkpoints)} checkpoints are: {checkpoints}")
 
