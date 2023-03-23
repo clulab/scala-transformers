@@ -16,14 +16,12 @@ from typing import Union
 
 class Sentence:
     def __init__(self) -> None:
-        self.words = []
-        self.labels = [] 
-        self.head_positions = []
+        self.clear()
 
     def clear(self) -> None:
-        self.words.clear
-        self.labels.clear
-        self.head_positions.clear
+        self.words = []
+        self.labels = []
+        self.head_positions = []
 
     def add_line(self, word: str, label: str, head_position: Union[int, None]) -> None:
         self.words.append(word)
@@ -113,11 +111,22 @@ class DataWrangler:
     @classmethod
     def read_dataframe(cls, filename: str, label_to_index: dict[str, int], task_id: int, tokenizer: AutoTokenizer) -> pd.DataFrame:
         # now build the actual dataframe for this dataset
-        data = {"words": [], "str_labels": [], names.INPUT_IDS: [], "word_ids": [], names.LABELS: [], names.HEAD_POSITIONS: [], names.TASK_IDS: []}
+        WORDS = "words"
+        STR_LABELS = "str_labels"
+        WORD_IDS = "word_ids"
+        data = {
+            WORDS: [], 
+            STR_LABELS: [], 
+            names.INPUT_IDS: [], 
+            WORD_IDS: [], 
+            names.LABELS: [], 
+            names.HEAD_POSITIONS: [], 
+            names.TASK_IDS: []
+        }
         
         def add_sentence(sentence: Sentence) -> None:           
-            data["words"].append(sentence.words)
-            data["str_labels"].append(sentence.labels)
+            data[WORDS].append(sentence.words)
+            data[STR_LABELS].append(sentence.labels)
 
             # tokenize each sentence
             token_input = tokenizer(sentence.words, is_split_into_words=True)  
@@ -126,7 +135,7 @@ class DataWrangler:
 
             word_ids = token_input.word_ids(batch_index=0)
             assert len(word_ids) == len(token_ids)
-            data["word_ids"].append(word_ids)
+            data[WORD_IDS].append(word_ids)
             
             # map labels to the first token in each word
             token_labels = cls.align_labels(word_ids, sentence.labels, label_to_index)
