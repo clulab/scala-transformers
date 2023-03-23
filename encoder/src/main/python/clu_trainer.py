@@ -52,7 +52,7 @@ class CluTrainer(BasicTrainer):
             model=model,
             args=training_args,
             data_collator=data_collator,
-            compute_metrics=lambda eval_pred: self.compute_metrics(eval_pred), # TODO this had been commented out
+            # compute_metrics=lambda eval_pred: self.compute_metrics(eval_pred),
             train_dataset=train_ds,
             #eval_dataset=validation_ds,
             tokenizer=self.tokenizer
@@ -78,7 +78,6 @@ class CluTrainer(BasicTrainer):
                     y_true.append(label_ids[i][j]) #index_to_label[label_ids[i][j]])
                     y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
         # return computed metrics
-        result = accuracy_score(y_true, y_pred) # TODO remove
         return {names.ACCURACY: accuracy_score(y_true, y_pred)}
 
 

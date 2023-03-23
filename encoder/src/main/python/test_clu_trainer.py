@@ -8,7 +8,7 @@ def test_true() -> None:
 def test_false() -> None:
     assert False != True
 
-def skip_test_trainer() -> None:
+def test_trainer() -> None:
     tokenizer = CluTokenizer.get_pretrained()
     tasks = Task.mk_tasks("data/", tokenizer, [
         ShortTaskDef("NER",       "conll-ner/", "train_small.txt",    "train_small.txt",  "train_small.txt"),
@@ -22,4 +22,4 @@ def skip_test_trainer() -> None:
 
 
 if __name__ == "__main__":
-    skip_test_trainer()
+    test_trainer()
