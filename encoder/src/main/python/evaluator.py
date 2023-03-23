@@ -18,7 +18,7 @@ class Evaluator:
     def data_to_tensor(self, dict: dict[str, int]) -> IntTensor: 
         predict_dict = {}
         for key in dict:
-            if key in {names.INPUT_IDS, "head_positions"}:
+            if key in {names.INPUT_IDS, names.HEAD_POSITIONS}:
                 predict_dict[key] = IntTensor(dict[key]).view(1, len(dict[key]))
                 # torch.tensor(IntTensor(dict[key])).view(1, len(dict[key]))
             elif key in {names.TASKS_IDS}:
@@ -57,7 +57,7 @@ class Evaluator:
     def evaluation_classification_report(self, task: Task, name: str, useTest: bool = False) -> dict[str, float]:
         print(f"Classification report (useTest = {useTest}) for task {name}:")
         num_labels = task.num_labels
-        df = task.dev_df if useTest == False else task.test_df
+        df = task.dev_df if not useTest else task.test_df
         ds = Dataset.from_pandas(df)
 
         golds, predictions = self.predict(ds)
@@ -72,19 +72,19 @@ class Evaluator:
                 if golds[i] == predictions[i]:
                     correct = correct + 1
         
-        acc = correct / total
+        accuracy = correct / total
         print(f"correct = {correct}, total = {total}")
-        return {"accuracy": acc}
+        return {names.ACCURACY: accuracy}
         
     # compute accuracy on dev or test partition using the given model
     def evaluate_task(self, task: Task) -> float:
         print(f"Evaluating on the validation dataset for task {task.task_name}:")
-        acc = self.evaluation_classification_report(task, task.task_name, useTest = False)
-        print(acc)
-        return acc
+        accuracy = self.evaluation_classification_report(task, task.task_name, useTest = False)
+        print(accuracy)
+        return accuracy
 
     # evaluates self's model and returns macro accuracy on all tasks
     def evaluate(self, tasks: list[Task]) -> float:
-        accuracies = [self.evaluate_task(task)["accuracy"] for task in tasks]
-        macro_acc = sum(accuracies) / len(accuracies)
-        return macro_acc
+        accuracies = [self.evaluate_task(task)[names.ACCURACY] for task in tasks]
+        macro_accuracy = sum(accuracies) / len(accuracies)
+        return macro_accuracy

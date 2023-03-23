@@ -9,6 +9,7 @@ from clu_timer import CluTimer
 from clu_tokenizer import CluTokenizer
 from datasets import Dataset
 from dual_data_collator import DualDataCollator
+from names import names
 from parameters import parameters
 from task import ShortTaskDef, Task
 from sklearn.metrics import accuracy_score
@@ -78,7 +79,7 @@ class CluTrainer(BasicTrainer):
                     y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
         # return computed metrics
         result = accuracy_score(y_true, y_pred) # TODO remove
-        return {"accuracy": accuracy_score(y_true, y_pred)}
+        return {names.ACCURACY: accuracy_score(y_true, y_pred)}
 
 
 if __name__ == "__main__":
