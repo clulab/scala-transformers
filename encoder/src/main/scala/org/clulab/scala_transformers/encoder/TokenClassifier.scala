@@ -38,23 +38,38 @@ class TokenClassifier(
    * @param words Words in this sentence
    * @return Sequnce of labels for each task, for each token
    */
-  def predict(words: Seq[String]): Array[Array[String]] = {
+  def predict(words: Seq[String], headTaskName:String = "Deps Head"): Array[Array[String]] = {
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
+    val wordIds = tokenization.wordIds
+    val tokens = tokenization.tokens
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
 
-    // now generate token label predictions for each task
-    val allLabels = tasks.map { task =>
-      if(task.dual == false) {
-        val tokenLabels = task.predict(encOutput)
+    // outputs for all tasks stored here
+    val allLabels = new Array[Array[String]](tasks.length)
+    var heads: Option[Array[Int]] = None
+
+    // now generate token label predictions for each primary task
+    for(i <- tasks.indices) {
+      if(! tasks(i).dual) {
+        val tokenLabels = tasks(i).predict(encOutput)
         val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
-        wordLabels
-      } else {
-        null // TODO!
+        allLabels(i) = wordLabels
+
+        // if this is the task that predicts head positions, then save them for the dual tasks
+        if(tasks(i).name == headTaskName) {
+          heads = Some(tokenLabels.map(_.toInt))
+        }
       }
+    }
+
+    if(heads.isDefined) {
+      println("Tokens:    " + tokens.mkString(", "))
+      println("Heads:     " + heads.get.mkString(", "))
+      println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
     }
 
     allLabels
@@ -97,11 +112,20 @@ object TokenClassifier {
     if (s == "1") true else false
   }
 
+  def mkTokenMask(wordIds: Array[Long]): Array[Boolean] = {
+    wordIds.zipWithIndex.map{ case (wordId, index) =>
+      mkSingleTokenMask(wordId, index, wordIds)  
+    }
+  }
+
+  def mkSingleTokenMask(wordId: Long, index: Int, wordIds: Array[Long]): Boolean = {
+    wordId >= 0 && (index == 0 || wordId != wordIds(index - 1))
+  }
+
   def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
     require(tokenLabels.length == wordIds.length)
     val wordLabelOpts = tokenLabels.zip(wordIds).zipWithIndex.map { case ((tokenLabel, wordId), index) =>
-      val valid = wordId >= 0 && (index == 0 || wordId != wordIds(index - 1))
-
+      val valid = mkSingleTokenMask(wordId, index, wordIds)
       if (valid) Some(tokenLabel)
       else None
     }
