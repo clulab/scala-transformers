@@ -25,6 +25,23 @@ class TokenizerTest extends Test {
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
 
+  it should "tokenize with the bert-base-cased tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("bert-base-cased")
+    val tokenization = tokenizer.tokenize(words)
+
+    val expectedTokens = Array("[CLS]", "EU", "rejects", "German", "call", "to", "boycott", "British", "la", "##mb", ".", "[SEP]")
+    val actualTokens = tokenization.tokens
+    actualTokens should contain theSameElementsInOrderAs expectedTokens
+
+    val expectedTokenIds = Array(101, 7270, 22961, 1528, 1840, 1106, 21423, 1418, 2495, 12913, 119, 102)
+    val actualTokenIds = tokenization.tokenIds
+    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
+
+    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 7, 8, -1)
+    val actualWordIds = tokenization.wordIds
+    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
+  }
+
   it should "tokenize with the xlm-robert-base tokenizer" in {
     val tokenizer = ScalaJniTokenizer("xlm-roberta-base")
     val tokenization = tokenizer.tokenize(words)
@@ -43,7 +60,7 @@ class TokenizerTest extends Test {
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
 
-  it should "tokenize with the roberta-base tokenizer with addPrefixSpac = truee" in {
+  it should "tokenize with the roberta-base tokenizer with addPrefixSpace = true" in {
     val tokenizer = ScalaJniTokenizer("roberta-base", addPrefixSpace = true)
     val tokenization = tokenizer.tokenize(words)
 
