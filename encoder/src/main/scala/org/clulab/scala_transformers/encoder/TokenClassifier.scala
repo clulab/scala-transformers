@@ -70,6 +70,7 @@ class TokenClassifier(
       println("Tokens:    " + tokens.mkString(", "))
       println("Heads:     " + heads.get.mkString(", "))
       println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
+      // TODO: dual task inference here!
     }
 
     allLabels
