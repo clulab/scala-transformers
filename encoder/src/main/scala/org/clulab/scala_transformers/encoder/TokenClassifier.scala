@@ -83,7 +83,7 @@ object TokenClassifier {
     logger.info(s"Loading TokenClassifier from directory $modelDir...")
     val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
     val tokenizerName = readLine(new File(s"$modelDir/encoder.name"))
-    val tokenizer = ScalaJniTokenizer(tokenizerName)
+    val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace = true)
 
     val taskParentDir = new File(s"$modelDir/tasks")
     val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
