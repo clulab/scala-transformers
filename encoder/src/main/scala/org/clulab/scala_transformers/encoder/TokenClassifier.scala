@@ -79,11 +79,16 @@ class TokenClassifier(
 object TokenClassifier {
   lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
+  private def requiresAddPrefixSpace(modelDir: String): Boolean = {
+    if(modelDir.toLowerCase().contains("roberta")) true
+    else false
+  }
+
   def apply(modelDir: String): TokenClassifier = {
     logger.info(s"Loading TokenClassifier from directory $modelDir...")
     val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
     val tokenizerName = readLine(new File(s"$modelDir/encoder.name"))
-    val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace = true)
+    val tokenizer = ScalaJniTokenizer(tokenizerName, requiresAddPrefixSpace(modelDir))
 
     val taskParentDir = new File(s"$modelDir/tasks")
     val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
