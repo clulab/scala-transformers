@@ -52,10 +52,10 @@ class TokenClassifier(
     val allLabels = new Array[Array[String]](tasks.length)
     var heads: Option[Array[Int]] = None
 
-    // now generate token label predictions for each primary task
+    // now generate token label predictions for all primary tasks (not dual!)
     for(i <- tasks.indices) {
       if(! tasks(i).dual) {
-        val tokenLabels = tasks(i).predict(encOutput)
+        val tokenLabels = tasks(i).predict(encOutput, None, None)
         val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
         allLabels(i) = wordLabels
 
@@ -66,11 +66,20 @@ class TokenClassifier(
       }
     }
 
+    // generate outputs for the dual tasks, if heads were predicted by one of the primary tasks
     if(heads.isDefined) {
-      println("Tokens:    " + tokens.mkString(", "))
-      println("Heads:     " + heads.get.mkString(", "))
-      println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
-      // TODO: dual task inference here!
+      //println("Tokens:    " + tokens.mkString(", "))
+      //println("Heads:     " + heads.get.mkString(", "))
+      //println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
+      val masks = Some(TokenClassifier.mkTokenMask(wordIds))
+
+      for(i <- tasks.indices) {
+        if(tasks(i).dual) {
+          val tokenLabels = tasks(i).predict(encOutput, heads, masks)
+          val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+          allLabels(i) = wordLabels
+        }
+      }
     }
 
     allLabels
@@ -125,14 +134,14 @@ object TokenClassifier {
   }
 
   def mkSingleTokenMask(wordId: Long, index: Int, wordIds: Array[Long]): Boolean = {
-    wordId >= 0 && (index == 0 || wordId != wordIds(index - 1))
+    ! (wordId >= 0 && (index == 0 || wordId != wordIds(index - 1)))
   }
 
   def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
     require(tokenLabels.length == wordIds.length)
     val wordLabelOpts = tokenLabels.zip(wordIds).zipWithIndex.map { case ((tokenLabel, wordId), index) =>
-      val valid = mkSingleTokenMask(wordId, index, wordIds)
-      if (valid) Some(tokenLabel)
+      val masked = mkSingleTokenMask(wordId, index, wordIds)
+      if (! masked) Some(tokenLabel)
       else None
     }
 

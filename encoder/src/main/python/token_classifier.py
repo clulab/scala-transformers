@@ -240,6 +240,7 @@ class TokenClassificationHead(nn.Module):
       #print(f'head_positions: {long_head_positions}')
       head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), long_head_positions]
       #print(f'head_states.size = {head_states.size()}')
+      # concate the hidden states from modifier + head
       modifier_head_states = torch.cat([sequence_output, head_states], dim = 2)
       #print(f'modifier_head_states.size = {modifier_head_states.size()}')
       return modifier_head_states

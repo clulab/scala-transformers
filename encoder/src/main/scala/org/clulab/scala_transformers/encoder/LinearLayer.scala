@@ -41,13 +41,57 @@ class LinearLayer(
   }
 
   /** Predict the top label per token */
-  def predict(inputSentence: DenseMatrix[Float]): Array[String] = {
-    val batch = Array(inputSentence)
-    predict(batch).head
+  def predict(inputSentence: DenseMatrix[Float], 
+              heads: Option[Array[Int]], 
+              masks: Option[Array[Boolean]]): Array[String] = {
+    val batchSentences = Array(inputSentence)
+    val batchHeads = if(heads.isDefined) Some(Array(heads.get)) else None
+    val batchMasks = if(masks.isDefined) Some(Array(masks.get)) else None
+    predict(batchSentences, batchHeads, batchMasks).head
   }
 
   /** Predict the top label for each token in each sentence in the batch */
-  def predict(inputBatch: Array[DenseMatrix[Float]]): Array[Array[String]] = {
+  def predict(inputBatch: Array[DenseMatrix[Float]], 
+              batchHeads: Option[Array[Array[Int]]],
+              batchMasks: Option[Array[Array[Boolean]]]): Array[Array[String]] = {
+    if(dual) predictDual(inputBatch, batchHeads, batchMasks)
+    else predictPrimal(inputBatch)
+  }
+
+  def predictDual(inputBatch: Array[DenseMatrix[Float]], 
+                  batchHeads: Option[Array[Array[Int]]] = None,
+                  batchMasks: Option[Array[Array[Boolean]]] = None): Array[Array[String]] = {
+    assert(batchHeads.isDefined)
+    assert(batchMasks.isDefined)
+
+    val outputBatch = new Array[Array[String]](inputBatch.length)
+    for(i <- inputBatch.indices) {
+      val labels = new Array[String](batchHeads.get(i).length)
+      val input = inputBatch(i)
+      val heads = batchHeads.get(i)
+      val masks = batchMasks.get(i)
+      
+      for(mod <- heads.indices) {
+        val head = heads(mod)
+        if(masks(mod)) {
+          labels(mod) = "nil"
+        } else {
+          // TODO: dual task!
+          // concat mod then head
+
+          // println(input.dimensions)
+
+          labels(mod) = "TODO"
+        }
+      }
+      
+      println("token labels: " + labels.mkString(", "))
+      outputBatch(i) = labels
+    }
+    outputBatch                    
+  }
+
+  def predictPrimal(inputBatch: Array[DenseMatrix[Float]]): Array[Array[String]] = {
     val labels = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
     // predict best label per (subword) token
     val logits = forward(inputBatch)
