@@ -85,7 +85,7 @@ class LinearLayer(
         }
       }
       
-      println("token labels: " + labels.mkString(", "))
+      // println("token labels: " + labels.mkString(", "))
       outputBatch(i) = labels
     }
     outputBatch                    
