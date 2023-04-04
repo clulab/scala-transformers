@@ -8,7 +8,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= {
   Seq(
-	    "org.scalatest" %% "scalatest"           % "3.0.9" % "test"
+	    "org.scalatest" %% "scalatest"           % "3.2.15" % "test"
   )
 }
 

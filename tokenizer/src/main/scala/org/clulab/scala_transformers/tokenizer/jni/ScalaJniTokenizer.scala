@@ -10,7 +10,7 @@ import scala.ref.WeakReference
 class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizer(name) {
   val tokenizerId: Long = JavaJniTokenizer.create(name)
 
-  override def finalize: Unit = {
+  override def finalize(): Unit = {
     JavaJniTokenizer.destroy(tokenizerId)
   }
 
