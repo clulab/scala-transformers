@@ -19,7 +19,7 @@ object TokenClassifierTimerApp extends App {
 
     override def predict(words: Seq[String], headTaskName: String = "Deps Head"): Array[Array[String]] = {
       val headTaskIndexOpt = {
-        val headTaskIndex = tasks.indexOf { task: LinearLayer => task.name == headTaskName && !task.dual }
+        val headTaskIndex = tasks.indexWhere { task => task.name == headTaskName && !task.dual }
 
         if (headTaskIndex >= 0) Some(headTaskIndex)
         else None
@@ -92,7 +92,7 @@ object TokenClassifierTimerApp extends App {
   val elapsedTimer = Timers.getOrNew("Elapsed")
 
   elapsedTimer.time {
-    lines.zipWithIndex.par.foreach { case (line, index) =>
+    lines.zipWithIndex/*.par*/.foreach { case (line, index) =>
       println(s"$index $line")
       if (index != 1382) {
         val words = line.split(" ")
