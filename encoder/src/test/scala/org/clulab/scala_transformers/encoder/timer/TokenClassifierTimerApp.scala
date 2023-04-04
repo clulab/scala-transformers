@@ -1,6 +1,6 @@
 package org.clulab.scala_transformers.encoder.timer
 
-import org.clulab.scala_transformers.encoder.TokenClassifier
+import org.clulab.scala_transformers.encoder.{LinearLayer, TokenClassifier}
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 
 import scala.io.Source
@@ -17,33 +17,67 @@ object TokenClassifierTimerApp extends App {
       Timers.getOrNew(s"Encoder.predict $index")
     }
 
-    override def predict(words: Seq[String]): Array[Array[String]] = {
+    override def predict(words: Seq[String], headTaskName: String = "Deps Head"): Array[Array[String]] = {
+      val headTaskIndexOpt = {
+        val headTaskIndex = tasks.indexOf { task: LinearLayer => task.name == headTaskName && !task.dual }
 
-      val (tokenization, inputIds) = tokenizeTimer.time {
-        val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
-        val inputIds = tokenization.tokenIds
+        if (headTaskIndex >= 0) Some(headTaskIndex)
+        else None
+      }
 
-        (tokenization, inputIds)
+      val tokenization = tokenizeTimer.time {
+        LongTokenization(tokenizer.tokenize(words.toArray))
       }
 
       val encOutput = forwardTimer.time {
-        val encOutput = encoder.forward(inputIds)
+        val encOutput = encoder.forward(tokenization.tokenIds)
 
         encOutput
       }
 
-      val allLabels = tasks.zipWithIndex.map { case (task, index) =>
-        val wordLabels = predictTimers(index).time {
-          val tokenLabels = task.predict(encOutput, None, None)
-          val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+      val notDualTokenAndWordLabels = tasks.zipWithIndex.map { case (task, index) =>
+        if (!task.dual) {
+          val tokenAndWordLabels = predictTimers(index).time {
+            val tokenLabels = task.predict(encOutput, None, None)
+            val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
 
-          wordLabels
+            (tokenLabels, wordLabels)
+          }
+
+          Some(tokenAndWordLabels)
         }
-
-        wordLabels
+        else None
       }
 
-      allLabels
+      val dualTokenAndWordLabels = if (headTaskIndexOpt.isDefined) {
+        val headsOpt = Some(notDualTokenAndWordLabels(headTaskIndexOpt.get).get._1.map { sth => sth.toInt })
+        val masksOpt = Some(TokenClassifier.mkTokenMask(tokenization.wordIds))
+        val dualTokenAndWordLabels = tasks.zipWithIndex.map { case (task, index) =>
+          if (task.dual) {
+            val tokenAndWordLabels = predictTimers(index).time {
+              val tokenLabels = task.predict(encOutput, headsOpt, masksOpt)
+              val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+
+              (tokenLabels, wordLabels)
+            }
+
+            Some(tokenAndWordLabels)
+          }
+          else None
+        }
+
+        dualTokenAndWordLabels
+      }
+      else
+        tasks.map { _ => None: Option[(Array[String], Array[String])] }
+
+      val wordLabels = notDualTokenAndWordLabels.zip(dualTokenAndWordLabels).map { case (notDualTokenAndWordLabels, dualTokenAndWordLabels) =>
+        if (notDualTokenAndWordLabels.isDefined) notDualTokenAndWordLabels.get._2
+        else if (dualTokenAndWordLabels.isDefined) dualTokenAndWordLabels.get._2
+        else throw new RuntimeException("Some task was unpredicted.")
+      }
+
+      wordLabels
     }
   }
 
