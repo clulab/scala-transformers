@@ -34,7 +34,7 @@ object TokenClassifierTimerApp extends App {
 
       val allLabels = tasks.zipWithIndex.map { case (task, index) =>
         val wordLabels = predictTimers(index).time {
-          val tokenLabels = task.predict(encOutput)
+          val tokenLabels = task.predict(encOutput, None, None)
           val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
 
           wordLabels
