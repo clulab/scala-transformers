@@ -96,7 +96,7 @@ object TokenClassifier {
 
   def apply(modelDir: String): TokenClassifier = {
     logger.info(s"Loading TokenClassifier from directory $modelDir...")
-    val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
+    val encoder = Encoder.fromFile(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
     val tokenizerName = readLine(new File(s"$modelDir/encoder.name"))
     val tokenizer = ScalaJniTokenizer(tokenizerName, requiresAddPrefixSpace(modelDir))
 
