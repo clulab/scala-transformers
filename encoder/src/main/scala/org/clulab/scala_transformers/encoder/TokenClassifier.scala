@@ -5,9 +5,6 @@ import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 import org.slf4j.{Logger, LoggerFactory}
 
-import java.io.File
-import scala.io.{Codec, Source}
-
 /** 
  * Implements the inference step of a token classifier for multi-task learning
  * The classifier uses a single encoder to generate the hidden state representation for every token and
@@ -89,42 +86,48 @@ class TokenClassifier(
 object TokenClassifier {
   lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  private def requiresAddPrefixSpace(modelDir: String): Boolean = {
-    if(modelDir.toLowerCase().contains("roberta")) true
-    else false
-  }
+  def apply(encoder: Encoder, tokenizerName: String, addPrefixSpace: Boolean, tasks: Array[LinearLayer]): TokenClassifier = {
+    val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
 
-  def apply(modelDir: String): TokenClassifier = {
-    logger.info(s"Loading TokenClassifier from directory $modelDir...")
-    val encoder = Encoder.fromFile(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
-    val tokenizerName = readLine(new File(s"$modelDir/encoder.name"))
-    val tokenizer = ScalaJniTokenizer(tokenizerName, requiresAddPrefixSpace(modelDir))
-
-    val taskParentDir = new File(s"$modelDir/tasks")
-    val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
-    val tasks = taskDirs.map { taskDir =>
-      logger.info(s"Loading task from directory $taskDir...")
-      LinearLayer(readLine(new File(s"$taskDir/name")), readBoolean(new File(s"$taskDir/dual")), taskDir)
-    }
-
-    logger.info("Load complete.")
     new TokenClassifier(encoder, tasks, tokenizer)
   }
 
-  def readLine(file: File): String = {
-    val source = Source.fromFile(file)(Codec.UTF8)
+  protected def fromModelReader(modelReader: ModelReader): TokenClassifier = {
+    val modelLayout = modelReader.modelLayout
+    logger.info(s"Loading TokenClassifier from ${modelReader.description} location ${modelLayout.baseName}...")
+    val encoder = modelReader.newEncoder
+    val tokenizerName = modelReader.tokenizerName
+    val addPrefixSpace = modelLayout.addPrefixSpace
+    val tasks = {
+      val taskCount = modelReader.taskCount
 
-    try {
-      source.getLines.next.trim()
+      0.until(taskCount).map { taskIndex =>
+        logger.info(s"Loading task from ${modelReader.description} location ${modelLayout.getTasks}")
+        val taskName = modelReader.taskName(taskIndex)
+        val taskDual = modelReader.taskDual(taskIndex)
+
+        // Maybe this can be from bytes
+        LinearLayer(taskName, taskDual, modelLayout.getTasks) // TODO
+      }
     }
-    finally {
-      source.close()
-    }
+    val result = apply(encoder, tokenizerName, addPrefixSpace, tasks.toArray)
+
+    logger.info("Load complete.")
+    result
   }
 
-  def readBoolean(file: File): Boolean = {
-    val s = readLine(file)
-    if (s == "1") true else false
+  def fromFiles(modelDir: String): TokenClassifier = {
+    val modelLayout = new ModelLayout(modelDir)
+    val modelReader = new ModelReaderFromFiles(modelLayout)
+
+    fromModelReader(modelReader)
+  }
+
+  def fromResources(modelDir: String): TokenClassifier = {
+    val modelLayout = new ModelLayout(modelDir)
+    val modelReader = new ModelReaderFromResources(modelLayout)
+
+    fromModelReader(modelReader)
   }
 
   def mkTokenMask(wordIds: Array[Long]): Array[Boolean] = {
