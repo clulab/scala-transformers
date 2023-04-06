@@ -7,4 +7,4 @@ This subproject should work on the four supported platforms without further meas
 * librust_tokenizer.so is built for Linux with Intel processors
 * rust_tokenizer.dll works under Windows for Intel processors
 
-To rebuild these libraries, install `Rust` and then run `cargo build` in the `rust` directory.  Copy the resulting library from the `target` directory to the `resources` directory.
+To rebuild these libraries, install `Rust` and then run `cargo build` in the `rust` directory.  Copy the resulting library from the `target` directory to the `resources` directory.  For a release, use `cargo build --release`.

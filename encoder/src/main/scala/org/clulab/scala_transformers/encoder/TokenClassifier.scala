@@ -5,9 +5,6 @@ import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 import org.slf4j.{Logger, LoggerFactory}
 
-import java.io.File
-import scala.io.{Codec, Source}
-
 /** 
  * Implements the inference step of a token classifier for multi-task learning
  * The classifier uses a single encoder to generate the hidden state representation for every token and
@@ -87,44 +84,19 @@ class TokenClassifier(
 }
 
 object TokenClassifier {
-  lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  private def requiresAddPrefixSpace(modelDir: String): Boolean = {
-    if(modelDir.toLowerCase().contains("roberta")) true
-    else false
+  def fromFiles(modelDir: String): TokenClassifier = {
+    val tokenClassifierLayout = new TokenClassifierLayout(modelDir)
+    val tokenClassifierFactory = new TokenClassifierFactoryFromFiles(tokenClassifierLayout)
+
+    tokenClassifierFactory.newTokenClassifier
   }
 
-  def apply(modelDir: String): TokenClassifier = {
-    logger.info(s"Loading TokenClassifier from directory $modelDir...")
-    val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
-    val tokenizerName = readLine(new File(s"$modelDir/encoder.name"))
-    val tokenizer = ScalaJniTokenizer(tokenizerName, requiresAddPrefixSpace(modelDir))
+  def fromResources(modelDir: String): TokenClassifier = {
+    val tokenClassifierLayout = new TokenClassifierLayout(modelDir)
+    val tokenClassifierFactory = new TokenClassifierFactoryFromResources(tokenClassifierLayout)
 
-    val taskParentDir = new File(s"$modelDir/tasks")
-    val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
-    val tasks = taskDirs.map { taskDir =>
-      logger.info(s"Loading task from directory $taskDir...")
-      LinearLayer(readLine(new File(s"$taskDir/name")), readBoolean(new File(s"$taskDir/dual")), taskDir)
-    }
-
-    logger.info("Load complete.")
-    new TokenClassifier(encoder, tasks, tokenizer)
-  }
-
-  def readLine(file: File): String = {
-    val source = Source.fromFile(file)(Codec.UTF8)
-
-    try {
-      source.getLines.next.trim()
-    }
-    finally {
-      source.close()
-    }
-  }
-
-  def readBoolean(file: File): Boolean = {
-    val s = readLine(file)
-    if (s == "1") true else false
+    tokenClassifierFactory.newTokenClassifier
   }
 
   def mkTokenMask(wordIds: Array[Long]): Array[Boolean] = {
