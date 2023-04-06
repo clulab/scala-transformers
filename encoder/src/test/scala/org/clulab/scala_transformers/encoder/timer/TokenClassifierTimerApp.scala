@@ -84,7 +84,7 @@ object TokenClassifierTimerApp extends App {
   val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
   val lines = {
     val source = Source.fromFile(fileName)
-    val lines = source.getLines.toArray
+    val lines = source.getLines().toArray
 
     source.close
     lines
@@ -95,7 +95,7 @@ object TokenClassifierTimerApp extends App {
     lines.zipWithIndex/*.par*/.foreach { case (line, index) =>
       println(s"$index $line")
       if (index != 1382) {
-        val words = line.split(" ")
+        val words = line.split(" ").toSeq
 
         //    println(s"Words: ${words.mkString(", ")}")
         val allLabels = tokenClassifier.predict(words)
@@ -104,5 +104,5 @@ object TokenClassifierTimerApp extends App {
       }
     }
   }
-  Timers.summarize
+  Timers.summarize()
 }
