@@ -3,7 +3,7 @@ package org.clulab.scala_transformers.encoder
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
 import breeze.linalg.DenseMatrix
 
-import java.net.URLConnection
+import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
 
 class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession) {
@@ -47,13 +47,13 @@ object Encoder {
     val contentLength = connection.getContentLength
     val bytes = new Array[Byte](contentLength)
     val inputStream = getClass.getResourceAsStream(resourceName)
-    // val inputStream = classOf[Encoder].getResourceAsStream(resourceName)
+    val dataInputStream = new DataInputStream(inputStream)
 
     try {
-      inputStream.read(bytes)
+      dataInputStream.readFully(bytes)
     }
     finally {
-      inputStream.close()
+      dataInputStream.close()
     }
     ortEnvironment.createSession(bytes, new OrtSession.SessionOptions)
   }
