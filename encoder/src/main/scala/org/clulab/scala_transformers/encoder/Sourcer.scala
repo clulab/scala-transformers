@@ -10,7 +10,7 @@ class Sourcer {
       f
     }
     finally {
-      source.close()
+      Option(source).foreach(_.close())
     }
 
     result // debug here
@@ -26,18 +26,18 @@ class Sourcer {
   def readFloatMatrix(source: Source): Array[Array[Float]] = withSource(source) {
     source
         .getLines
+        .toArray
         .filterNot(_.startsWith("#"))
         .map(_.trim().split("\\s+").map(_.toFloat))
-        .toArray
   }
 
   def readFloatVector(source: Source): Array[Float] = withSource(source) {
     source
         .getLines
+        .toArray
         .filterNot(_.startsWith("#"))
         .flatMap(_.trim().split("\\s+"))
         .map(_.toFloat)
-        .toArray
   }
 
   def readStringVector(source: Source): Array[String] = withSource(source) {
@@ -57,10 +57,10 @@ object Sourcer {
 
   def existsAsResource(resourceName: String): Boolean = {
     try {
-      val connection = getClass.getResource(resourceName).openConnection
-      val contentLength = connection.getContentLength
+      val resource = getClass.getResource(resourceName)
+      val result = Option(resource).isDefined
 
-      contentLength > 0
+      result
     }
     catch {
       case _: Throwable => false
@@ -71,5 +71,11 @@ object Sourcer {
 
   def sourceFromFile(fileName: String): Source = Source.fromFile(fileName)(codec)
 
-  def sourceFromResource(resourceName: String): Source = Source.fromResource(resourceName)(codec)
+  def sourceFromResource(resourceName: String): Source = {
+    // For some reason, Source.fromResource() does not work here.
+    val url = Sourcer.getClass.getResource(resourceName)
+    val source = Source.fromURL(url)(codec)
+
+    source
+  }
 }

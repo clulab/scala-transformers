@@ -63,18 +63,12 @@ class LinearLayerFactoryFromFiles(linearLayerLayout: LinearLayerLayout) extends 
 
   def newSource(place: String): Source = Sourcer.sourceFromFile(place)
 
-  def newLinearLayer(taskName: String, taskDual: Boolean): LinearLayer =
-      LinearLayer.fromFiles(taskName, taskDual, linearLayerLayout.weights, linearLayerLayout.biases, linearLayerLayout.labels)
-
   def exists(place: String): Boolean = Sourcer.existsAsFile(place)
 }
 
 class LinearLayerFactoryFromResources(linearLayerLayout: LinearLayerLayout) extends LinearLayerFactory(linearLayerLayout) {
 
   def newSource(place: String): Source = Sourcer.sourceFromResource(place)
-
-  def newLinearLayer(taskName: String, taskDual: Boolean): LinearLayer =
-      LinearLayer.fromResources(taskName, taskDual, linearLayerLayout.weights, linearLayerLayout.biases, linearLayerLayout.labels)
 
   // This should be a "file" rather than a "directory".
   def exists(place: String): Boolean = Sourcer.existsAsResource(place)

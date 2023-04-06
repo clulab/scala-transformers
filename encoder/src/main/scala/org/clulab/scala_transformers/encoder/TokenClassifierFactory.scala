@@ -6,7 +6,7 @@ import org.slf4j.{Logger, LoggerFactory}
 import java.io.File
 import scala.io.Source
 
-abstract class TokenClassifierFactory(val modelLayout: TokenClassifierLayout, val description: String) extends Sourcer {
+abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifierLayout, val description: String) extends Sourcer {
   lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   def newEncoder: Encoder
@@ -15,13 +15,14 @@ abstract class TokenClassifierFactory(val modelLayout: TokenClassifierLayout, va
   def newSource(place: String): Source
   def exists(place: String): Boolean
 
-  def name: String = readLine(newSource(modelLayout.name))
+  def name: String = readLine(newSource(tokenClassifierLayout.name))
 
   def taskCount: Int = 0.until(Int.MaxValue)
       .find { index =>
-        val layerLayout = modelLayout.linearLayerLayout(index)
+        val linearLayerLayout = tokenClassifierLayout.linearLayerLayout(index)
+        val result = !exists(linearLayerLayout.name)
 
-        !exists(layerLayout.name)
+        result
       }
       .get
 
@@ -36,10 +37,11 @@ abstract class TokenClassifierFactory(val modelLayout: TokenClassifierLayout, va
   }
 
   def newTokenClassifier: TokenClassifier = {
-    logger.info(s"Loading TokenClassifier from ${description} location ${modelLayout.baseName}...")
-    val addPrefixSpace = modelLayout.addPrefixSpace
-    val linearLayers = 0.until(taskCount).map { taskIndex =>
-      logger.info(s"Loading task from ${description} location ${modelLayout.tasks}")
+    logger.info(s"Loading TokenClassifier from ${description} location ${tokenClassifierLayout.baseName}...")
+    val addPrefixSpace = tokenClassifierLayout.addPrefixSpace
+    val taskRange = 0.until(taskCount)
+    val linearLayers = taskRange.map { taskIndex =>
+      logger.info(s"Loading task from ${description} location ${tokenClassifierLayout.tasks}")
       val linearLayerFactory = newLinearLayerFactory(taskIndex)
 
       linearLayerFactory.newLinearLayer
