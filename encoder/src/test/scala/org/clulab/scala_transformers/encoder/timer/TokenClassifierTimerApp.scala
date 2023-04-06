@@ -81,7 +81,7 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
-  val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../tcmodel"))
+  val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
   val lines = {
     val source = Source.fromFile(fileName)
     val lines = source.getLines.toArray
