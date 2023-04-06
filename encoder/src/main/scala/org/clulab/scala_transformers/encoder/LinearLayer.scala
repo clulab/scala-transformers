@@ -142,85 +142,18 @@ class LinearLayer(
 }
 
 object LinearLayer {
-  lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  def apply(name: String, dual: Boolean, modelDir: String): LinearLayer = {
-    val weightsFileName = modelDir + "/weights"
-    val  biasesFileName = modelDir + "/biases"
-    val  labelsFileName = modelDir + "/labels"
+  def fromFiles(layerDir: String): LinearLayer = {
+    val linearLayerLayout = new LinearLayerLayout(layerDir)
+    val linearLayerFactory = new LinearLayerFactoryFromFiles(linearLayerLayout)
 
-    if (!new File(weightsFileName).exists)
-      throw new RuntimeException(s"ERROR: you need at least a weights file for linear layer $name!")
-    val weights = loadWeights(weightsFileName)
-    logger.info(s"Found weights with dimension ${weights.rows} x ${weights.cols}")
-
-    val biasesOpt =
-        if (new File(biasesFileName).exists) {
-          val biases = loadBiases(biasesFileName)
-          logger.info(s"Found biases with dimension ${biases.length}")
-          Some(biases)
-        }
-        else None
-
-    val labelsOpt =
-        if (new File(labelsFileName).exists) {
-          val labels = loadLabels(labelsFileName)
-          logger.info(s"Using the following labels: ${labels.mkString(", ")}")
-          Some(labels)
-        }
-        else None
-
-    new LinearLayer(name, dual, weights, biasesOpt, labelsOpt)
+    linearLayerFactory.newLinearLayer
   }
 
-  protected def loadWeights(fileName: String): DenseMatrix[Float] = {
-    val source = Source.fromFile(fileName)(Codec.UTF8)
+  def fromResources(layerDir: String): LinearLayer = {
+    val linearLayerLayout = new LinearLayerLayout (layerDir)
+    val linearLayerFactory = new LinearLayerFactoryFromResources(linearLayerLayout)
 
-    try {
-      val values = source
-          .getLines
-          .filterNot(_.startsWith("#"))
-          .map(_.trim().split("\\s+").map(_.toFloat))
-          .toArray
-
-      // dimensions: rows = hidden state size, columns = labels' count
-      BreezeUtils.mkRowMatrix(values).t
-    }
-    finally {
-      source.close()
-    }
-  }
-
-  protected def loadBiases(fileName: String): DenseVector[Float] = {
-    val source = Source.fromFile(fileName)(Codec.UTF8)
-
-    try {
-      val values = source
-          .getLines
-          .filterNot(_.startsWith("#"))
-          .flatMap(_.trim().split("\\s+"))
-          .map(_.toFloat)
-          .toArray
-
-      // the bias is a column vector
-      DenseVector(values)
-    }
-    finally {
-      source.close()
-    }
-  }
-
-  protected def loadLabels(fileName: String): Array[String] = {
-    val source = Source.fromFile(fileName)(Codec.UTF8)
-
-    try {
-      source
-          .getLines
-          .map(_.trim)
-          .toArray
-    }
-    finally {
-      source.close()
-    }
+    linearLayerFactory.newLinearLayer
   }
 }

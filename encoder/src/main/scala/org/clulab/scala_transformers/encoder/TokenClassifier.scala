@@ -84,50 +84,19 @@ class TokenClassifier(
 }
 
 object TokenClassifier {
-  lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
-
-  def apply(encoder: Encoder, tokenizerName: String, addPrefixSpace: Boolean, tasks: Array[LinearLayer]): TokenClassifier = {
-    val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
-
-    new TokenClassifier(encoder, tasks, tokenizer)
-  }
-
-  protected def fromModelReader(modelReader: ModelReader): TokenClassifier = {
-    val modelLayout = modelReader.modelLayout
-    logger.info(s"Loading TokenClassifier from ${modelReader.description} location ${modelLayout.baseName}...")
-    val encoder = modelReader.newEncoder
-    val tokenizerName = modelReader.tokenizerName
-    val addPrefixSpace = modelLayout.addPrefixSpace
-    val tasks = {
-      val taskCount = modelReader.taskCount
-
-      0.until(taskCount).map { taskIndex =>
-        logger.info(s"Loading task from ${modelReader.description} location ${modelLayout.getTasks}")
-        val taskName = modelReader.taskName(taskIndex)
-        val taskDual = modelReader.taskDual(taskIndex)
-
-        // Maybe this can be from bytes
-        LinearLayer(taskName, taskDual, modelLayout.getTasks) // TODO
-      }
-    }
-    val result = apply(encoder, tokenizerName, addPrefixSpace, tasks.toArray)
-
-    logger.info("Load complete.")
-    result
-  }
 
   def fromFiles(modelDir: String): TokenClassifier = {
-    val modelLayout = new ModelLayout(modelDir)
-    val modelReader = new ModelReaderFromFiles(modelLayout)
+    val tokenClassifierLayout = new TokenClassifierLayout(modelDir)
+    val tokenClassifierFactory = new TokenClassifierFactoryFromFiles(tokenClassifierLayout)
 
-    fromModelReader(modelReader)
+    tokenClassifierFactory.newTokenClassifier
   }
 
   def fromResources(modelDir: String): TokenClassifier = {
-    val modelLayout = new ModelLayout(modelDir)
-    val modelReader = new ModelReaderFromResources(modelLayout)
+    val tokenClassifierLayout = new TokenClassifierLayout(modelDir)
+    val tokenClassifierFactory = new TokenClassifierFactoryFromResources(tokenClassifierLayout)
 
-    fromModelReader(modelReader)
+    tokenClassifierFactory.newTokenClassifier
   }
 
   def mkTokenMask(wordIds: Array[Long]): Array[Boolean] = {
