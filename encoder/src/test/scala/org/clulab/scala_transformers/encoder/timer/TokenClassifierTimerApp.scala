@@ -81,7 +81,7 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
-  val tokenClassifier = new TimedTokenClassifier(TokenClassifier("../tcmodel"))
+  val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../tcmodel"))
   val lines = {
     val source = Source.fromFile(fileName)
     val lines = source.getLines.toArray
