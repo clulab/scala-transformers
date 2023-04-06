@@ -16,14 +16,14 @@ class Sourcer {
     result // debug here
   }
 
-  def readLine(source: Source): String = withSource(source) {
+  def sourceLine(source: Source): String = withSource(source) {
     source.getLines.next.trim()
   }
 
-  def readBoolean(source: Source): Boolean =
-      readLine(source) == "1"
+  def sourceBoolean(source: Source): Boolean =
+      sourceLine(source) == "1"
 
-  def readFloatMatrix(source: Source): Array[Array[Float]] = withSource(source) {
+  def sourceFloatMatrix(source: Source): Array[Array[Float]] = withSource(source) {
     source
         .getLines
         .toArray
@@ -31,7 +31,7 @@ class Sourcer {
         .map(_.trim().split("\\s+").map(_.toFloat))
   }
 
-  def readFloatVector(source: Source): Array[Float] = withSource(source) {
+  def sourceFloatVector(source: Source): Array[Float] = withSource(source) {
     source
         .getLines
         .toArray
@@ -40,7 +40,7 @@ class Sourcer {
         .map(_.toFloat)
   }
 
-  def readStringVector(source: Source): Array[String] = withSource(source) {
+  def sourceStringVector(source: Source): Array[String] = withSource(source) {
     source
         .getLines
         .map(_.trim)

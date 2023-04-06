@@ -11,15 +11,15 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
   def newSource(place: String): Source
   def exists(place: String): Boolean
 
-  def name: String = readLine(newSource(linearLayerLayout.name))
+  def name: String = sourceLine(newSource(linearLayerLayout.name))
 
-  def dual: Boolean = readBoolean(newSource(linearLayerLayout.dual))
+  def dual: Boolean = sourceBoolean(newSource(linearLayerLayout.dual))
 
   def getWeights: DenseMatrix[Float] = {
     val place = linearLayerLayout.weights
     if (!exists(place))
       throw new RuntimeException(s"ERROR: you need at least a weights file for linear layer $name!")
-    val values = readFloatMatrix(newSource(place))
+    val values = sourceFloatMatrix(newSource(place))
     // dimensions: rows = hidden state size, columns = labels' count
     val weights = BreezeUtils.mkRowMatrix(values).t
 
@@ -30,7 +30,7 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
   def getBiasesOpt: Option[DenseVector[Float]] = {
     val place = linearLayerLayout.biases
     if (exists(place)) {
-      val values = readFloatVector(newSource(place))
+      val values = sourceFloatVector(newSource(place))
       // the bias is a column vector
       val biases = DenseVector(values)
 
@@ -43,7 +43,7 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
   def getLabelsOpt: Option[Array[String]] = {
     val place = linearLayerLayout.labels
     if (exists(place)) {
-      val values = readStringVector(newSource(place))
+      val values = sourceStringVector(newSource(place))
 
       Some(values)
     }
@@ -61,15 +61,15 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
 
 class LinearLayerFactoryFromFiles(linearLayerLayout: LinearLayerLayout) extends LinearLayerFactory(linearLayerLayout) {
 
-  def newSource(place: String): Source = Sourcer.sourceFromFile(place)
+  def newSource(fileName: String): Source = Sourcer.sourceFromFile(fileName)
 
-  def exists(place: String): Boolean = Sourcer.existsAsFile(place)
+  def exists(fileName: String): Boolean = Sourcer.existsAsFile(fileName)
 }
 
 class LinearLayerFactoryFromResources(linearLayerLayout: LinearLayerLayout) extends LinearLayerFactory(linearLayerLayout) {
 
-  def newSource(place: String): Source = Sourcer.sourceFromResource(place)
+  def newSource(resourceName: String): Source = Sourcer.sourceFromResource(resourceName)
 
   // This should be a "file" rather than a "directory".
-  def exists(place: String): Boolean = Sourcer.existsAsResource(place)
+  def exists(resourceName: String): Boolean = Sourcer.existsAsResource(resourceName)
 }

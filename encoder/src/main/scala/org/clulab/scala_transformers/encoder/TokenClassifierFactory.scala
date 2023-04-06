@@ -15,7 +15,7 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
   def newSource(place: String): Source
   def exists(place: String): Boolean
 
-  def name: String = readLine(newSource(tokenClassifierLayout.name))
+  def name: String = sourceLine(newSource(tokenClassifierLayout.name))
 
   def taskCount: Int = 0.until(Int.MaxValue)
       .find { index =>
@@ -26,9 +26,9 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
       }
       .get
 
-  def readLine(place: String): String = readLine(newSource(place))
+  def sourceLine(place: String): String = sourceLine(newSource(place))
 
-  def readBoolean(place: String): Boolean = readBoolean(newSource(place))
+  def sourceBoolean(place: String): Boolean = sourceBoolean(newSource(place))
 
   protected def newTokenClassifier(encoder: Encoder, tokenizerName: String, addPrefixSpace: Boolean, tasks: Array[LinearLayer]): TokenClassifier = {
     val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
@@ -55,23 +55,23 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
 
 class TokenClassifierFactoryFromFiles(modelLayout: TokenClassifierLayout) extends TokenClassifierFactory(modelLayout, "filesystem") {
 
-  def newSource(place: String): Source = Sourcer.sourceFromFile(place)
+  def newSource(fileName: String): Source = Sourcer.sourceFromFile(fileName)
 
   def newEncoder: Encoder = Encoder.fromFile(new File(modelLayout.onnx).getAbsolutePath)
 
   def newLinearLayerFactory(index: Int) = new LinearLayerFactoryFromFiles(modelLayout.linearLayerLayout(index))
 
-  def exists(place: String): Boolean = Sourcer.existsAsFile(place)
+  def exists(fileName: String): Boolean = Sourcer.existsAsFile(fileName)
 }
 
 class TokenClassifierFactoryFromResources(modelLayout: TokenClassifierLayout) extends TokenClassifierFactory(modelLayout, "resource") {
 
-  def newSource(place: String): Source = Sourcer.sourceFromResource(place)
+  def newSource(resourceName: String): Source = Sourcer.sourceFromResource(resourceName)
 
   def newEncoder: Encoder = Encoder.fromResource(modelLayout.onnx)
 
   def newLinearLayerFactory(index: Int) = new LinearLayerFactoryFromResources(modelLayout.linearLayerLayout(index))
 
   // This should be a "file" rather than a "directory".
-  def exists(place: String): Boolean = Sourcer.existsAsResource(place)
+  def exists(resourceName: String): Boolean = Sourcer.existsAsResource(resourceName)
 }
