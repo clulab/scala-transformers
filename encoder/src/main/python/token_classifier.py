@@ -133,6 +133,7 @@ class TokenClassificationModel(PreTrainedModel):
         os.makedirs(task_checkpoint, exist_ok = True)
 
         self.export_name(task_checkpoint + '/name', task.task_name)
+        self.export_dual(task_checkpoint + '/dual', task.dual_mode)
         
         lf = open(task_checkpoint + "/labels", "w")
         for label in labels:
@@ -157,6 +158,14 @@ class TokenClassificationModel(PreTrainedModel):
     def export_name(self, file_name, name):
       f = open(file_name, 'w')
       f.write(f'{name}\n')
+      f.close()
+
+    def export_dual(self, file_name, dual_mode):
+      f = open(file_name, 'w')
+      if(dual_mode):
+        f.write(f'1\n')
+      else:
+        f.write(f'0\n')
       f.close()
 
     def export_encoder(self, checkpoint, tokenizer, export_device):
@@ -231,6 +240,7 @@ class TokenClassificationHead(nn.Module):
       #print(f'head_positions: {long_head_positions}')
       head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), long_head_positions]
       #print(f'head_states.size = {head_states.size()}')
+      # concate the hidden states from modifier + head
       modifier_head_states = torch.cat([sequence_output, head_states], dim = 2)
       #print(f'modifier_head_states.size = {modifier_head_states.size()}')
       return modifier_head_states

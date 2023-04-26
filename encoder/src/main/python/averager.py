@@ -17,7 +17,7 @@ from evaluation_metrics import evaluate_model
 # main function for averaging models coming from different checkpoints
 def main():
   print(f'Loading tokenizer named "{cf.transformer_name}"...')
-  tokenizer = AutoTokenizer.from_pretrained(cf.transformer_name, model_input_names=["input_ids", "token_type_ids", "attention_mask"])
+  tokenizer = AutoTokenizer.from_pretrained(cf.transformer_name, model_input_names=["input_ids", "token_type_ids", "attention_mask"], add_prefix_space=True)
   config = AutoConfig.from_pretrained(cf.transformer_name)
 
   # the tasks to learn

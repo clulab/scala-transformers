@@ -2,8 +2,7 @@ name := "scala-transformers-encoder"
 description := "Provides a Scala interface to huggingface encoders"
 
 resolvers ++= Seq(
-//  Resolvers.localResolver, // Reserve for Two Six.
-//  Resolvers.clulabResolver // processors-models, transitive dependency
+  "Artifactory" at "https://artifactory.clulab.org/artifactory/sbt-release"
 )
 
 libraryDependencies ++= {
@@ -13,9 +12,11 @@ libraryDependencies ++= {
   }
 
   Seq(
-    "org.scalanlp"              %% "breeze"      % breezeVersion,
-    "com.microsoft.onnxruntime"  % "onnxruntime" % "1.13.1",
-    "org.slf4j"                  % "slf4j-api"   % "1.7.10"
+    "org.scalanlp"              %% "breeze"             % breezeVersion,
+    "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.13.1",
+    "org.clulab"                 % "roberta-onnx-model" % "0.0.2",
+//  "org.clulab"                 % "deberta-onnx-model" % "0.0.2",
+    "org.slf4j"                  % "slf4j-api"          % "1.7.10"
   )
 }
 

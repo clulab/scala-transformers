@@ -3,6 +3,7 @@ package org.clulab.scala_transformers.encoder
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
 import breeze.linalg.DenseMatrix
 
+import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
 
 class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession) {
@@ -35,8 +36,31 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
 object Encoder {
   val ortEnvironment = OrtEnvironment.getEnvironment
 
-  def apply(onnxModelFile: String): Encoder = {
-    val ortSession = ortEnvironment.createSession(onnxModelFile, new OrtSession.SessionOptions)
-    new Encoder(ortEnvironment, ortSession)
+  protected def fromSession(ortSession: OrtSession): Encoder =
+      new Encoder(ortEnvironment, ortSession)
+
+  protected def ortSessionFromFile(fileName: String): OrtSession =
+      ortEnvironment.createSession(fileName, new OrtSession.SessionOptions)
+
+  protected def ortSessionFromResource(resourceName: String): OrtSession = {
+    val connection = getClass.getResource(resourceName).openConnection
+    val contentLength = connection.getContentLength
+    val bytes = new Array[Byte](contentLength)
+    val inputStream = getClass.getResourceAsStream(resourceName)
+    val dataInputStream = new DataInputStream(inputStream)
+
+    try {
+      dataInputStream.readFully(bytes)
+    }
+    finally {
+      dataInputStream.close()
+    }
+    ortEnvironment.createSession(bytes, new OrtSession.SessionOptions)
   }
+
+  def fromFile(onnxModelFile: String): Encoder =
+      fromSession(ortSessionFromFile(onnxModelFile))
+
+  def fromResource(resourceName: String): Encoder =
+      fromSession(ortSessionFromResource(resourceName))
 }
