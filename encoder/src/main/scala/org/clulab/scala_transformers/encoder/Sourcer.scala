@@ -17,7 +17,7 @@ class Sourcer {
   }
 
   def sourceLine(source: Source): String = withSource(source) {
-    source.getLines.next.trim()
+    source.getLines().next().trim()
   }
 
   def sourceBoolean(source: Source): Boolean =
@@ -25,7 +25,7 @@ class Sourcer {
 
   def sourceFloatMatrix(source: Source): Array[Array[Float]] = withSource(source) {
     source
-        .getLines
+        .getLines()
         .toArray
         .filterNot(_.startsWith("#"))
         .map(_.trim().split("\\s+").map(_.toFloat))
@@ -33,7 +33,7 @@ class Sourcer {
 
   def sourceFloatVector(source: Source): Array[Float] = withSource(source) {
     source
-        .getLines
+        .getLines()
         .toArray
         .filterNot(_.startsWith("#"))
         .flatMap(_.trim().split("\\s+"))
@@ -42,7 +42,7 @@ class Sourcer {
 
   def sourceStringVector(source: Source): Array[String] = withSource(source) {
     source
-        .getLines
+        .getLines()
         .map(_.trim)
         .toArray
   }
