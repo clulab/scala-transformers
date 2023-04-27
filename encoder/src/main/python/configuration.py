@@ -37,7 +37,7 @@ weight_decay = 0.01
 
 # which transformer to use
 # see this page for other options: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
-transformer_name = 'microsoft/deberta-v3-base' # 'roberta-base' # 'google/bert_uncased_L-4_H-512_A-8' # 'bert-base-cased' # 'xlm-roberta-base' # 'distilbert-base-cased'
+transformer_name = 'google/electra-small-discriminator'  # 'microsoft/deberta-v3-base' # 'roberta-base' # 'google/bert_uncased_L-4_H-512_A-8' # 'bert-base-cased' # 'xlm-roberta-base' # 'distilbert-base-cased'
 model_name = f'{transformer_name.replace("/", "-")}-mtl' 
 
 # for dependency parsing, this dataset column indicates where the positions of the heads are stored
