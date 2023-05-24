@@ -1,6 +1,7 @@
-package org.clulab.scala_transformers.encoder.timer
+package org.clulab.scala_transformers.encoder.apps
 
 import org.clulab.scala_transformers.encoder.TokenClassifier
+import org.clulab.scala_transformers.encoder.timer.Timers
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 
 import scala.io.Source
