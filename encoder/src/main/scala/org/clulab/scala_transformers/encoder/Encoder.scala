@@ -35,12 +35,19 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
 
 object Encoder {
   val ortEnvironment = OrtEnvironment.getEnvironment
+  val sessionOptions = {
+    val gpuDeviceId = 0
+    val sessionOptions = new OrtSession.SessionOptions()
+
+    sessionOptions.addCUDA(gpuDeviceId)
+    sessionOptions
+  }
 
   protected def fromSession(ortSession: OrtSession): Encoder =
       new Encoder(ortEnvironment, ortSession)
 
   protected def ortSessionFromFile(fileName: String): OrtSession =
-      ortEnvironment.createSession(fileName, new OrtSession.SessionOptions)
+      ortEnvironment.createSession(fileName, sessionOptions)
 
   protected def ortSessionFromResource(resourceName: String): OrtSession = {
     val connection = getClass.getResource(resourceName).openConnection
@@ -55,7 +62,7 @@ object Encoder {
     finally {
       dataInputStream.close()
     }
-    ortEnvironment.createSession(bytes, new OrtSession.SessionOptions)
+    ortEnvironment.createSession(bytes, sessionOptions)
   }
 
   def fromFile(onnxModelFile: String): Encoder =
