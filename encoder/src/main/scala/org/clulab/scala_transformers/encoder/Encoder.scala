@@ -39,7 +39,7 @@ object Encoder {
     val gpuDeviceId = 0
     val sessionOptions = new OrtSession.SessionOptions()
 
-    sessionOptions.addCUDA(gpuDeviceId)
+//    sessionOptions.addCUDA(gpuDeviceId)
     sessionOptions
   }
 

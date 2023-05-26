@@ -13,8 +13,8 @@ libraryDependencies ++= {
 
   Seq(
     "org.scalanlp"              %% "breeze"             % breezeVersion,
-//    "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.14.0",
-    "com.microsoft.onnxruntime"  % "onnxruntime_gpu"        % "1.14.0",
+    "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.14.0",
+//    "com.microsoft.onnxruntime"  % "onnxruntime_gpu"        % "1.14.0",
     "org.clulab"                 % "roberta-onnx-model" % "0.0.2",
 //  "org.clulab"                 % "deberta-onnx-model" % "0.0.2",
     "org.slf4j"                  % "slf4j-api"          % "1.7.10"
