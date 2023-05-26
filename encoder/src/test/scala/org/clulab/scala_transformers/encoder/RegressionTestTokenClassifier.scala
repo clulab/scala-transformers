@@ -18,8 +18,8 @@ class RegressionTestTokenClassifier extends Test {
   val sentences = tokenClassifierTimer.readSentences(sentencesFileName)
   val expectedCollectionOfLabels = tokenClassifierTimer.readLabels(labelsFileName)
 
-  // The model for the token classifier is not usually available, so this test is ignore by default.
-  it should "produce consistent results" in {
+  // The model for the token classifier is not usually available, so this test is ignored by default.
+  ignore should "produce consistent results" in {
     val actualCollectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
 
     actualCollectionOfLabels.zip(expectedCollectionOfLabels).zipWithIndex.foreach { case ((actualLabels, expectedLabels), index) =>
