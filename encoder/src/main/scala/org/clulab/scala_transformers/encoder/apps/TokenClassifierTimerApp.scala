@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets
 import scala.io.Source
 
 class TokenClassifierTimer {
-  lazy val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
+  lazy val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../../roberta-base-mtl/avg_export"))
 
   def readSentences(fileName: String): Seq[String] = {
     val source = Source.fromFile(fileName)
@@ -37,7 +37,7 @@ class TokenClassifierTimer {
   }
 
   def writeLabels(fileName: String, labelsCollection: Seq[Seq[String]]): Unit= {
-    val printWriter = new PrintWriter(new File(fileName), StandardCharsets.UTF_8)
+    val printWriter = new PrintWriter(new File(fileName), StandardCharsets.UTF_8.name())
 
     try {
       labelsCollection.foreach { labels =>
@@ -54,9 +54,10 @@ class TokenClassifierTimer {
     val collectionOfLabels = elapsedTimer.time {
       sentences.zipWithIndex/*.par*/.map { case (sentence, index) =>
         println(s"$index $sentence")
-        if (index != 1382) {
-          val words = sentence.split(" ").toSeq
+        val words = sentence.split(' ').toSeq
 
+        // index != 1382 of sentences.txt
+        if (words.length < 350) {
           // println(s"Words: ${words.mkString(" ")}")
           val labels = tokenClassifier.predict(words).flatten.toVector
 
