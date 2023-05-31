@@ -28,7 +28,8 @@ class TokenClassifierTimer {
 
     try {
       source.getLines().toVector.map { line =>
-        line.split(' ').toSeq
+        if (line.nonEmpty) line.split(' ').toSeq
+        else Seq.empty[String]
       }
     }
     finally {

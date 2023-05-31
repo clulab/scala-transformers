@@ -21,9 +21,20 @@ class RegressionTestTokenClassifier extends Test {
   // The model for the token classifier is not usually available, so this test is ignored by default.
   ignore should "produce consistent results" in {
     val actualCollectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
+    val failingIndexes = actualCollectionOfLabels.zip(expectedCollectionOfLabels).zipWithIndex.filter { case ((actualLabels, expectedLabels), index) =>
+      val failing = actualLabels != expectedLabels
+      
+      if (failing) {
+        val message = s"""$index
+            |  actual: ${actualLabels.mkString(" ")}
+            |expected: ${expectedLabels.mkString(" ")}
+            |""".stripMargin
 
-    actualCollectionOfLabels.zip(expectedCollectionOfLabels).zipWithIndex.foreach { case ((actualLabels, expectedLabels), index) =>
-      (index, expectedLabels.mkString(" ")) should be ((index, actualLabels.mkString(" ")))
+        println(message)
+      }
+      failing
     }
+
+    failingIndexes should be (empty)
   }
 }
