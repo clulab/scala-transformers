@@ -13,17 +13,17 @@ class RegressionTestTokenClassifier extends Test {
   println(new File(".").getAbsolutePath)
 
   val tokenClassifierTimer = new TokenClassifierTimer()
-  val sentencesFileName = "../encoder/src/test/resources/sentences.txt"
-  val labelsFileName = "../encoder/src/test/resources/labels.txt"
+  val sentencesFileName = "./src/test/resources/sentences.txt"
+  val labelsFileName = "./src/test/resources/labels.txt"
   val sentences = tokenClassifierTimer.readSentences(sentencesFileName)
   val expectedCollectionOfLabels = tokenClassifierTimer.readLabels(labelsFileName)
 
   // The model for the token classifier is not usually available, so this test is ignored by default.
-  ignore should "produce consistent results" in {
+  it should "produce consistent results" in {
     val actualCollectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
     val failingIndexes = actualCollectionOfLabels.zip(expectedCollectionOfLabels).zipWithIndex.filter { case ((actualLabels, expectedLabels), index) =>
       val failing = actualLabels != expectedLabels
-      
+
       if (failing) {
         val message = s"""$index
             |  actual: ${actualLabels.mkString(" ")}

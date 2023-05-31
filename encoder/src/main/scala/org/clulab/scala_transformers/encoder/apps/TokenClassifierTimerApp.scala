@@ -148,8 +148,8 @@ class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassi
 }
 
 object TokenClassifierTimerApp extends App {
-  val sentencesFileName = args.lift(0).getOrElse("../sentences.txt")
-  val    labelsFileName = args.lift(1).getOrElse("../labels.txt")
+  val sentencesFileName = args.lift(0).getOrElse("./src/test/resources/sentences.txt")
+  val    labelsFileName = args.lift(1).getOrElse("./src/test/resources/labels.txt")
   val tokenClassifierTimer = new TokenClassifierTimer()
   val sentences = tokenClassifierTimer.readSentences(sentencesFileName)
   val collectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
