@@ -53,7 +53,7 @@ class TokenClassifierTimer {
   def makeLabels(sentences: Seq[String]): Seq[Seq[String]] = {
     val elapsedTimer = Timers.getOrNew("Elapsed")
     val collectionOfLabels = elapsedTimer.time {
-      sentences.zipWithIndex.par.map { case (sentence, index) =>
+      sentences.zipWithIndex./*par.*/map { case (sentence, index) =>
         println(s"$index $sentence")
         val words = sentence.split(' ').toSeq
 
