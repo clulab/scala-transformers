@@ -1,5 +1,7 @@
 package org.clulab.scala_transformers.encoder.apps
 
+import breeze.linalg.DenseMatrix
+import breeze.util.JavaArrayOps
 import org.clulab.scala_transformers.encoder.TokenClassifier
 import org.clulab.scala_transformers.encoder.timer.Timers
 import org.clulab.scala_transformers.tokenizer.LongTokenization
@@ -72,6 +74,57 @@ class TokenClassifierTimer {
     Timers.summarize()
     collectionOfLabels.toVector
   }
+
+  def readVectors(fileName: String): Seq[Seq[String]] = {
+    val source = Source.fromFile(fileName)
+
+    try {
+      source.getLines().toVector.map { line =>
+        if (line.nonEmpty) line.split(',').toSeq
+        else Seq.empty[String]
+      }
+    }
+    finally {
+      source.close()
+    }
+  }
+
+  def writeVectors(fileName: String, vectorsCollection: Seq[Seq[String]]): Unit = {
+    val printWriter = new PrintWriter(new File(fileName), StandardCharsets.UTF_8.name())
+
+    try {
+      vectorsCollection.foreach { vector =>
+        printWriter.println(vector.mkString(","))
+      }
+    }
+    finally {
+      printWriter.close()
+    }
+  }
+
+  def makeVectors(sentences: Seq[String]): Seq[Seq[String]] = {
+    val elapsedTimer = Timers.getOrNew("Elapsed")
+    val collectionOfVectors = elapsedTimer.time {
+      sentences.zipWithIndex. /*par.*/ map { case (sentence, index) =>
+        println(s"$index $sentence")
+        val words = sentence.split(' ').toSeq
+
+        // index != 1382 of sentences.txt
+        if (words.length < 350) {
+          // println(s"Words: ${words.mkString(" ")}")
+          val floats = tokenClassifier.encodeToArray(words)
+          val strings = floats.map { vector => vector.map(_.toString).mkString("[", " ", "]") }
+
+          strings.toVector
+        }
+        else
+          Vector.empty[String]
+      }
+    }
+
+    Timers.summarize()
+    collectionOfVectors.toVector
+  }
 }
 
 class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassifier(
@@ -83,22 +136,34 @@ class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassi
     Timers.getOrNew(s"Encoder.predict $index")
   }
 
-  override def predict(words: Seq[String], headTaskName: String = "Deps Head"): Array[Array[String]] = {
+  def encode(tokenization: LongTokenization): DenseMatrix[Float] = {
+    val encOutput = forwardTimer.time {
+      val encOutput = encoder.forward(tokenization.tokenIds)
+
+      encOutput
+    }
+
+    encOutput
+  }
+
+  def encodeToArray(words: Seq[String], headTaskName: String = "Deps Head"): Array[Array[Float]] = {
+    val tokenization = tokenizeTimer.time {
+      LongTokenization(tokenizer.tokenize(words.toArray))
+    }
+    val denseMatrix = encode(tokenization)
+    val floats = JavaArrayOps.dmToArray2(denseMatrix)
+
+    floats
+  }
+
+  def predict(tokenization: LongTokenization, headTaskName: String): Array[Array[String]] = {
+    val encOutput = encode(tokenization)
+
     val headTaskIndexOpt = {
       val headTaskIndex = tasks.indexWhere { task => task.name == headTaskName && !task.dual }
 
       if (headTaskIndex >= 0) Some(headTaskIndex)
       else None
-    }
-
-    val tokenization = tokenizeTimer.time {
-      LongTokenization(tokenizer.tokenize(words.toArray))
-    }
-
-    val encOutput = forwardTimer.time {
-      val encOutput = encoder.forward(tokenization.tokenIds)
-
-      encOutput
     }
 
     val notDualTokenAndWordLabels = tasks.zipWithIndex.map { case (task, index) =>
@@ -145,15 +210,41 @@ class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassi
 
     wordLabels
   }
+
+  override def predict(words: Seq[String], headTaskName: String = "Deps Head"): Array[Array[String]] = {
+    val tokenization = tokenizeTimer.time {
+      LongTokenization(tokenizer.tokenize(words.toArray))
+    }
+
+    predict(tokenization, headTaskName)
+  }
 }
 
 object TokenClassifierTimerApp extends App {
-  val sentencesFileName = args.lift(0).getOrElse("./src/test/resources/sentences.txt")
-  val    labelsFileName = args.lift(1).getOrElse("./src/test/resources/labels.txt")
-  val tokenClassifierTimer = new TokenClassifierTimer()
-  val sentences = tokenClassifierTimer.readSentences(sentencesFileName)
-  val collectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
 
-  // Optionally write out the labels
-  // tokenClassifierTimer.writeLabels(labelsFileName, collectionOfLabels)
+  def makeLabels(): Unit = {
+    val sentencesFileName = args.lift(0).getOrElse("./src/test/resources/sentences.txt")
+    val labelsFileName = args.lift(1).getOrElse("./src/test/resources/labels.txt")
+    val tokenClassifierTimer = new TokenClassifierTimer()
+    val sentences = tokenClassifierTimer.readSentences(sentencesFileName)
+    val collectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
+
+    // Optionally write out the labels
+    // tokenClassifierTimer.writeLabels(labelsFileName, collectionOfLabels)
+  }
+
+  def makeVectors(): Unit = {
+    val sentencesFileName = args.lift(0).getOrElse("./src/test/resources/sentences.txt")
+    val vectorsFileName = args.lift(1).getOrElse("./src/test/resources/vectors.txt")
+    val tokenClassifierTimer = new TokenClassifierTimer()
+    // These are limited to 100 to keep down the output file size.
+    val sentences = tokenClassifierTimer.readSentences(sentencesFileName).take(100)
+    val collectionOfVectors = tokenClassifierTimer.makeVectors(sentences)
+
+    // Optionally write out the labels
+    // tokenClassifierTimer.writeVectors(vectorsFileName, collectionOfVectors)
+  }
+
+//  makeLabels()
+  makeVectors()
 }

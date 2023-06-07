@@ -15,11 +15,12 @@ class RegressionTestTokenClassifier extends Test {
   val tokenClassifierTimer = new TokenClassifierTimer()
   val sentencesFileName = "./src/test/resources/sentences.txt"
   val labelsFileName = "./src/test/resources/labels.txt"
+  val vectorsFileName = "./src/test/resources/vectors.txt"
   val sentences = tokenClassifierTimer.readSentences(sentencesFileName)
-  val expectedCollectionOfLabels = tokenClassifierTimer.readLabels(labelsFileName)
 
   // The model for the token classifier is not usually available, so this test is ignored by default.
   it should "produce consistent results" in {
+    val expectedCollectionOfLabels = tokenClassifierTimer.readLabels(labelsFileName)
     val actualCollectionOfLabels = tokenClassifierTimer.makeLabels(sentences)
     val failingIndexes = actualCollectionOfLabels.zip(expectedCollectionOfLabels).zipWithIndex.filter { case ((actualLabels, expectedLabels), index) =>
       val failing = actualLabels != expectedLabels
@@ -36,5 +37,26 @@ class RegressionTestTokenClassifier extends Test {
     }
 
     failingIndexes should be (empty)
+  }
+
+  it should "produce consistent vectors" in {
+    val expectedCollectionOfVectors = tokenClassifierTimer.readVectors(vectorsFileName)
+    val actualCollectionOfVectors = tokenClassifierTimer.makeVectors(sentences.take(expectedCollectionOfVectors.length))
+    val failingIndexes = actualCollectionOfVectors.zip(expectedCollectionOfVectors).zipWithIndex.filter { case ((actualVectors, expectedVectors), index) =>
+      val failing = actualVectors != expectedVectors
+
+      if (failing) {
+        val message =
+          s"""$index
+             |  actual: ${actualVectors.mkString(" ")}
+             |expected: ${expectedVectors.mkString(" ")}
+             |""".stripMargin
+
+        println(message)
+      }
+      failing
+    }
+
+    failingIndexes should be(empty)
   }
 }
