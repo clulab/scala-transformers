@@ -140,7 +140,8 @@ class TokenClassificationModel(PreTrainedModel):
 
         os.makedirs(task_checkpoint, exist_ok = True)
 
-        self.export_name(f"{task_checkpoint}/name", task.task_name)
+        self.export_name(task_checkpoint + '/name', task.task_name)
+        self.export_dual(task_checkpoint + '/dual', task.dual_mode)
         
         with FileUtils.for_writing(f"{task_checkpoint}/labels") as file:
             for label in labels:
@@ -163,7 +164,15 @@ class TokenClassificationModel(PreTrainedModel):
         with open(file_name, "w", encoding=self.encoding) as file:
             file.write(f"{name}\n")
 
-    def export_encoder(self, checkpoint: str, tokenizer: AutoTokenizer, export_device: str) -> None:
+    def export_dual(self, file_name, dual_mode):
+      f = open(file_name, 'w')
+      if(dual_mode):
+        f.write(f'1\n')
+      else:
+        f.write(f'0\n')
+      f.close()
+
+    def export_encoder(self, checkpoint, tokenizer, export_device):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
@@ -229,14 +238,15 @@ class TokenClassificationHead(nn.Module):
         print(f"Classifier layer is {self.classifier}")
 
     def concatenate(self, sequence_output, head_positions):
-        #print(f"in concat. sequence_output.size = {sequence_output.size()}; head_positions.size = {head_positions.size()}")
-        long_head_positions = head_positions.to(torch.long)
-        #print(f"head_positions: {long_head_positions}")
-        head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), long_head_positions]
-        #print(f"head_states.size = {head_states.size()}")
-        modifier_head_states = torch.cat([sequence_output, head_states], dim=2)
-        #print(f"modifier_head_states.size = {modifier_head_states.size()}")
-        return modifier_head_states
+      #print(f'in concat. sequence_output.size = {sequence_output.size()}; head_positions.size = {head_positions.size()}')
+      long_head_positions = head_positions.to(torch.long)
+      #print(f'head_positions: {long_head_positions}')
+      head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), long_head_positions]
+      #print(f'head_states.size = {head_states.size()}')
+      # concate the hidden states from modifier + head
+      modifier_head_states = torch.cat([sequence_output, head_states], dim = 2)
+      #print(f'modifier_head_states.size = {modifier_head_states.size()}')
+      return modifier_head_states
 
     def forward(self, sequence_output, pooled_output, head_positions, labels=None, attention_mask=None, **kwargs):
         #print(f"sequence_output size = {sequence_output.size()}")

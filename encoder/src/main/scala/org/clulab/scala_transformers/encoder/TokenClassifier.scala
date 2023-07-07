@@ -5,9 +5,6 @@ import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 import org.slf4j.{Logger, LoggerFactory}
 
-import java.io.File
-import scala.io.{Codec, Source}
-
 /** 
  * Implements the inference step of a token classifier for multi-task learning
  * The classifier uses a single encoder to generate the hidden state representation for every token and
@@ -38,20 +35,48 @@ class TokenClassifier(
    * @param words Words in this sentence
    * @return Sequnce of labels for each task, for each token
    */
-  def predict(words: Seq[String]): Array[Array[String]] = {
+  def predict(words: Seq[String], headTaskName:String = "Deps Head"): Array[Array[String]] = {
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
+    val wordIds = tokenization.wordIds
+    val tokens = tokenization.tokens
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
 
-    // now generate token label predictions for each task
-    val allLabels = tasks.map { task =>
-      val tokenLabels = task.predict(encOutput)
-      val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+    // outputs for all tasks stored here
+    val allLabels = new Array[Array[String]](tasks.length)
+    var heads: Option[Array[Int]] = None
 
-      wordLabels
+    // now generate token label predictions for all primary tasks (not dual!)
+    for(i <- tasks.indices) {
+      if(! tasks(i).dual) {
+        val tokenLabels = tasks(i).predict(encOutput, None, None)
+        val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+        allLabels(i) = wordLabels
+
+        // if this is the task that predicts head positions, then save them for the dual tasks
+        if(tasks(i).name == headTaskName) {
+          heads = Some(tokenLabels.map(_.toInt))
+        }
+      }
+    }
+
+    // generate outputs for the dual tasks, if heads were predicted by one of the primary tasks
+    if(heads.isDefined) {
+      //println("Tokens:    " + tokens.mkString(", "))
+      //println("Heads:     " + heads.get.mkString(", "))
+      //println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
+      val masks = Some(TokenClassifier.mkTokenMask(wordIds))
+
+      for(i <- tasks.indices) {
+        if(tasks(i).dual) {
+          val tokenLabels = tasks(i).predict(encOutput, heads, masks)
+          val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
+          allLabels(i) = wordLabels
+        }
+      }
     }
 
     allLabels
@@ -59,42 +84,36 @@ class TokenClassifier(
 }
 
 object TokenClassifier {
-  lazy val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  def apply(modelDir: String): TokenClassifier = {
-    logger.info(s"Loading TokenClassifier from directory $modelDir...")
-    val encoder = Encoder(new File(s"$modelDir/encoder.onnx").getAbsolutePath())
-    val tokenizerName = readLine(new File(s"$modelDir/encoder.name"))
-    val tokenizer = ScalaJniTokenizer(tokenizerName)
+  def fromFiles(modelDir: String): TokenClassifier = {
+    val tokenClassifierLayout = new TokenClassifierLayout(modelDir)
+    val tokenClassifierFactory = new TokenClassifierFactoryFromFiles(tokenClassifierLayout)
 
-    val taskParentDir = new File(s"$modelDir/tasks")
-    val taskDirs = taskParentDir.listFiles().map(_.getAbsolutePath).sorted
-    val tasks = taskDirs.map { taskDir =>
-      logger.info(s"Loading task from directory $taskDir...")
-      LinearLayer(readLine(new File(s"$taskDir/name")), taskDir)
-    }
-
-    logger.info("Load complete.")
-    new TokenClassifier(encoder, tasks, tokenizer)
+    tokenClassifierFactory.newTokenClassifier
   }
 
-  def readLine(file: File): String = {
-    val source = Source.fromFile(file)(Codec.UTF8)
+  def fromResources(modelDir: String): TokenClassifier = {
+    val tokenClassifierLayout = new TokenClassifierLayout(modelDir)
+    val tokenClassifierFactory = new TokenClassifierFactoryFromResources(tokenClassifierLayout)
 
-    try {
-      source.getLines.next.trim()
+    tokenClassifierFactory.newTokenClassifier
+  }
+
+  def mkTokenMask(wordIds: Array[Long]): Array[Boolean] = {
+    wordIds.zipWithIndex.map{ case (wordId, index) =>
+      mkSingleTokenMask(wordId, index, wordIds)  
     }
-    finally {
-      source.close()
-    }
+  }
+
+  def mkSingleTokenMask(wordId: Long, index: Int, wordIds: Array[Long]): Boolean = {
+    ! (wordId >= 0 && (index == 0 || wordId != wordIds(index - 1)))
   }
 
   def mapTokenLabelsToWords(tokenLabels: Array[String], wordIds: Array[Long]): Array[String] = {
     require(tokenLabels.length == wordIds.length)
     val wordLabelOpts = tokenLabels.zip(wordIds).zipWithIndex.map { case ((tokenLabel, wordId), index) =>
-      val valid = wordId >= 0 && (index == 0 || wordId != wordIds(index - 1))
-
-      if (valid) Some(tokenLabel)
+      val masked = mkSingleTokenMask(wordId, index, wordIds)
+      if (! masked) Some(tokenLabel)
       else None
     }
 
