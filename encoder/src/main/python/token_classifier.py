@@ -164,7 +164,7 @@ class TokenClassificationModel(PreTrainedModel):
         with open(file_name, "w", encoding=self.encoding) as file:
             file.write(f"{name}\n")
 
-    def export_dual(self, file_name: str, dual_mode; bool) -> None:
+    def export_dual(self, file_name: str, dual_mode: bool) -> None:
         with open(file_name, "w", encoding=self.encoding) as file:
             if dual_mode:
                 file.write("1\n")
