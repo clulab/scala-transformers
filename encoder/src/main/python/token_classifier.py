@@ -12,7 +12,7 @@ from task import Task
 from torch import nn, Tensor
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
-from typing import Callable, Optional, Union
+from typing import Any, Callable, List, Optional, Union
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
 class TokenClassificationModel(PreTrainedModel):    
@@ -23,7 +23,7 @@ class TokenClassificationModel(PreTrainedModel):
         self.output_heads: nn.ModuleDict = nn.ModuleDict() # these are initialized in add_heads
         self.training_mode: bool = True
 
-    def add_heads(self, tasks: list[Task]) -> "TokenClassificationModel":
+    def add_heads(self, tasks: List[Task]) -> "TokenClassificationModel":
         for task in tasks:
             head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, self.config.hidden_dropout_prob)
             # ModuleDict requires keys to be strings
@@ -42,7 +42,7 @@ class TokenClassificationModel(PreTrainedModel):
             head._init_weights()
     
     def forward(self,
-        input_ids: Tensor = None, attention_mask: Tensor = None, token_type_ids: Tensor = None,
+        input_ids: Tensor = None, attention_mask: Tensor = None, token_type_ids: Optional[Tensor] = None,
         labels: Tensor = None, head_positions: Tensor = None, task_ids: Tensor = None, **kwargs: str
     ) -> TokenClassifierOutput:
         outputs = self.encoder(
@@ -87,14 +87,14 @@ class TokenClassificationModel(PreTrainedModel):
             if filtered_labels is not None:
                 loss_list.append(task_loss) #lost_list is empty, so loss becomes empty
                 
-        loss = None if len(loss_list) == 0 else torch.stack(loss_list)
+        loss = None if len(loss_list) == 0 else torch.stack(loss_list).mean()
         #print("batch done")
         #print(f"logits size: {logits.size()}")
                     
         # logits are only used for eval, so we don't save them in training (different task dimensions confuse HF) 
         # at testing time we run one task at a time, so we need to save them then 
         return TokenClassifierOutput(
-            loss=None if labels is None else loss.mean(),
+            loss=loss,
             logits=None if self.training_mode else logits,
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions
@@ -194,7 +194,7 @@ class TokenClassificationModel(PreTrainedModel):
         )
 
     # exports model in a format friendly for ingestion on the JVM
-    def export_model(self, tasks: list[Task], tokenizer: AutoTokenizer, checkpoint_dir: str) -> None:
+    def export_model(self, tasks: List[Task], tokenizer: AutoTokenizer, checkpoint_dir: str) -> None:
         # send the entire model to CPU for this export
         export_device = "cpu"
         self.to(export_device)

@@ -6,6 +6,7 @@ import pandas as pd
 from data_wrangler import DataWrangler
 from dataclasses import dataclass
 from transformers import AutoTokenizer
+from typing import Dict, List
 
 @dataclass
 class LongTaskDef:
@@ -44,9 +45,9 @@ class Task:
         self.task_name: str = long_task_def.task_name
         self.dual_mode: bool = long_task_def.dual_mode
         # we need an index of labels first
-        self.labels: list[str] = DataWrangler.read_label_set(long_task_def.train_file_name)
-        self.index_to_label: dict[int, str] = {i: t for i, t in enumerate(self.labels)} 
-        self.label_to_index: dict[str, int] = {t: i for i, t in enumerate(self.labels)} 
+        self.labels: List[str] = DataWrangler.read_label_set(long_task_def.train_file_name)
+        self.index_to_label: Dict[int, str] = {i: t for i, t in enumerate(self.labels)} 
+        self.label_to_index: Dict[str, int] = {t: i for i, t in enumerate(self.labels)} 
         self.num_labels: int = len(self.index_to_label)
         # create data frames for the datasets
         self.train_df: pd.DataFrame = DataWrangler.read_dataframe(long_task_def.train_file_name, self.label_to_index, self.task_id, long_task_def.tokenizer)
@@ -57,7 +58,7 @@ class Task:
         print(self.train_df)
                 
     @classmethod
-    def mk_tasks(cls, global_base_dir: str, tokenizer: AutoTokenizer, short_task_defs: list[ShortTaskDef]) -> list["Task"]:
+    def mk_tasks(cls, global_base_dir: str, tokenizer: AutoTokenizer, short_task_defs: List[ShortTaskDef]) -> List["Task"]:
         return [
             Task(short_task_def.to_long_task_def(index, global_base_dir, tokenizer)) \
             for index, short_task_def in enumerate(short_task_defs)

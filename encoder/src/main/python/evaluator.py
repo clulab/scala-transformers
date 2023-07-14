@@ -10,22 +10,23 @@ from task import Task
 from token_classifier import TokenClassificationModel
 from torch import IntTensor, Tensor
 from tqdm.notebook import tqdm
+from typing import Dict, List
 
 class Evaluator:
     def __init__(self, model: TokenClassificationModel) -> None:
         self.model = model
         
-    def data_to_tensor(self, dict: dict[str, int]) -> IntTensor: 
-        predict_dict = {}
+    def data_to_tensor(self, dict: Dict[str, Tensor]) -> Dict[str, Tensor]: 
+        predict_dict: Dict[str, Tensor] = {}
         for key in dict:
             if key in {names.INPUT_IDS, names.HEAD_POSITIONS}:
                 predict_dict[key] = IntTensor(dict[key]).view(1, len(dict[key]))
                 # torch.tensor(IntTensor(dict[key])).view(1, len(dict[key]))
-            elif key in {names.TASKS_IDS}:
+            elif key in {names.TASK_IDS}:
                 predict_dict[key] = torch.tensor(dict[key]).view(1)
         return predict_dict
 
-    def labels_to_tensor(self, dict: dict[str, Tensor]) -> Tensor: 
+    def labels_to_tensor(self, dict: Dict[str, Tensor]) -> Tensor: 
         return torch.tensor(dict[names.LABELS])
 
     def predict(self, dataset: Dataset) -> tuple[list[float], list[float]]:
@@ -43,7 +44,7 @@ class Evaluator:
                 #print("PREDICTIONS:")
                 #print(logits)
                 #print(logits.size())
-                pred_labels = torch.argmax(logits, axis = -1)
+                pred_labels = torch.argmax(logits)
                 #print("PRED LABELS:")
                 #print(pred_labels)
                 predictions.extend(pred_labels.tolist())
@@ -54,7 +55,7 @@ class Evaluator:
         return (golds, predictions)
 
     # compute accuracy using the model directly
-    def evaluation_classification_report(self, task: Task, name: str, useTest: bool = False) -> dict[str, float]:
+    def evaluation_classification_report(self, task: Task, name: str, useTest: bool = False) -> Dict[str, float]:
         print(f"Classification report (useTest = {useTest}) for task {name}:")
         num_labels = task.num_labels
         df = task.dev_df if not useTest else task.test_df
@@ -77,14 +78,14 @@ class Evaluator:
         return {names.ACCURACY: accuracy}
         
     # compute accuracy on dev or test partition using the given model
-    def evaluate_task(self, task: Task) -> float:
+    def evaluate_task(self, task: Task) -> Dict[str, float]:
         print(f"Evaluating on the validation dataset for task {task.task_name}:")
         accuracy = self.evaluation_classification_report(task, task.task_name, useTest = False)
         print(accuracy)
         return accuracy
 
     # evaluates self's model and returns macro accuracy on all tasks
-    def evaluate(self, tasks: list[Task]) -> float:
+    def evaluate(self, tasks: List[Task]) -> float:
         accuracies = [self.evaluate_task(task)[names.ACCURACY] for task in tasks]
         macro_accuracy = sum(accuracies) / len(accuracies)
         return macro_accuracy

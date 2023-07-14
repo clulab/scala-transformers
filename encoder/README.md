@@ -25,7 +25,12 @@ If you add a library, perform
 pip freeze > requirements.txt
 ```
 
-To run the tests, use
+To run the tests from the main project directory, use
 ```sh
 pytest
+```
+
+To check the type hinting, run in the encoder/src/main/python directory
+```sh
+mypy *.py
 ```

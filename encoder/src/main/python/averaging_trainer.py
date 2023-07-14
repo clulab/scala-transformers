@@ -11,6 +11,7 @@ from parameters import parameters
 from task import ShortTaskDef, Task
 from token_classifier import TokenClassificationModel
 from transformers import AutoTokenizer, AutoConfig
+from typing import List
 
 @dataclass
 class Checkpoint:
@@ -22,7 +23,7 @@ class AveragingTrainer(BasicTrainer):
         super().__init__(tokenizer)
 
     # main function for averaging models coming from different checkpoints
-    def train(self, tasks: list[Task]) -> None:
+    def train(self, tasks: List[Task]) -> None:
         # create our own token classifier, including the MTL linear layers (or heads)
         model= TokenClassificationModel(self.config, parameters.transformer_name).add_heads(tasks)
 
@@ -34,10 +35,10 @@ class AveragingTrainer(BasicTrainer):
         avg_model = self.average_checkpoints(all_checkpoints, 5, self.config, tasks, tokenizer, "avg", "avg_export")
 
         # evaluate the averaged model to be sure it works
-        macro_accuracy = self.evaluate_model(avg_model, tasks)
+        macro_accuracy = Evaluator(avg_model).evaluate(tasks)
         print(f"Dev macro accuracy for the averaged model: {macro_accuracy}")
 
-    def evaluate_checkpoints(self, model: TokenClassificationModel, tasks: list[Task]) -> list[Checkpoint]:
+    def evaluate_checkpoints(self, model: TokenClassificationModel, tasks: List[Task]) -> List[Checkpoint]:
         best_checkpoint = Checkpoint("", 0)
         all_checkpoints = [] # keeps track of scores for all checkpoints
         directories = (x for x in os.scandir(parameters.model_name) if x.is_dir())
@@ -47,7 +48,7 @@ class AveragingTrainer(BasicTrainer):
             model.summarize_heads()
             
             # evaluate on validation (dev)
-            macro_accuracy = Evaluator.evaluate_model(model, tasks)
+            macro_accuracy = Evaluator(model).evaluate(tasks)
             print(f"Dev macro accuracy for checkpoint {directory}: {macro_accuracy}")
             
             all_checkpoints.append(Checkpoint(directory.path, macro_accuracy))
@@ -59,14 +60,14 @@ class AveragingTrainer(BasicTrainer):
         
         return all_checkpoints
 
-    def load_model(self, checkpoint: Checkpoint, config: AutoConfig, tasks: list[Task]) -> TokenClassificationModel:
+    def load_model(self, checkpoint: Checkpoint, config: AutoConfig, tasks: List[Task]) -> TokenClassificationModel:
         model = TokenClassificationModel(config, parameters.transformer_name)
         model.add_heads(tasks)
         model.from_pretrained(checkpoint.path, ignore_mismatched_sizes=True)
         return model
 
     def average_checkpoints(self,
-        all_checkpoints: list[Checkpoint], k: int, config: AutoConfig, tasks: list[Task],
+        all_checkpoints: List[Checkpoint], k: int, config: AutoConfig, tasks: List[Task],
         tokenizer: AutoTokenizer, dir_to_save: str, dir_to_export: str
     ) -> TokenClassificationModel:
         # sort in descending order of macro accuracy and keep top k
@@ -86,7 +87,7 @@ class AveragingTrainer(BasicTrainer):
 
         for i in range(1, len(checkpoints)):  # Skip 0, which is the main_model.
             print(f"Loading satellite checkpoint[{i}] {checkpoints[i]}...")
-            satellite_model = self.load_model(checkpoints[i].path, config, tasks)
+            satellite_model = self.load_model(checkpoints[i], config, tasks)
             self.print_some_params(satellite_model, "satellite model:")
 
             print("Adding its parameter weights to the main model...")

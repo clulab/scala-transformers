@@ -8,7 +8,7 @@ from names import names
 from parameters import parameters
 from tqdm.notebook import tqdm
 from transformers import AutoTokenizer
-from typing import Union
+from typing import Any, Dict, List, Union
 
 # enable tqdm in pandas
 # tqdm.pandas()
@@ -19,9 +19,9 @@ class Sentence:
         self.clear()
 
     def clear(self) -> None:
-        self.words = []
-        self.labels = []
-        self.head_positions = []
+        self.words: List[str] = []
+        self.labels: List[str] = []
+        self.head_positions: List[int] = []
 
     def add_line(self, word: str, label: str, head_position: Union[int, None]) -> None:
         self.words.append(word)
@@ -32,7 +32,7 @@ class Sentence:
 class DataWrangler:
     # map labels to the first token in each word
     @classmethod
-    def align_labels(cls, word_ids: list[int], labels: list[str], label_to_index: dict[str, int]) -> list[int]:
+    def align_labels(cls, word_ids: List[int], labels: List[str], label_to_index: Dict[str, int]) -> List[int]:
         label_ids = []
         previous_word_id = None
         for word_id in word_ids:
@@ -53,7 +53,7 @@ class DataWrangler:
 
     # map word-level head positions to subword tokens
     @classmethod
-    def align_head_positions(cls, word_ids: list[int], word_heads: list[int]) -> list[int]:
+    def align_head_positions(cls, word_ids: List[int], word_heads: List[int]) -> List[int]:
         # map from word positions to first-in-word token positions 
         #print(f"word_ids = {word_ids}")
         #print(f"word_heads = {word_heads}")
@@ -93,7 +93,7 @@ class DataWrangler:
                 
     # build a sorted list of labels in the dataset            
     @classmethod
-    def read_label_set(cls, filename: str) -> list[str]:
+    def read_label_set(cls, filename: str) -> List[str]:
         labels = set()
         with FileUtils.for_reading(filename) as file:
             for line in file:
@@ -109,12 +109,12 @@ class DataWrangler:
 
     # converts a two-column file in the basic MTL format ("word \t label") into a dataframe
     @classmethod
-    def read_dataframe(cls, filename: str, label_to_index: dict[str, int], task_id: int, tokenizer: AutoTokenizer) -> pd.DataFrame:
+    def read_dataframe(cls, filename: str, label_to_index: Dict[str, int], task_id: int, tokenizer: AutoTokenizer) -> pd.DataFrame:
         # now build the actual dataframe for this dataset
         WORDS = "words"
         STR_LABELS = "str_labels"
         WORD_IDS = "word_ids"
-        data = {
+        data: Dict[str, List[Any]] = {
             WORDS: [], 
             STR_LABELS: [], 
             names.INPUT_IDS: [], 
