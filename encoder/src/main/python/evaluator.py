@@ -44,7 +44,7 @@ class Evaluator:
                 #print("PREDICTIONS:")
                 #print(logits)
                 #print(logits.size())
-                pred_labels = torch.argmax(logits)
+                pred_labels = torch.argmax(logits, axis=-1)
                 #print("PRED LABELS:")
                 #print(pred_labels)
                 predictions.extend(pred_labels.tolist())

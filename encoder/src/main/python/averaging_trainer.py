@@ -25,7 +25,7 @@ class AveragingTrainer(BasicTrainer):
     # main function for averaging models coming from different checkpoints
     def train(self, tasks: List[Task]) -> None:
         # create our own token classifier, including the MTL linear layers (or heads)
-        model= TokenClassificationModel(self.config, parameters.transformer_name).add_heads(tasks)
+        model = TokenClassificationModel(self.config, parameters.transformer_name).add_heads(tasks)
 
         all_checkpoints = self.evaluate_checkpoints(model, tasks)
         #all_checkpoints = [("bert-base-cased-mtl/checkpoint-112788", 0.9609160767081839), ("bert-base-cased-mtl/checkpoint-563940", 0.9755393804639914), ("bert-base-cased-mtl/checkpoint-263172", 0.9689283322957432), ("bert-base-cased-mtl/checkpoint-338364", 0.9714441630119305), ("bert-base-cased-mtl/checkpoint-187980", 0.9656722898890078), ("bert-base-cased-mtl/checkpoint-639132", 0.9765498831853234), ("bert-base-cased-mtl/checkpoint-526344", 0.9755484633714315), ("bert-base-cased-mtl/checkpoint-601536", 0.9761621421054925), ("bert-base-cased-mtl/checkpoint-413556", 0.9736679839344381), ("bert-base-cased-mtl/checkpoint-75192", 0.9576241024527834), ("bert-base-cased-mtl/checkpoint-225576", 0.9676488217187262), ("bert-base-cased-mtl/checkpoint-751920", 0.9773871674484382), ("bert-base-cased-mtl/checkpoint-300768", 0.9706321234813376), ("bert-base-cased-mtl/checkpoint-789516", 0.9776340092350553), ("bert-base-cased-mtl/checkpoint-150384", 0.9632114643167207), ("bert-base-cased-mtl/checkpoint-488748", 0.9746556698249005), ("bert-base-cased-mtl/checkpoint-451152", 0.9741960558691349), ("bert-base-cased-mtl/checkpoint-37596", 0.9480660393679876), ("bert-base-cased-mtl/checkpoint-714324", 0.9773336477345376), ("bert-base-cased-mtl/checkpoint-676728", 0.9770617046439647), ("bert-base-cased-mtl/checkpoint-375960", 0.9728387337126444)]
@@ -39,7 +39,7 @@ class AveragingTrainer(BasicTrainer):
         print(f"Dev macro accuracy for the averaged model: {macro_accuracy}")
 
     def evaluate_checkpoints(self, model: TokenClassificationModel, tasks: List[Task]) -> List[Checkpoint]:
-        best_checkpoint = Checkpoint("", 0)
+        best_checkpoint = Checkpoint(parameters.model_name, 0)
         all_checkpoints = [] # keeps track of scores for all checkpoints
         directories = (x for x in os.scandir(parameters.model_name) if x.is_dir())
 

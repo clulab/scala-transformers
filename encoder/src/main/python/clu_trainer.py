@@ -46,7 +46,8 @@ class CluTrainer(BasicTrainer):
             #evaluation_strategy="epoch",
             #do_eval=True, 
             weight_decay=parameters.weight_decay,
-            use_mps_device = parameters.use_mps_device
+            use_mps_device = parameters.use_mps_device,
+            no_cuda = not parameters.use_cuda_device
         )
         
         trainer = Trainer(

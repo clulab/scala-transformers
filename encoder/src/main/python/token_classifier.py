@@ -161,11 +161,11 @@ class TokenClassificationModel(PreTrainedModel):
             file.write("\n")
     
     def export_name(self, file_name: str, name: str) -> None:
-        with open(file_name, "w", encoding=self.encoding) as file:
+        with open(file_name, "w", encoding=parameters.encoding) as file:
             file.write(f"{name}\n")
 
     def export_dual(self, file_name: str, dual_mode: bool) -> None:
-        with open(file_name, "w", encoding=self.encoding) as file:
+        with open(file_name, "w", encoding=parameters.encoding) as file:
             if dual_mode:
                 file.write("1\n")
             else:
