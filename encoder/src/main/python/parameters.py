@@ -8,6 +8,7 @@ import torch
 
 class Parameters:
     def __init__(self) -> None:
+        avoid_cuda = False
         avoid_mps = False
         # select device
         if not avoid_cuda and torch.cuda.is_available():
