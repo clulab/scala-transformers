@@ -7,12 +7,13 @@ class TokenizersTest extends Test {
   // See also test_clu_tokenizer.py.
   val tokenizerNames = Seq(
     "bert-base-cased",
-    "xlm-roberta-base",
     "distilbert-base-cased",
-    "roberta-base" // ,
-    // Either of these last two will not just fail, but cause a
+    "roberta-base",
+    "xlm-roberta-base" // ,
+    // All of these latter ones will not just fail, but cause a
     // fatal runtime error and end the testing completely.
     // "google/bert_uncased_L-4_H-512_A-8",
+    // "google/electra-small-discriminator",
     // "microsoft/deberta-v3-base"
   )
 

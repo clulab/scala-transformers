@@ -41,13 +41,13 @@ class Parameters:
 
         # which transformer to use
         # see this page for other options: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
+        # self.transformer_name: str = "bert-base-cased" 
+        # self.transformer_name: str = "distilbert-base-cased"
+        # self.transformer_name: str = "roberta-base" 
+        # self.transformer_name: str = "xlm-roberta-base" 
+        # self.transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
         # self.transformer_name: str = "google/electra-small-discriminator"  
         self.transformer_name: str = "microsoft/deberta-v3-base" 
-        # self.transformer_name: str = "roberta-base" 
-        # self.transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
-        # self.transformer_name: str = "bert-base-cased" 
-        # self.transformer_name: str = "xlm-roberta-base" 
-        # self.transformer_name: str = "distilbert-base-cased"
 
         self.model_name: str = f"{self.transformer_name.replace('/', '-')}-mtl"
 
