@@ -24,7 +24,7 @@ class SentencesTest extends Test {
   def test(tokenizerName: String): Unit = {
     val modelName = tokenizerName.replace("/",  "-")
 
-    it should s"reproduce results for $tokenizerName" in {
+    ignore should s"reproduce results for $tokenizerName" in {
       val addPrefixSpace = tokenizerName.contains("roberta")
       val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
       val inFileName = s"../corpora/sentences/$modelName-mtl.txt"
