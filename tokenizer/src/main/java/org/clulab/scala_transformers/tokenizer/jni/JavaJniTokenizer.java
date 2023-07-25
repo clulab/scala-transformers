@@ -5,6 +5,8 @@ public class JavaJniTokenizer {
     // return an instance
     private static native long native_create(String name);
 
+    private static native long native_deserialize(String content);
+
     // Garbage collect the RustTokenizer.
     public static native void native_destroy(long rustTokenizerId);
 
@@ -13,6 +15,12 @@ public class JavaJniTokenizer {
 
     public static long create(String name) {
         long tokenizer_id = native_create(name);
+
+        return tokenizer_id;
+    }
+
+    public static long deserialize(String content) {
+        long tokenizer_id = native_deserialize(content);
 
         return tokenizer_id;
     }

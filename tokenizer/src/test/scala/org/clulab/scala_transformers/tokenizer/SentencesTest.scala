@@ -11,23 +11,28 @@ class SentencesTest extends Test {
     "bert-base-cased",
     "distilbert-base-cased",
     "roberta-base",
-    "xlm-roberta-base" // ,
+    "xlm-roberta-base",
     // All of these latter ones will not just fail, but cause a
     // fatal runtime error and end the testing completely.
-    // "google/bert_uncased_L-4_H-512_A-8",
-    // "google/electra-small-discriminator",
-    // "microsoft/deberta-v3-base"
+    "google/bert_uncased_L-4_H-512_A-8",
+    "google/electra-small-discriminator",
+    "microsoft/deberta-v3-base"
   )
 
   behavior of "Tokenizer"
 
   def test(tokenizerName: String): Unit = {
-    val modelName = tokenizerName.replace("/",  "-")
+    // Use this to get the tokenizer.
+    val patchedTokenizerName =
+        if (tokenizerName.contains("/")) "../pretrained/" + tokenizerName + "/tokenizer.json"
+        else tokenizerName
+    // Use this to get the sentence file.
+    val modelName = tokenizerName.replace("/",  "-") + "-mtl"
 
-    ignore should s"reproduce results for $tokenizerName" in {
+    it should s"reproduce results for $tokenizerName" in {
       val addPrefixSpace = tokenizerName.contains("roberta")
-      val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
-      val inFileName = s"../corpora/sentences/$modelName-mtl.txt"
+      val tokenizer = ScalaJniTokenizer(patchedTokenizerName, addPrefixSpace)
+      val inFileName = s"../corpora/sentences/$modelName.txt"
       val source = Source.fromFile(inFileName)(Codec.UTF8)
 
       try {

@@ -7,11 +7,23 @@ use jni::sys::jlong;
 use jni::sys::jobject;
 use jni::sys::jsize;
 use jni::sys::jobjectArray;
+use std::path::Path;
 use tokenizers::tokenizer::Tokenizer;
 
 fn create_tokenizer(name: &String) -> i64 {
     // See https://doc.rust-lang.org/std/primitive.pointer.html.
     let tokenizer_stack: Tokenizer = Tokenizer::from_pretrained(name, None).unwrap();
+    let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
+    let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
+    let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
+    let tokenizer_id: i64 = tokenizer_ptr as i64;
+
+    return tokenizer_id;
+}
+
+fn deserialize_tokenizer(content: &String) -> i64 {
+    // See https://doc.rust-lang.org/std/primitive.pointer.html.
+    let tokenizer_stack: Tokenizer = Tokenizer::from_file(Path::new(content)).unwrap();
     let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
     let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
     let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
@@ -34,6 +46,17 @@ pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJni
     eprintln!("[Tokenizer] => create_rust_tokenizer(\"{}\")", r_name);
 
     let tokenizer_id = create_tokenizer(&r_name);
+    eprintln!("[Tokenizer] <= {}", tokenizer_id);
+    return tokenizer_id;
+}
+
+#[no_mangle]
+pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1deserialize(env: JNIEnv,
+        _class: JClass, j_content: JString) -> jlong {
+    let r_content: String = env.get_string(j_content).unwrap().into();
+    eprintln!("[Tokenizer] => from_string");
+
+    let tokenizer_id = deserialize_tokenizer(&r_content);
     eprintln!("[Tokenizer] <= {}", tokenizer_id);
     return tokenizer_id;
 }

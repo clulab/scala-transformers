@@ -8,7 +8,12 @@ import scala.collection.mutable.{HashMap => MutableHashMap}
 import scala.ref.WeakReference
 
 class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizer(name) {
-  val tokenizerId: Long = JavaJniTokenizer.create(name)
+  val tokenizerId: Long = {
+    if (name.contains("/"))
+      JavaJniTokenizer.deserialize(name)
+    else
+      JavaJniTokenizer.create(name)
+  }
 
   override def finalize(): Unit = {
     JavaJniTokenizer.destroy(tokenizerId)
