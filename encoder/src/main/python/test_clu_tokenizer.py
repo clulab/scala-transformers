@@ -14,13 +14,13 @@ def test_clu_tokenizer() -> None:
     tokenizer = CluTokenizer.get_pretrained()
     for name in names.tokenizer_names:
         tokenizer = CluTokenizer.get_pretrained(name)
-        tokenizedWords = tokenizer(words, is_split_into_words=True)
-        idsFromWords = tokenizedWords.input_ids
-        tokensFromWords = tokenizer.convert_ids_to_tokens(idsFromWords)
+        tokenized_words = tokenizer(words, is_split_into_words=True)
+        ids_from_words = tokenized_words.input_ids
+        tokens_from_words = tokenizer.convert_ids_to_tokens(ids_from_words)
 
         print(words)
-        print(tokensFromWords)
-        print(idsFromWords)
+        print(tokens_from_words)
+        print(ids_from_words)
 
 
 if __name__ == "__main__":

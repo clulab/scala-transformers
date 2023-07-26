@@ -9,10 +9,17 @@ import scala.ref.WeakReference
 
 class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizer(name) {
   val tokenizerId: Long = {
-    if (name.contains("/"))
+    if (name.contains("/")) {
+
       JavaJniTokenizer.deserialize(name)
-    else
-      JavaJniTokenizer.create(name)
+    }
+    else {
+      val tokenizerId = JavaJniTokenizer.create(name)
+
+      if (tokenizerId == 0)
+        throw new RuntimeException(s"The '$name' tokenizer could not be created by Tokenizer::from_pretrained!")
+      tokenizerId
+    }
   }
 
   override def finalize(): Unit = {
