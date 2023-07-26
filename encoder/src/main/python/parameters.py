@@ -46,12 +46,15 @@ class Parameters:
         # self.transformer_name: str = "roberta-base" 
         # self.transformer_name: str = "xlm-roberta-base" 
         # self.transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
-        # self.transformer_name: str = "google/electra-small-discriminator"  
+        # self.transformer_name: str = "google/electra-small-discriminator"
         self.transformer_name: str = "microsoft/deberta-v3-base" 
 
-        self.model_name: str = f"{self.transformer_name.replace('/', '-')}-mtl"
-
+        self.model_name: str = self.get_model_name(self.transformer_name)
+    
         # the encoding used by default for reading and writing files       
         self.encoding = "UTF-8"
+
+    def get_model_name(self, transformer_name: str) -> str:
+        return f"{transformer_name.replace('/', '-')}-mtl"
 
 parameters = Parameters()

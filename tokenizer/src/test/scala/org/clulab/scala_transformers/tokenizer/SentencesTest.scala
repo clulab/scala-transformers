@@ -12,8 +12,6 @@ class SentencesTest extends Test {
     "distilbert-base-cased",
     "roberta-base",
     "xlm-roberta-base",
-    // All of these latter ones will not just fail, but cause a
-    // fatal runtime error and end the testing completely.
     "google/bert_uncased_L-4_H-512_A-8",
     "google/electra-small-discriminator",
     "microsoft/deberta-v3-base"
@@ -24,15 +22,16 @@ class SentencesTest extends Test {
   def test(tokenizerName: String): Unit = {
     // Use this to get the tokenizer.
     val patchedTokenizerName =
-        if (tokenizerName.contains("/")) "../pretrained/" + tokenizerName + "/tokenizer.json"
-        else tokenizerName
+        /*if (tokenizerName.contains("/"))*/ "../pretrained/" + tokenizerName + "/tokenizer.json"
+//        else tokenizerName
     // Use this to get the sentence file.
     val modelName = tokenizerName.replace("/",  "-") + "-mtl"
 
     it should s"reproduce results for $tokenizerName" in {
       val addPrefixSpace = tokenizerName.contains("roberta")
       val tokenizer = ScalaJniTokenizer(patchedTokenizerName, addPrefixSpace)
-      val inFileName = s"../corpora/sentences/$modelName.txt"
+//      val inFileName = s"./tokenizer/src/test/resources/sentences/$modelName.txt"
+      val inFileName = s"./tokenizer/src/test/resources/words/$modelName.txt"
       val source = Source.fromFile(inFileName)(Codec.UTF8)
 
       try {
@@ -49,8 +48,20 @@ class SentencesTest extends Test {
           val tokenString = tokens.mkString("[", ", ", "]")
           val idString = ids.mkString("[", ", ", "]")
 
-          tokenString should be (lines(1))
-          idString should be (lines(2))
+          if (tokenString != lines(1) || idString != lines(2)) {
+            println(tokenizerName)
+            println(lines(0))
+            println(s"  actual: $tokenString")
+            println(s"expected: ${lines(1)}")
+
+            println(s"  actual: $idString")
+            println(s"expected: ${lines(2)}")
+
+            val wordIds = tokenization.wordIds
+            println(wordIds.mkString(", "))
+          }
+//          tokenString should be (lines(1))
+//          idString should be (lines(2))
         }
       }
       finally {
