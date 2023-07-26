@@ -10,10 +10,10 @@ use jni::sys::jobjectArray;
 use std::path::Path;
 use tokenizers::tokenizer::{Result, Tokenizer};
 
-fn create_tokenizer(name: &String) -> Result<i64> {
+fn create_from_pretrained(name: &String) -> Result<i64> {
     // See https://doc.rust-lang.org/std/primitive.pointer.html.
-    let tokenizer_result = Tokenizer::from_pretrained(name, None);
-    let result = tokenizer_result.map(|tokenizer_stack| {
+    let tokenizer_result: Result<Tokenizer> = Tokenizer::from_pretrained(name, None);
+    let result: Result<i64> = tokenizer_result.map(|tokenizer_stack| {
         let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
         let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
         let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
@@ -25,15 +25,19 @@ fn create_tokenizer(name: &String) -> Result<i64> {
     return result;
 }
 
-fn deserialize_tokenizer(content: &String) -> i64 {
+fn create_from_file(file_name: &String) -> Result<i64> {
     // See https://doc.rust-lang.org/std/primitive.pointer.html.
-    let tokenizer_stack: Tokenizer = Tokenizer::from_file(Path::new(content)).unwrap();
-    let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
-    let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
-    let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
-    let tokenizer_id: i64 = tokenizer_ptr as i64;
+    let tokenizer_result: Result<Tokenizer> = Tokenizer::from_file(Path::new(file_name));
+    let result: Result<i64> = tokenizer_result.map(|tokenizer_stack| {
+        let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
+        let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
+        let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
+        let tokenizer_id: i64 = tokenizer_ptr as i64;
 
-    return tokenizer_id;
+        tokenizer_id
+    });
+
+    return result;
 }
 
 fn destroy_tokenizer(tokenizer_id: i64) {
@@ -44,12 +48,12 @@ fn destroy_tokenizer(tokenizer_id: i64) {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create(env: JNIEnv,
+pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create_1from_1pretrained(env: JNIEnv,
         _class: JClass, j_name: JString) -> jlong {
     let r_name: String = env.get_string(j_name).unwrap().into();
-    eprintln!("[Tokenizer] => create_rust_tokenizer(\"{}\")", r_name);
+    eprintln!("[Tokenizer] => create_from_pretrained(\"{}\")", r_name);
 
-    let tokenizer_result = create_tokenizer(&r_name);
+    let tokenizer_result = create_from_pretrained(&r_name);
     let tokenizer_id = match tokenizer_result {
         Ok(tokenizer_id) => {
             eprintln!("[Tokenizer] <= {}", tokenizer_id);
@@ -65,13 +69,23 @@ pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJni
 }
 
 #[no_mangle]
-pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1deserialize(env: JNIEnv,
-        _class: JClass, j_content: JString) -> jlong {
-    let r_content: String = env.get_string(j_content).unwrap().into();
-    eprintln!("[Tokenizer] => from_string");
+pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create_1from_1file(env: JNIEnv,
+        _class: JClass, j_file_name: JString) -> jlong {
+    let r_file_name: String = env.get_string(j_file_name).unwrap().into();
+    eprintln!("[Tokenizer] => create_from_file(\"{}\")", r_file_name);
 
-    let tokenizer_id = deserialize_tokenizer(&r_content);
-    eprintln!("[Tokenizer] <= {}", tokenizer_id);
+    let tokenizer_result = create_from_file(&r_file_name);
+    let tokenizer_id = match tokenizer_result {
+        Ok(tokenizer_id) => {
+            eprintln!("[Tokenizer] <= {}", tokenizer_id);
+            tokenizer_id
+        },
+        Err(error) => {
+            eprintln!("[Tokenizer] <= {}", error);
+            0 as i64
+        }
+    };
+    
     return tokenizer_id;
 }
 
