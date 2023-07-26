@@ -2,6 +2,7 @@ xkcd
 supercalifragilisticexpialidocious
 opyt
 <s>
+</s>
 [CLS]
 [SEP]
 [UNK]
