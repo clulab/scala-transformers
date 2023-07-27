@@ -10,7 +10,15 @@ import scala.ref.WeakReference
 
 class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizer(name) {
   val tokenizerId: Long = {
-    // Try to load it from a file, which would override the resource.
+    from_file(name)
+      .getOrElse(from_resource(name)
+        .getOrElse(from_network(name)
+          .getOrElse(0)
+        )
+      )
+  }
+
+  protected def from_file(name: String): Option[Long] = {
     val file = new File(name)
 
     if (file.exists() && file.isFile) {
@@ -18,54 +26,53 @@ class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends T
 
       if (tokenizerId == 0)
         throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_file()!""")
-      tokenizerId
+      Some(tokenizerId)
     }
-    // Try to load it from a resource if it is there.
-    else {
-      val resourceName = s"/org/clulab/scala_transformers/tokenizer/$name/tokenizer.json"
-      val resourceURLOpt = Option(getClass.getResource(resourceName))
+    else None
+  }
 
-      if (resourceURLOpt.isDefined) {
-        // Unfortunately, there isn't a good way to know how many bytes there are.
-        val bufferSize = 10280
-        val byteBuffer = new Array[Byte](bufferSize)
-        val outputBuffer = new ByteArrayOutputStream()
-        val resourceURL = resourceURLOpt.get
-        val inputStream = resourceURL.openStream()
+  protected def from_resource(name: String): Option[Long] = {
+    val resourceName = s"/org/clulab/scala_transformers/tokenizer/$name/tokenizer.json"
+    val resourceURLOpt = Option(getClass.getResource(resourceName))
 
-        @annotation.tailrec
-        def readBytes(): Unit = {
-          val count = inputStream.read(byteBuffer)
+    resourceURLOpt.map { resourceURL =>
+      val bufferSize = 10280
+      val byteBuffer = new Array[Byte](bufferSize)
+      val outputBuffer = new ByteArrayOutputStream()
+      val inputStream = resourceURL.openStream()
 
-          if (count >= 0) {
-            outputBuffer.write(byteBuffer, 0, count)
-            readBytes()
-          }
-        }
+      @annotation.tailrec
+      def readBytes(): Unit = {
+        val count = inputStream.read(byteBuffer)
 
-        try {
+        if (count >= 0) {
+          outputBuffer.write(byteBuffer, 0, count)
           readBytes()
         }
-        finally {
-          inputStream.close()
-        }
-
-        val bytes = outputBuffer.toByteArray
-        val tokenizerId = JavaJniTokenizer.createFromBytes(bytes)
-
-        if (tokenizerId == 0)
-          throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_pretrained()!""")
-        tokenizerId
       }
-      // As a last resort, try to fetch it over the network.
-      else {
-        val tokenizerId = JavaJniTokenizer.createFromPretrained(name)
 
-        if (tokenizerId == 0)
-          throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_pretrained()!""")
-        tokenizerId
+      try {
+        readBytes()
       }
+      finally {
+        inputStream.close()
+      }
+
+      val bytes = outputBuffer.toByteArray
+      val tokenizerId = JavaJniTokenizer.createFromBytes(bytes)
+
+      if (tokenizerId == 0)
+        throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_pretrained()!""")
+      tokenizerId
     }
+  }
+
+  protected def from_network(name: String): Option[Long] = {
+    val tokenizerId = JavaJniTokenizer.createFromPretrained(name)
+
+    if (tokenizerId == 0)
+      throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_pretrained()!""")
+    Some(tokenizerId)
   }
 
   override def finalize(): Unit = {
