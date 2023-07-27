@@ -4,10 +4,8 @@ import org.clulab.scala_transformers.tokenizer.LibraryLoader
 import org.clulab.scala_transformers.tokenizer.Tokenization
 import org.clulab.scala_transformers.tokenizer.Tokenizer
 
-import java.io.File
-import java.nio.file.{Files, Paths}
+import java.io.{ByteArrayOutputStream, File}
 import scala.collection.mutable.{HashMap => MutableHashMap}
-import scala.io.Source
 import scala.ref.WeakReference
 
 class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizer(name) {
@@ -25,11 +23,34 @@ class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends T
     // Try to load it from a resource if it is there.
     else {
       val resourceName = s"/org/clulab/scala_transformers/tokenizer/$name/tokenizer.json"
-      val resourceOpt = Option(this.getClass.getResource(resourceName))
+      val resourceURLOpt = Option(getClass.getResource(resourceName))
 
-      if (resourceOpt.isDefined) {
-        val resource = resourceOpt.get
-        val bytes = Files.readAllBytes(Paths.get(resource.toURI))
+      if (resourceURLOpt.isDefined) {
+        // Unfortunately, there isn't a good way to know how many bytes there are.
+        val bufferSize = 10280
+        val byteBuffer = new Array[Byte](bufferSize)
+        val outputBuffer = new ByteArrayOutputStream()
+        val resourceURL = resourceURLOpt.get
+        val inputStream = resourceURL.openStream()
+
+        @annotation.tailrec
+        def readBytes(): Unit = {
+          val count = inputStream.read(byteBuffer)
+
+          if (count >= 0) {
+            outputBuffer.write(byteBuffer, 0, count)
+            readBytes()
+          }
+        }
+
+        try {
+          readBytes()
+        }
+        finally {
+          inputStream.close()
+        }
+
+        val bytes = outputBuffer.toByteArray
         val tokenizerId = JavaJniTokenizer.createFromBytes(bytes)
 
         if (tokenizerId == 0)
