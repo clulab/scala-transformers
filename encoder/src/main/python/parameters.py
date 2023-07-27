@@ -8,15 +8,18 @@ import torch
 
 class Parameters:
     def __init__(self) -> None:
+        avoid_cuda = False
+        avoid_mps = False
         # select device
-        if torch.cuda.is_available():
+        if not avoid_cuda and torch.cuda.is_available():
             device = torch.device("cuda")
-        elif "arm64" in platform.platform():
+        elif not avoid_mps and "arm64" in platform.platform():
             device = torch.device("mps") # "mps"
         else:
             device = torch.device("cpu")
         print(f"Using device: {device.type}") 
         self.use_mps_device: bool = str(device) == "mps"
+        self.use_cuda_device: bool = str(device) == "cuda"
         self.device: torch.device = device
 
         # random seed
@@ -38,17 +41,20 @@ class Parameters:
 
         # which transformer to use
         # see this page for other options: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
-        self.transformer_name: str = "google/electra-small-discriminator"  
-        # self.transformer_name: str = "microsoft/deberta-v3-base" 
-        # self.transformer_name: str = "roberta-base" 
-        # self.transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
         # self.transformer_name: str = "bert-base-cased" 
-        # self.transformer_name: str = "xlm-roberta-base" 
         # self.transformer_name: str = "distilbert-base-cased"
+        # self.transformer_name: str = "roberta-base" 
+        # self.transformer_name: str = "xlm-roberta-base" 
+        # self.transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
+        # self.transformer_name: str = "google/electra-small-discriminator"
+        self.transformer_name: str = "microsoft/deberta-v3-base" 
 
-        self.model_name: str = f"{self.transformer_name.replace('/', '-')}-mtl" 
-
+        self.model_name: str = self.get_model_name(self.transformer_name)
+    
         # the encoding used by default for reading and writing files       
         self.encoding = "UTF-8"
+
+    def get_model_name(self, transformer_name: str) -> str:
+        return f"{transformer_name.replace('/', '-')}-mtl"
 
 parameters = Parameters()

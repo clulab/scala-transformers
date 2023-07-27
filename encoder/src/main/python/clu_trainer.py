@@ -15,13 +15,14 @@ from task import ShortTaskDef, Task
 from sklearn.metrics import accuracy_score
 from token_classifier import TokenClassificationModel
 from transformers import AutoTokenizer, EvalPrediction, TrainingArguments, Trainer
+from typing import Dict, List
 
 class CluTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
         super().__init__(tokenizer)
 
     # main function for training the MTL classifier
-    def train(self, tasks: list[Task]) -> None:
+    def train(self, tasks: List[Task]) -> None:
         # our own token classifier
         model = TokenClassificationModel(self.config, parameters.transformer_name).add_heads(tasks)
         model.summarize_heads()
@@ -45,7 +46,8 @@ class CluTrainer(BasicTrainer):
             #evaluation_strategy="epoch",
             #do_eval=True, 
             weight_decay=parameters.weight_decay,
-            use_mps_device = parameters.use_mps_device
+            use_mps_device = parameters.use_mps_device,
+            no_cuda = not parameters.use_cuda_device
         )
         
         trainer = Trainer(
@@ -62,7 +64,7 @@ class CluTrainer(BasicTrainer):
             lambda: trainer.train()
         )
 
-    def compute_metrics(self, eval_pred: EvalPrediction) -> dict[str, float]:
+    def compute_metrics(self, eval_pred: EvalPrediction) -> Dict[str, float]:
         #print("GOLDS: ", eval_pred.label_ids)
         #print("PREDS: ", eval_pred.predictions)
         # gold labels

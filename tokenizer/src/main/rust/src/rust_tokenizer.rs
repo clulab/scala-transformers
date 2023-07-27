@@ -3,24 +3,63 @@ use jni::objects::JClass;
 use jni::objects::JObject;
 use jni::objects::JString;
 use jni::objects::JValue;
+use jni::sys::jbyteArray;
 use jni::sys::jlong;
 use jni::sys::jobject;
 use jni::sys::jsize;
 use jni::sys::jobjectArray;
-use tokenizers::tokenizer::Tokenizer;
+use std::path::Path;
+use tokenizers::tokenizer::{Result, Tokenizer};
 
-fn create_tokenizer(name: &String) -> i64 {
+fn create_from_pretrained(name: &String) -> Result<i64> {
     // See https://doc.rust-lang.org/std/primitive.pointer.html.
-    let tokenizer_stack: Tokenizer = Tokenizer::from_pretrained(name, None).unwrap();
-    let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
-    let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
-    let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
-    let tokenizer_id: i64 = tokenizer_ptr as i64;
+    let tokenizer_result: Result<Tokenizer> = Tokenizer::from_pretrained(name, None);
+    let result: Result<i64> = tokenizer_result.map(|tokenizer_stack| {
+        let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
+        let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
+        let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
+        let tokenizer_id: i64 = tokenizer_ptr as i64;
+    
+        tokenizer_id
+    });
 
-    return tokenizer_id;
+    return result;
+}
+
+fn create_from_file(file_name: &String) -> Result<i64> {
+    // See https://doc.rust-lang.org/std/primitive.pointer.html.
+    let tokenizer_result: Result<Tokenizer> = Tokenizer::from_file(Path::new(file_name));
+    let result: Result<i64> = tokenizer_result.map(|tokenizer_stack| {
+        let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
+        let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
+        let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
+        let tokenizer_id: i64 = tokenizer_ptr as i64;
+
+        tokenizer_id
+    });
+
+    return result;
+}
+
+fn create_from_bytes(bytes_vec: &Vec<u8>) -> Result<i64> {
+    let bytes_ref = bytes_vec.as_slice();
+    let tokenizer_result = Tokenizer::from_bytes(bytes_ref);
+    let result: Result<i64> = tokenizer_result.map(|tokenizer_stack| {
+        let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
+        let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
+        let tokenizer_ptr: *mut Tokenizer = tokenizer_ref;
+        let tokenizer_id: i64 = tokenizer_ptr as i64;
+
+        tokenizer_id
+    });
+
+    return result;
 }
 
 fn destroy_tokenizer(tokenizer_id: i64) {
+    if tokenizer_id == 0 {
+        return;
+    }
     let tokenizer_ptr = tokenizer_id as *mut Tokenizer;
     // This takes ownership and will cause memory to be released.
     unsafe { Box::from_raw(tokenizer_ptr) };
@@ -28,15 +67,70 @@ fn destroy_tokenizer(tokenizer_id: i64) {
 }
 
 #[no_mangle]
-pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create(env: JNIEnv,
+pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create_1from_1pretrained(env: JNIEnv,
         _class: JClass, j_name: JString) -> jlong {
     let r_name: String = env.get_string(j_name).unwrap().into();
-    eprintln!("[Tokenizer] => create_rust_tokenizer(\"{}\")", r_name);
+    eprintln!("[Tokenizer] => create_from_pretrained(\"{}\")", r_name);
 
-    let tokenizer_id = create_tokenizer(&r_name);
-    eprintln!("[Tokenizer] <= {}", tokenizer_id);
+    let tokenizer_result = create_from_pretrained(&r_name);
+    let tokenizer_id = match tokenizer_result {
+        Ok(tokenizer_id) => {
+            eprintln!("[Tokenizer] <= {}", tokenizer_id);
+            tokenizer_id
+        },
+        Err(error) => {
+            eprintln!("[Tokenizer] <= {}", error);
+            0 as i64
+        }
+    };
+
     return tokenizer_id;
 }
+
+#[no_mangle]
+pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create_1from_1file(env: JNIEnv,
+        _class: JClass, j_file_name: JString) -> jlong {
+    let r_file_name: String = env.get_string(j_file_name).unwrap().into();
+    eprintln!("[Tokenizer] => create_from_file(\"{}\")", r_file_name);
+
+    let tokenizer_result = create_from_file(&r_file_name);
+    let tokenizer_id = match tokenizer_result {
+        Ok(tokenizer_id) => {
+            eprintln!("[Tokenizer] <= {}", tokenizer_id);
+            tokenizer_id
+        },
+        Err(error) => {
+            eprintln!("[Tokenizer] <= {}", error);
+            0 as i64
+        }
+    };
+    
+    return tokenizer_id;
+}
+
+#[no_mangle]
+pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1create_1from_1bytes(env: JNIEnv,
+        _class: JClass, j_bytes: jbyteArray) -> jlong {
+    eprintln!("[Tokenizer] => create_from_bytes(...)");
+    let buffer = env.convert_byte_array(j_bytes).unwrap();
+    // let buffer: Vec<u8> = env.convert_byte_array(j_bytes).unwrap();
+    // let buffer = env.get_byte_array_elements(j_bytes, ReleaseMode::NoCopyBack).unwrap();
+
+    let tokenizer_result = create_from_bytes(&buffer);
+    let tokenizer_id = match tokenizer_result {
+        Ok(tokenizer_id) => {
+            eprintln!("[Tokenizer] <= {}", tokenizer_id);
+            tokenizer_id
+        },
+        Err(error) => {
+            eprintln!("[Tokenizer] <= {}", error);
+            0 as i64
+        }
+    };
+
+    return tokenizer_id;
+}
+
 
 #[no_mangle]
 pub extern "system" fn Java_org_clulab_scala_1transformers_tokenizer_jni_JavaJniTokenizer_native_1destroy(_env: JNIEnv,
