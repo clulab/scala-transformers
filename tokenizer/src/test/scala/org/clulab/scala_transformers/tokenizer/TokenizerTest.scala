@@ -78,7 +78,9 @@ class TokenizerTest extends Test {
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
 
-  it should "tokenize with the roberta-base tokenizer with addPrefixSpace = false" in {
+  // This one is now included as a resource in which addPrefixSpace is expected to be true.
+  // We don't want to have to include two or more of everything, so this configuration is disallowed.
+  ignore should "tokenize with the roberta-base tokenizer with addPrefixSpace = false" in {
     val tokenizer = ScalaJniTokenizer("roberta-base", addPrefixSpace = false)
     val tokenization = tokenizer.tokenize(words)
 
@@ -97,7 +99,7 @@ class TokenizerTest extends Test {
   }
 
   it should "tokenize with the microsoft/deberta-v3-base tokenizer" in {
-    val tokenizer = ScalaJniTokenizer("./pretrained/microsoft-fast/tokenizer.json", addPrefixSpace = false)
+    val tokenizer = ScalaJniTokenizer("microsoft/deberta-v3-base", addPrefixSpace = false)
     val tokenization = tokenizer.tokenize(words)
 
     // The special symbols are not added and words are broken up.  I think this was added later.

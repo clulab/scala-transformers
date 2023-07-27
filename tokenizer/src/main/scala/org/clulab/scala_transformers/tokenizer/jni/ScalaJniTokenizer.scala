@@ -4,21 +4,46 @@ import org.clulab.scala_transformers.tokenizer.LibraryLoader
 import org.clulab.scala_transformers.tokenizer.Tokenization
 import org.clulab.scala_transformers.tokenizer.Tokenizer
 
+import java.io.File
+import java.nio.file.{Files, Paths}
 import scala.collection.mutable.{HashMap => MutableHashMap}
+import scala.io.Source
 import scala.ref.WeakReference
 
 class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizer(name) {
   val tokenizerId: Long = {
-    if (name.contains("/")) {
+    // Try to load it from a file, which would override the resource.
+    val file = new File(name)
 
-      JavaJniTokenizer.deserialize(name)
-    }
-    else {
-      val tokenizerId = JavaJniTokenizer.create(name)
+    if (file.exists() && file.isFile) {
+      val tokenizerId = JavaJniTokenizer.createFromFile(name)
 
       if (tokenizerId == 0)
-        throw new RuntimeException(s"The '$name' tokenizer could not be created by Tokenizer::from_pretrained!")
+        throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_file()!""")
       tokenizerId
+    }
+    // Try to load it from a resource if it is there.
+    else {
+      val resourceName = s"/org/clulab/scala_transformers/tokenizer/$name/tokenizer.json"
+      val resourceOpt = Option(this.getClass.getResource(resourceName))
+
+      if (resourceOpt.isDefined) {
+        val resource = resourceOpt.get
+        val bytes = Files.readAllBytes(Paths.get(resource.toURI))
+        val tokenizerId = JavaJniTokenizer.createFromBytes(bytes)
+
+        if (tokenizerId == 0)
+          throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_pretrained()!""")
+        tokenizerId
+      }
+      // As a last resort, try to fetch it over the network.
+      else {
+        val tokenizerId = JavaJniTokenizer.createFromPretrained(name)
+
+        if (tokenizerId == 0)
+          throw new RuntimeException(s"""The "$name" tokenizer could not be created by Tokenizer::from_pretrained()!""")
+        tokenizerId
+      }
     }
   }
 

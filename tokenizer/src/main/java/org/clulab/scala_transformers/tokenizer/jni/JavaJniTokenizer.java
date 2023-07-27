@@ -7,6 +7,8 @@ public class JavaJniTokenizer {
 
     private static native long native_create_from_file(String fileName);
 
+    private static native long native_create_from_bytes(byte[] bytes);
+
     // Garbage collect the RustTokenizer.
     public static native void native_destroy(long rustTokenizerId);
 
@@ -21,6 +23,12 @@ public class JavaJniTokenizer {
 
     public static long createFromFile(String fileName) {
         long tokenizer_id = native_create_from_file(fileName);
+
+        return tokenizer_id;
+    }
+
+    public static long createFromBytes(byte[] bytes) {
+        long tokenizer_id = native_create_from_bytes(bytes);
 
         return tokenizer_id;
     }
