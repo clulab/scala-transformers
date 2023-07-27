@@ -3,7 +3,6 @@ use jni::objects::JClass;
 use jni::objects::JObject;
 use jni::objects::JString;
 use jni::objects::JValue;
-// use jni::objects::ReleaseMode;
 use jni::sys::jbyteArray;
 use jni::sys::jlong;
 use jni::sys::jobject;
@@ -42,11 +41,9 @@ fn create_from_file(file_name: &String) -> Result<i64> {
     return result;
 }
 
-fn create_from_bytes(bytes: &Vec<u8>) -> Result<i64> {
-    eprintln!("It got to create_from_bytes!");
-    let s = bytes.as_slice().as_ref();
-    // let tokenizer_result: Result<Tokenizer> = Tokenizer::from_bytes(s);
-    let tokenizer_result = Tokenizer::from_bytes(s);
+fn create_from_bytes(bytes_vec: &Vec<u8>) -> Result<i64> {
+    let bytes_ref = bytes_vec.as_slice();
+    let tokenizer_result = Tokenizer::from_bytes(bytes_ref);
     let result: Result<i64> = tokenizer_result.map(|tokenizer_stack| {
         let tokenizer_heap: Box<Tokenizer> = Box::new(tokenizer_stack);
         let tokenizer_ref: &'static mut Tokenizer = Box::leak(tokenizer_heap);
@@ -60,6 +57,9 @@ fn create_from_bytes(bytes: &Vec<u8>) -> Result<i64> {
 }
 
 fn destroy_tokenizer(tokenizer_id: i64) {
+    if tokenizer_id == 0 {
+        return;
+    }
     let tokenizer_ptr = tokenizer_id as *mut Tokenizer;
     // This takes ownership and will cause memory to be released.
     unsafe { Box::from_raw(tokenizer_ptr) };

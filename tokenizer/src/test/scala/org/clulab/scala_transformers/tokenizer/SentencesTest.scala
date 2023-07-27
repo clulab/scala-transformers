@@ -6,7 +6,7 @@ import org.clulab.transformers.test.Test
 import scala.io.{Codec, Source}
 
 class SentencesTest extends Test {
-  // See also test_clu_tokenizer.py.
+  // See also names.py.
   val tokenizerNames = Seq(
     "bert-base-cased",
     "distilbert-base-cased",
@@ -19,19 +19,13 @@ class SentencesTest extends Test {
 
   behavior of "Tokenizer"
 
-  def test(tokenizerName: String): Unit = {
-    // Use this to get the tokenizer.
-    val patchedTokenizerName =
-        /*if (tokenizerName.contains("/"))*/ "../pretrained/" + tokenizerName + "/tokenizer.json"
-//        else tokenizerName
-    // Use this to get the sentence file.
+  def test(tokenizerName: String, kind: String): Unit = {
     val modelName = tokenizerName.replace("/",  "-") + "-mtl"
 
-    it should s"reproduce results for $tokenizerName" in {
+    it should s"reproduce results for $tokenizerName on $kind" in {
       val addPrefixSpace = tokenizerName.contains("roberta")
-      val tokenizer = ScalaJniTokenizer(patchedTokenizerName, addPrefixSpace)
-//      val inFileName = s"./tokenizer/src/test/resources/sentences/$modelName.txt"
-      val inFileName = s"./tokenizer/src/test/resources/words/$modelName.txt"
+      val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
+      val inFileName = s"../tokenizer/src/test/resources/$kind/$modelName.txt"
       val source = Source.fromFile(inFileName)(Codec.UTF8)
 
       try {
@@ -60,17 +54,21 @@ class SentencesTest extends Test {
             val wordIds = tokenization.wordIds
             println(wordIds.mkString(", "))
           }
-//          tokenString should be (lines(1))
-//          idString should be (lines(2))
+          tokenString should be (lines(1))
+          idString should be (lines(2))
         }
       }
       finally {
         source.close()
       }
-
-      println(s"$tokenizerName has id ${tokenizer.tokenizerId}.")
     }
   }
 
-  tokenizerNames.foreach(test)
+  tokenizerNames.foreach(test(_, "sentences"))
+  tokenizerNames
+      .filterNot { name =>
+        // These have some difficulties with special "words".
+        name.contains("roberta") || name.contains("microsoft")
+      }
+      .foreach(test(_, "words"))
 }

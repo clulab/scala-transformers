@@ -48,7 +48,10 @@ class ScalaJniTokenizer(name: String, addPrefixSpace: Boolean = false) extends T
   }
 
   override def finalize(): Unit = {
-    JavaJniTokenizer.destroy(tokenizerId)
+    // With this design, it is possible to get a tokenizerId of 0.  An exception will
+    // be thrown, but the object is still created and will be finalized.
+    if (tokenizerId != 0)
+      JavaJniTokenizer.destroy(tokenizerId)
   }
 
   override def tokenize(words: Array[String]): Tokenization = {
