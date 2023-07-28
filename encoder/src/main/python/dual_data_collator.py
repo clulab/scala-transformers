@@ -1,21 +1,21 @@
 import torch
 
-from names import names
+from names import Names
 from transformers import AutoTokenizer, DataCollatorForTokenClassification
 from typing import Any, Dict, List
 
-# A custom data collator that creates correct batches for all tasks by including the names.HEAD_POSITIONS column as well
+# A custom data collator that creates correct batches for all tasks by including the Names.HEAD_POSITIONS column as well
 class DualDataCollator(DataCollatorForTokenClassification):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
         super().__init__(tokenizer)
 
     def make_head_features(self, features: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        result = [{names.INPUT_IDS: feature[names.HEAD_POSITIONS]} for feature in features]
+        result = [{Names.INPUT_IDS: feature[Names.HEAD_POSITIONS]} for feature in features]
         return result
-        # return [{names.INPUT_IDS: feature[names.HEAD_POSITIONS]} for feature in features]
+        # return [{Names.INPUT_IDS: feature[Names.HEAD_POSITIONS]} for feature in features]
 
     def torch_call(self, features: List[Dict[str, Any]]) -> Dict[str, Any]:
-        label_name: str = "label" if "label" in features[0].keys() else names.LABELS
+        label_name: str = "label" if "label" in features[0].keys() else Names.LABELS
         labels = [feature[label_name] for feature in features] if label_name in features[0].keys() else None
 
         batch = self.tokenizer.pad(
@@ -36,13 +36,13 @@ class DualDataCollator(DataCollatorForTokenClassification):
             # Conversion to tensors will fail if we have labels as they are not of the same length yet.
             return_tensors="pt" if labels is None else None
         )
-        #print(f"batched head positions: {batch_heads[names.INPUT_IDS]}")
-        batch[names.HEAD_POSITIONS] = batch_heads[names.INPUT_IDS]
+        #print(f"batched head positions: {batch_heads[Names.INPUT_IDS]}")
+        batch[Names.HEAD_POSITIONS] = batch_heads[Names.INPUT_IDS]
 
         if labels is None:
             return batch
 
-        sequence_length = torch.tensor(batch[names.INPUT_IDS]).shape[1]
+        sequence_length = torch.tensor(batch[Names.INPUT_IDS]).shape[1]
         padding_side = self.tokenizer.padding_side
         if padding_side == "right":
             batch[label_name] = [

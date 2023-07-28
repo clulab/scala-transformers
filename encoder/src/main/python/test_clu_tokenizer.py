@@ -1,6 +1,6 @@
 
 from clu_tokenizer import CluTokenizer
-from names import names
+from names import Names
 
 def test_clu_tokenizer() -> None:
     words = [
@@ -12,7 +12,7 @@ def test_clu_tokenizer() -> None:
 
 
     tokenizer = CluTokenizer.get_pretrained()
-    for name in names.tokenizer_names:
+    for name in Names.TOKENIZER_NAMES:
         tokenizer = CluTokenizer.get_pretrained(name)
         tokenized_words = tokenizer(words, is_split_into_words=True)
         ids_from_words = tokenized_words.input_ids

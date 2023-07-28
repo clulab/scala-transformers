@@ -4,8 +4,8 @@
 import torch
 
 from datasets import Dataset
-from names import names
-from parameters import parameters
+from names import Names
+from parameters import Parameters
 from task import Task
 from token_classifier import TokenClassificationModel
 from torch import IntTensor, Tensor
@@ -19,15 +19,15 @@ class Evaluator:
     def data_to_tensor(self, dict: Dict[str, Tensor]) -> Dict[str, Tensor]: 
         predict_dict: Dict[str, Tensor] = {}
         for key in dict:
-            if key in {names.INPUT_IDS, names.HEAD_POSITIONS}:
+            if key in {Names.INPUT_IDS, Names.HEAD_POSITIONS}:
                 predict_dict[key] = IntTensor(dict[key]).view(1, len(dict[key]))
                 # torch.tensor(IntTensor(dict[key])).view(1, len(dict[key]))
-            elif key in {names.TASK_IDS}:
+            elif key in {Names.TASK_IDS}:
                 predict_dict[key] = torch.tensor(dict[key]).view(1)
         return predict_dict
 
     def labels_to_tensor(self, dict: Dict[str, Tensor]) -> Tensor: 
-        return torch.tensor(dict[names.LABELS])
+        return torch.tensor(dict[Names.LABELS])
 
     def predict(self, dataset: Dataset) -> tuple[list[float], list[float]]:
         self.model.eval()
@@ -68,14 +68,14 @@ class Evaluator:
         correct = 0
         total = 0
         for i in range(len(golds)):
-            if golds[i] != parameters.ignore_index:
+            if golds[i] != Parameters.ignore_index:
                 total = total + 1
                 if golds[i] == predictions[i]:
                     correct = correct + 1
         
         accuracy = correct / total
         print(f"correct = {correct}, total = {total}")
-        return {names.ACCURACY: accuracy}
+        return {Names.ACCURACY: accuracy}
         
     # compute accuracy on dev or test partition using the given model
     def evaluate_task(self, task: Task) -> Dict[str, float]:
@@ -86,6 +86,6 @@ class Evaluator:
 
     # evaluates self's model and returns macro accuracy on all tasks
     def evaluate(self, tasks: List[Task]) -> float:
-        accuracies = [self.evaluate_task(task)[names.ACCURACY] for task in tasks]
+        accuracies = [self.evaluate_task(task)[Names.ACCURACY] for task in tasks]
         macro_accuracy = sum(accuracies) / len(accuracies)
         return macro_accuracy

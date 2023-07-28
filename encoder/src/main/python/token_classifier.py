@@ -5,9 +5,9 @@ import os
 import torch
 
 from file_utils import FileUtils
-from names import names
+from names import Names
 from tensor_filter import TensorFilter
-from parameters import parameters
+from parameters import Parameters
 from task import Task
 from torch import nn, Tensor
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
@@ -161,11 +161,11 @@ class TokenClassificationModel(PreTrainedModel):
             file.write("\n")
     
     def export_name(self, file_name: str, name: str) -> None:
-        with open(file_name, "w", encoding=parameters.encoding) as file:
+        with open(file_name, "w", encoding=Parameters.encoding) as file:
             file.write(f"{name}\n")
 
     def export_dual(self, file_name: str, dual_mode: bool) -> None:
-        with open(file_name, "w", encoding=parameters.encoding) as file:
+        with open(file_name, "w", encoding=Parameters.encoding) as file:
             if dual_mode:
                 file.write("1\n")
             else:
@@ -175,7 +175,7 @@ class TokenClassificationModel(PreTrainedModel):
         orig_words = ["Using", "transformers", "with", "ONNX", "runtime"]
         token_input = tokenizer(orig_words, is_split_into_words = True, return_tensors = "pt")
         # print(token_input)
-        token_ids = token_input[names.INPUT_IDS].to(export_device) 
+        token_ids = token_input[Names.INPUT_IDS].to(export_device) 
         
         inputs = (token_ids) 
         input_names = ["token_ids"] 
@@ -209,7 +209,7 @@ class TokenClassificationModel(PreTrainedModel):
         # save the encoder as an ONNX model
         onnx_checkpoint = f"{checkpoint_dir}/encoder.onnx"
         self.export_encoder(onnx_checkpoint, tokenizer, export_device)
-        self.export_name(f"{checkpoint_dir}/encoder.name", parameters.transformer_name)
+        self.export_name(f"{checkpoint_dir}/encoder.name", Parameters.transformer_name)
         
 
 class TokenClassificationHead(nn.Module):
