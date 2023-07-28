@@ -29,4 +29,4 @@ When a named tokenizer is requested in the Scala code, the computer searches in 
 
 ## Rust
 
-To rebuild the libraries which provide the JNI interface to Hugging Face tokenizers, install `Rust` and then run `cargo build` in the [rust subdirectory](./src/main/rust).  Copy the resulting library (i.e., .so, .dll, or .dylib file) from the `target` directory to the [resources directory](./src/main/resources).  For a release, use `cargo build --release`.  The Macintosh library files will need to be renamed to distinguish between microprocessors, and the `.dylib` extension should be changed to `.jnilib`.
+To rebuild the libraries which provide the JNI interface to Hugging Face tokenizers, install `Rust` and then run `cargo build` in the [rust subdirectory](./src/main/rust).  Copy the resulting library (i.e., `.so`, `.dll`, or `.dylib` file) from the `target` directory to the [resources directory](./src/main/resources).  For a release, use `cargo build --release`.  The Macintosh library files will need to be renamed to distinguish between microprocessors, and the `.dylib` extension should be changed to `.jnilib`.

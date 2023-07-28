@@ -44,4 +44,4 @@ mypy *.py
 ```
 ### Tokenizers
 
-The Python code from this subproject is also used to download Hugging Face tokenizers and convert them into Rust format for use with the [tokenizer subproject](../tokenizer).  The program to do that is [save_pretrained.py](./save_pretrained.py).  It will download the specified tokenizers and save them in a local directory.  From there they can be manually copied to the [tokenizer resource directory](../tokenizer/src/main/resources/org/clulab/scala_transformers/tokenizer) and published with an updated release of that subproject.
+The Python code from this subproject is also used to download Hugging Face tokenizers and convert them into Rust format for use with the [tokenizer subproject](../tokenizer).  The program to do that is [save_pretrained.py](./src/main/python/save_pretrained.py).  It will download the specified tokenizers and save them in a local directory.  From there they can be manually copied to the [tokenizer resource directory](../tokenizer/src/main/resources/org/clulab/scala_transformers/tokenizer) and published with an updated release of that subproject.
