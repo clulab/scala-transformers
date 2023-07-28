@@ -21,6 +21,12 @@ Additionally, the [tokenizer subdirectory](./src/main/resources/org/clulab/scala
 
 For instructions on adding more, see the [encoder README](../encoder/README.md).
 
+When a named tokenizer is requested in the Scala code, the computer searches in three places for a serialized version of it, in order:
+
+1. In a file on the local hard drive.  This option can be used for unpublished tokenizers, perhaps for testing or privacy reasons.  In this case the tokenizer name should really be a file name.  It would normally end with `tozenizer.json` and not be just a directory name.  `../my_fancy_tokenizer/tokenizer.json` is an example.
+2. In a Java resource accessible on the classpath.  The resource name will be generated from the tokenizer name based on this template: `/org/clulab/scala_transformers/tokenizer/<tokenizer_name>/tokenizer.json`.
+3. At the [Hugging Face website](https://huggingface.co/).  Hugging Face code in the library and at the site will convert the tokenizer name to a URL looking something like this: `https://huggingface.co/<tokenizer_name>/blob/main/tokenizer.json`.  If the tokenizer is found once, it will be cached to your local hard drive and used on subsequent requests that aren't satisfied by the two options above.
+
 ## Rust
 
 To rebuild the libraries which provide the JNI interface to Hugging Face tokenizers, install `Rust` and then run `cargo build` in the [rust subdirectory](./src/main/rust).  Copy the resulting library (i.e., .so, .dll, or .dylib file) from the `target` directory to the [resources directory](./src/main/resources).  For a release, use `cargo build --release`.  The Macintosh library files will need to be renamed to distinguish between microprocessors, and the `.dylib` extension should be changed to `.jnilib`.
