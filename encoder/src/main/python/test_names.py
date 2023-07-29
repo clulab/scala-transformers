@@ -1,5 +1,5 @@
 
-from names import names
+from names import Names
 
 def test_global_names() -> None:
     # assert INPUT_IDS is None
@@ -7,5 +7,5 @@ def test_global_names() -> None:
     pass
 
 def test_scoped_names() -> None:
-    assert names.INPUT_IDS is not None
-    assert names.HEAD_POSITIONS is not None
+    assert Names.INPUT_IDS is not None
+    assert Names.HEAD_POSITIONS is not None

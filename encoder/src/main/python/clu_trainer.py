@@ -9,8 +9,8 @@ from clu_timer import CluTimer
 from clu_tokenizer import CluTokenizer
 from datasets import Dataset
 from dual_data_collator import DualDataCollator
-from names import names
-from parameters import parameters
+from names import Names
+from parameters import Parameters
 from task import ShortTaskDef, Task
 from sklearn.metrics import accuracy_score
 from token_classifier import TokenClassificationModel
@@ -24,7 +24,7 @@ class CluTrainer(BasicTrainer):
     # main function for training the MTL classifier
     def train(self, tasks: List[Task]) -> None:
         # our own token classifier
-        model = TokenClassificationModel(self.config, parameters.transformer_name).add_heads(tasks)
+        model = TokenClassificationModel(self.config, Parameters.transformer_name).add_heads(tasks)
         model.summarize_heads()
 
         # create the formal train/validation/test HF dataset
@@ -37,17 +37,17 @@ class CluTrainer(BasicTrainer):
         # Evaluating the intermediate models in this MTL setting is tricky, so we do not do it
         # Instead, the evaluations are handled in averager.py, where tasks are individually evaluated
         training_args = TrainingArguments(
-            output_dir=parameters.model_name,
+            output_dir=Parameters.model_name,
             log_level="error",
-            num_train_epochs=parameters.epochs + 1,
-            per_device_train_batch_size=parameters.batch_size,
-            per_device_eval_batch_size=parameters.batch_size,
+            num_train_epochs=Parameters.epochs + 1,
+            per_device_train_batch_size=Parameters.batch_size,
+            per_device_eval_batch_size=Parameters.batch_size,
             save_strategy="epoch",
             #evaluation_strategy="epoch",
             #do_eval=True, 
-            weight_decay=parameters.weight_decay,
-            use_mps_device = parameters.use_mps_device,
-            no_cuda = not parameters.use_cuda_device
+            weight_decay=Parameters.weight_decay,
+            use_mps_device = Parameters.use_mps_device,
+            no_cuda = not Parameters.use_cuda_device
         )
         
         trainer = Trainer(
@@ -76,11 +76,11 @@ class CluTrainer(BasicTrainer):
         batch_size, seq_len = pred_ids.shape
         for i in range(batch_size):
             for j in range(seq_len):
-                if label_ids[i, j] != parameters.ignore_index:
+                if label_ids[i, j] != Parameters.ignore_index:
                     y_true.append(label_ids[i][j]) #index_to_label[label_ids[i][j]])
                     y_pred.append(pred_ids[i][j]) #index_to_label[pred_ids[i][j]])
         # return computed metrics
-        return {names.ACCURACY: accuracy_score(y_true, y_pred)}
+        return {Names.ACCURACY: accuracy_score(y_true, y_pred)}
 
 
 if __name__ == "__main__":

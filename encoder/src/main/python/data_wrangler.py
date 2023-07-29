@@ -4,8 +4,8 @@
 import pandas as pd
 
 from file_utils import FileUtils
-from names import names
-from parameters import parameters
+from names import Names
+from parameters import Parameters
 from tqdm.notebook import tqdm
 from transformers import AutoTokenizer
 from typing import Any, Dict, List, Union
@@ -38,7 +38,7 @@ class DataWrangler:
         for word_id in word_ids:
             if word_id is None or word_id == previous_word_id:
                 # ignore if not a word or word id has already been seen
-                label_ids.append(parameters.ignore_index)
+                label_ids.append(Parameters.ignore_index)
             else:
                 # get label id for corresponding word
                 label_id = label_to_index.get(labels[word_id])
@@ -117,11 +117,11 @@ class DataWrangler:
         data: Dict[str, List[Any]] = {
             WORDS: [], 
             STR_LABELS: [], 
-            names.INPUT_IDS: [], 
+            Names.INPUT_IDS: [], 
             WORD_IDS: [], 
-            names.LABELS: [], 
-            names.HEAD_POSITIONS: [], 
-            names.TASK_IDS: []
+            Names.LABELS: [], 
+            Names.HEAD_POSITIONS: [], 
+            Names.TASK_IDS: []
         }
         
         def add_sentence(sentence: Sentence) -> None:           
@@ -130,8 +130,8 @@ class DataWrangler:
 
             # tokenize each sentence
             token_input = tokenizer(sentence.words, is_split_into_words=True)  
-            token_ids = token_input[names.INPUT_IDS]
-            data[names.INPUT_IDS].append(token_ids)
+            token_ids = token_input[Names.INPUT_IDS]
+            data[Names.INPUT_IDS].append(token_ids)
 
             word_ids = token_input.word_ids(batch_index=0)
             assert len(word_ids) == len(token_ids)
@@ -140,17 +140,17 @@ class DataWrangler:
             # map labels to the first token in each word
             token_labels = cls.align_labels(word_ids, sentence.labels, label_to_index)
             assert len(token_labels) == len(token_ids)
-            data[names.LABELS].append(token_labels)
+            data[Names.LABELS].append(token_labels)
 
             # if present, map head offsets to the first token in each word
             if len(sentence.head_positions) > 0:
                 token_head_positions = cls.align_head_positions(word_ids, sentence.head_positions)
             else:
-                token_head_positions = [parameters.ignore_index] * len(word_ids)
+                token_head_positions = [Parameters.ignore_index] * len(word_ids)
             assert len(token_head_positions) == len(token_ids)            
-            data[names.HEAD_POSITIONS].append(token_head_positions)
+            data[Names.HEAD_POSITIONS].append(token_head_positions)
             
-            data[names.TASK_IDS].append(task_id)
+            data[Names.TASK_IDS].append(task_id)
 
             #if task_id == 4:
             #  print(f"sent_words = {sentence.words}")
