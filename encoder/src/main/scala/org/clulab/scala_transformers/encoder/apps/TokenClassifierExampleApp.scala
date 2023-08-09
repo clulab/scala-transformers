@@ -10,10 +10,11 @@ import org.clulab.scala_transformers.tokenizer.LongTokenization
 */
 
 object TokenClassifierExampleApp extends App {
-  val tokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl/avg_export")
+  val tokenClassifier = TokenClassifier.fromFiles("../../scala-transformers-models/roberta-base-mtl/avg_export")
 //  val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/roberta_base_mtl/avg_export")
 
-  val words = Seq("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
+  //val words = Seq("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
+  val words = Seq("John", "Doe", "went", "to", "China", ".")
   println(s"Words: ${words.mkString(", ")}")
   val allLabels = tokenClassifier.predict(words)
   for (labels <- allLabels) {

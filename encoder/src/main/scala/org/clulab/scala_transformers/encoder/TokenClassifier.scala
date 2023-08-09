@@ -28,7 +28,31 @@ class TokenClassifier(
   val encoder: Encoder, 
   val tasks: Array[LinearLayer],
   val tokenizer: Tokenizer
-) {
+  ) {
+
+  /**
+    * Predict labels together with their scores for all tasks for a given sentence 
+    *
+    * @param words Words in this sentence
+    * @param headTaskName Which tasks indicates the predictions for dependency heads (if any)
+    * @return Labels and scores. Dimensions are: tasks x tokens in the sentence x array of (label, logit) per token
+    */
+  def predictWithScores(words: Seq[String], headTaskName:String = "Deps Head"): Array[Array[Array[(String, Float)]]] = {
+    // tokenize to subword tokens
+    val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
+    val inputIds = tokenization.tokenIds
+    val wordIds = tokenization.wordIds
+    val tokens = tokenization.tokens
+
+    // run the sentence through the transformer encoder
+    val encOutput = encoder.forward(inputIds)
+
+    // outputs for all tasks stored here
+    val allLabels = new Array[Array[Array[(String, Float)]]](tasks.length)
+    var heads: Option[Array[Int]] = None
+
+    AICI
+  }
 
   /** 
    * Predict labels for all tasks for a given sentence 

@@ -8,6 +8,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.File
 import scala.io.{Codec, Source}
+import scala.collection.mutable.ArrayBuffer
 
 /** Implements one linear layer */
 class LinearLayer(
@@ -56,6 +57,24 @@ class LinearLayer(
               batchMasks: Option[Array[Array[Boolean]]]): Array[Array[String]] = {
     if(dual) predictDual(inputBatch, batchHeads, batchMasks)
     else predictPrimal(inputBatch)
+  }
+
+  /** Predict all labels and their scores per token */
+  def predictWithScores(inputSentence: DenseMatrix[Float], 
+                        heads: Option[Array[Int]], 
+                        masks: Option[Array[Boolean]]): Array[Array[(String, Float)]] = {
+    val batchSentences = Array(inputSentence)
+    val batchHeads = if(heads.isDefined) Some(Array(heads.get)) else None
+    val batchMasks = if(masks.isDefined) Some(Array(masks.get)) else None
+    predictWithScores(batchSentences, batchHeads, batchMasks).head
+  }
+
+  /** Predict all labels and their scores per token in each sentence in the batch */
+  def predictWithScores(inputBatch: Array[DenseMatrix[Float]], 
+                        batchHeads: Option[Array[Array[Int]]],
+                        batchMasks: Option[Array[Array[Boolean]]]): Array[Array[Array[(String, Float)]]] = {
+    if(dual) predictDualWithScores(inputBatch, batchHeads, batchMasks)
+    else predictPrimalWithScores(inputBatch)
   }
 
   def concatenateModifiersAndHeads(
@@ -121,6 +140,49 @@ class LinearLayer(
     outputBatch                    
   }
 
+  // out dimensions: sentence in batch x token in sentence x label/score per token
+  def predictDualWithScores(inputBatch: Array[DenseMatrix[Float]], 
+                            batchHeads: Option[Array[Array[Int]]] = None,
+                            batchMasks: Option[Array[Array[Boolean]]] = None): Array[Array[Array[(String, Float)]]] = {
+    assert(batchHeads.isDefined)
+    assert(batchMasks.isDefined)
+    val indexToLabel = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
+
+    val outputBatch = new Array[Array[Array[(String, Float)]]](inputBatch.length)
+
+    // we process one sentence at a time because the dual setting makes it harder to batch
+    for(i <- inputBatch.indices) {
+      val input = inputBatch(i)
+      val heads = batchHeads.get(i)
+      val masks = batchMasks.get(i)
+
+      // generate a matrix that is twice as wide to concatenate the embeddings of the mod + head
+      val concatInput = concatenateModifiersAndHeads(input, heads)
+
+      // get the logits for the current sentence produced by this linear layer
+      val logitsPerSentence = forward(Array(concatInput))(0)
+
+      // one token per row; store scores for all labels for this token
+      val allLabels = Range(0, logitsPerSentence.rows).map { i =>
+        // picks line i from a 2D matrix and converts it to Array
+        val row = logitsPerSentence(i, ::).t.toArray 
+
+        // extract the label at each position in the row and its score
+        val labelsAndScores = new ArrayBuffer[(String, Float)]
+        for(j <- row.indices) {
+          labelsAndScores += Tuple2(indexToLabel(j), row(j))
+        }       
+
+        // keep scores in descending order (largest first) 
+        labelsAndScores.toArray.sortBy(0 - _._2)
+      }
+
+      outputBatch(i) = allLabels.toArray
+    }
+
+    outputBatch                    
+  }
+
   def predictPrimal(inputBatch: Array[DenseMatrix[Float]]): Array[Array[String]] = {
     val labels = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
     // predict best label per (subword) token
@@ -135,6 +197,33 @@ class LinearLayer(
       }
 
       bestLabels.toArray
+    }
+
+    outputBatch
+  }
+
+  // out dimensions: sentence in batch x token in sentence x label/score per token
+  def predictPrimalWithScores(inputBatch: Array[DenseMatrix[Float]]): Array[Array[Array[(String, Float)]]] = {
+    val labels = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
+    // predict best label per (subword) token
+    val logits = forward(inputBatch)
+    val outputBatch = logits.map { logitsPerSentence =>
+      // one token per row; store scores for all labels for this token
+      val allLabels = Range(0, logitsPerSentence.rows).map { i =>
+        // picks line i from a 2D matrix and converts it to Array
+        val row = logitsPerSentence(i, ::).t.toArray 
+
+        // extract the label at each position in the row and its score
+        val labelsAndScores = new ArrayBuffer[(String, Float)]
+        for(i <- row.indices) {
+          labelsAndScores += Tuple2(labels(i), row(i))
+        }       
+
+        // keep scores in descending order (largest first) 
+        labelsAndScores.toArray.sortBy(0 - _._2)
+      }
+
+      allLabels.toArray
     }
 
     outputBatch
