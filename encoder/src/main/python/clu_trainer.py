@@ -89,7 +89,7 @@ if __name__ == "__main__":
     tasks = Task.mk_tasks("data/", tokenizer, [
         ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
         ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"),
+        ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
         ShortTaskDef("Deps Head",  "deps-wsj/", "train.heads",  "dev.heads",  "test.heads"),
         ShortTaskDef("Deps Label", "deps-wsj/", "train.labels", "dev.labels", "test.labels", dual_mode=True)
     ])

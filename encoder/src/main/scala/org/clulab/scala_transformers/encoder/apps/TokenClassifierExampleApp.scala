@@ -10,11 +10,14 @@ import org.clulab.scala_transformers.tokenizer.LongTokenization
 */
 
 object TokenClassifierExampleApp extends App {
-  val tokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl/avg_export")
-//  val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/roberta_base_mtl/avg_export")
+  //val tokenClassifier = TokenClassifier.fromFiles("../../scala-transformers-models/roberta-base-mtl/avg_export")
+  val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/microsoft_deberta_v3_base_mtl/avg_export")
 
-  val words = Seq("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
+  //val words = Seq("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
+  val words = Seq("John", "Doe", "went", "to", "China", ".")
   println(s"Words: ${words.mkString(", ")}")
+
+  println("The top label per token per task:")
   val allLabels = tokenClassifier.predict(words)
   for (labels <- allLabels) {
     if(labels != null) {
@@ -22,23 +25,12 @@ object TokenClassifierExampleApp extends App {
     }
   }
 
-  /*
-  val encoder = Encoder(new File("../encoder.onnx").getAbsolutePath().toString)
-  val task = LinearLayer("NER", "..")
-
-  val words = Array("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
-  val tokenizer = ScalaJniTokenizer("bert-base-cased")
-  val tokenization = LongTokenization(tokenizer.tokenize(words))
-  val inputIds = tokenization.tokenIds
-  
-  val encOutput = encoder.forward(inputIds)
-  println(s"encOutput: ${encOutput.rows} x ${encOutput.cols}")
-
-  val taskOutput = task.forward(encOutput)
-  println(s"taskOutput: ${taskOutput.rows} x ${taskOutput.cols}")
-
-  val labels = task.predict(encOutput)
-  println("Tokens: " + tokenization.tokens.mkString(", "))
-  println("Predicted labels: " + labels.mkString(", "))
-  */
+  println("Top 3 labels per token per task:")
+  val allLabelsAndScores = tokenClassifier.predictWithScores(words)
+  for (i <- allLabelsAndScores.indices) {
+    println(s"Task #$i:")
+    for (token <- allLabelsAndScores(i)) {
+      println("\t" + token.slice(0, 3).mkString(", "))
+    }
+  }
 }
