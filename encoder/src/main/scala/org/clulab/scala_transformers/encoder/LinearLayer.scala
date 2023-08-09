@@ -141,6 +141,7 @@ class LinearLayer(
   }
 
   // out dimensions: sentence in batch x token in sentence x label/score per token
+  // labels are sorted in descending order of their scores
   def predictDualWithScores(inputBatch: Array[DenseMatrix[Float]], 
                             batchHeads: Option[Array[Array[Int]]] = None,
                             batchMasks: Option[Array[Array[Boolean]]] = None): Array[Array[Array[(String, Float)]]] = {
@@ -203,6 +204,7 @@ class LinearLayer(
   }
 
   // out dimensions: sentence in batch x token in sentence x label/score per token
+  // labels are sorted in descending order of their scores
   def predictPrimalWithScores(inputBatch: Array[DenseMatrix[Float]]): Array[Array[Array[(String, Float)]]] = {
     val labels = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
     // predict best label per (subword) token
