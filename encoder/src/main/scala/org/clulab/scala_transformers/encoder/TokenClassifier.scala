@@ -39,7 +39,7 @@ class TokenClassifier(
     // This condition must be met in order for allLabels to be filled properly without nulls.
     // The condition is not checked at runtime!
     // if (tasks.exists(_.dual))
-    //   assert(tasks.exists(task => !task.dual && task.name == headTaskName))
+    //   require(tasks.count(task => !task.dual && task.name == headTaskName) == 1)
 
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
@@ -93,6 +93,11 @@ class TokenClassifier(
    * @return Sequnce of labels for each task, for each token
    */
   def predict(words: Seq[String], headTaskName:String = "Deps Head"): Array[Array[String]] = {
+    // This condition must be met in order for allLabels to be filled properly without nulls.
+    // The condition is not checked at runtime!
+    // if (tasks.exists(_.dual))
+    //   require(tasks.count(task => !task.dual && task.name == headTaskName) == 1)
+
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
