@@ -1,9 +1,7 @@
 package org.clulab.scala_transformers.encoder
 
 import org.clulab.scala_transformers.tokenizer.Tokenizer
-import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.scala_transformers.tokenizer.LongTokenization
-import org.slf4j.{Logger, LoggerFactory}
 
 /** 
  * Implements the inference step of a token classifier for multi-task learning
@@ -38,11 +36,15 @@ class TokenClassifier(
     * @return Labels and scores. Dimensions are: tasks x tokens in the sentence x array of (label, logit) per token
     */
   def predictWithScores(words: Seq[String], headTaskName:String = "Deps Head"): Array[Array[Array[(String, Float)]]] = {
+    // This condition must be met in order for allLabels to be filled properly without nulls.
+    // The condition is not checked at runtime!
+    // if (tasks.exists(_.dual))
+    //   require(tasks.count(task => !task.dual && task.name == headTaskName) == 1)
+
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
     val wordIds = tokenization.wordIds
-    val tokens = tokenization.tokens
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
@@ -52,29 +54,29 @@ class TokenClassifier(
     var heads: Option[Array[Int]] = None
 
     // now generate token label predictions for all primary tasks (not dual!)
-    for(i <- tasks.indices) {
-      if(! tasks(i).dual) {
+    for (i <- tasks.indices) {
+      if (!tasks(i).dual) {
         val tokenLabels = tasks(i).predictWithScores(encOutput, None, None)
         val wordLabels = TokenClassifier.mapTokenLabelsAndScoresToWords(tokenLabels, tokenization.wordIds)
         allLabels(i) = wordLabels
 
         // if this is the task that predicts head positions, then save them for the dual tasks
         // here we save only the head predicted with the highest score (hence the .head)
-        if(tasks(i).name == headTaskName) {
+        if (tasks(i).name == headTaskName) {
           heads = Some(tokenLabels.map(_.head._1.toInt))
         }
       }
     }
 
     // generate outputs for the dual tasks, if heads were predicted by one of the primary tasks
-    if(heads.isDefined) {
+    if (heads.isDefined) {
       //println("Tokens:    " + tokens.mkString(", "))
       //println("Heads:     " + heads.get.mkString(", "))
       //println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
       val masks = Some(TokenClassifier.mkTokenMask(wordIds))
 
-      for(i <- tasks.indices) {
-        if(tasks(i).dual) {
+      for (i <- tasks.indices) {
+        if (tasks(i).dual) {
           val tokenLabels = tasks(i).predictWithScores(encOutput, heads, masks)
           val wordLabels = TokenClassifier.mapTokenLabelsAndScoresToWords(tokenLabels, tokenization.wordIds)
           allLabels(i) = wordLabels
@@ -91,11 +93,15 @@ class TokenClassifier(
    * @return Sequnce of labels for each task, for each token
    */
   def predict(words: Seq[String], headTaskName:String = "Deps Head"): Array[Array[String]] = {
+    // This condition must be met in order for allLabels to be filled properly without nulls.
+    // The condition is not checked at runtime!
+    // if (tasks.exists(_.dual))
+    //   require(tasks.count(task => !task.dual && task.name == headTaskName) == 1)
+
     // tokenize to subword tokens
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
     val wordIds = tokenization.wordIds
-    val tokens = tokenization.tokens
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
@@ -105,28 +111,28 @@ class TokenClassifier(
     var heads: Option[Array[Int]] = None
 
     // now generate token label predictions for all primary tasks (not dual!)
-    for(i <- tasks.indices) {
-      if(! tasks(i).dual) {
+    for (i <- tasks.indices) {
+      if (!tasks(i).dual) {
         val tokenLabels = tasks(i).predict(encOutput, None, None)
         val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
         allLabels(i) = wordLabels
 
         // if this is the task that predicts head positions, then save them for the dual tasks
-        if(tasks(i).name == headTaskName) {
+        if (tasks(i).name == headTaskName) {
           heads = Some(tokenLabels.map(_.toInt))
         }
       }
     }
 
     // generate outputs for the dual tasks, if heads were predicted by one of the primary tasks
-    if(heads.isDefined) {
+    if (heads.isDefined) {
       //println("Tokens:    " + tokens.mkString(", "))
       //println("Heads:     " + heads.get.mkString(", "))
       //println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
       val masks = Some(TokenClassifier.mkTokenMask(wordIds))
 
-      for(i <- tasks.indices) {
-        if(tasks(i).dual) {
+      for (i <- tasks.indices) {
+        if (tasks(i).dual) {
           val tokenLabels = tasks(i).predict(encOutput, heads, masks)
           val wordLabels = TokenClassifier.mapTokenLabelsToWords(tokenLabels, tokenization.wordIds)
           allLabels(i) = wordLabels
@@ -168,7 +174,7 @@ object TokenClassifier {
     require(tokenLabels.length == wordIds.length)
     val wordLabelOpts = tokenLabels.zip(wordIds).zipWithIndex.map { case ((tokenLabel, wordId), index) =>
       val masked = mkSingleTokenMask(wordId, index, wordIds)
-      if (! masked) Some(tokenLabel)
+      if (!masked) Some(tokenLabel)
       else None
     }
 

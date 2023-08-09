@@ -27,9 +27,9 @@ object TokenClassifierExampleApp extends App {
 
   println("Top 3 labels per token per task:")
   val allLabelsAndScores = tokenClassifier.predictWithScores(words)
-  for(i <- allLabelsAndScores.indices){
+  for (i <- allLabelsAndScores.indices) {
     println(s"Task #$i:")
-    for(token <- allLabelsAndScores(i)) {
+    for (token <- allLabelsAndScores(i)) {
       println("\t" + token.slice(0, 3).mkString(", "))
     }
   }
