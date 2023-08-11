@@ -45,13 +45,16 @@ class TokenClassifier(
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
     val wordIds = tokenization.wordIds
+    //val tokens = tokenization.tokens
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
 
     // outputs for all tasks stored here: task x tokens in sentence x scores per token
     val allLabels = new Array[Array[Array[(String, Float)]]](tasks.length)
-    var heads: Option[Array[Int]] = None
+    // all heads predicted for every token
+    // dimensions: token x heads
+    var heads: Option[Array[Array[Int]]] = None
 
     // now generate token label predictions for all primary tasks (not dual!)
     for (i <- tasks.indices) {
@@ -61,17 +64,19 @@ class TokenClassifier(
         allLabels(i) = wordLabels
 
         // if this is the task that predicts head positions, then save them for the dual tasks
-        // here we save only the head predicted with the highest score (hence the .head)
+        // we save all the heads predicted for each token
         if (tasks(i).name == headTaskName) {
-          heads = Some(tokenLabels.map(_.head._1.toInt))
+          heads = Some(tokenLabels.map(_.map(_._1.toInt)))
         }
       }
     }
 
     // generate outputs for the dual tasks, if heads were predicted by one of the primary tasks
+    // the dual task(s) must be aligned with the heads. 
+    //   that is, we predict the top label for each of the head candidates
     if (heads.isDefined) {
       //println("Tokens:    " + tokens.mkString(", "))
-      //println("Heads:     " + heads.get.mkString(", "))
+      //println("Heads:\n\t" + heads.get.map(_.slice(0, 3).mkString(", ")).mkString("\n\t"))
       //println("Masks:     " + TokenClassifier.mkTokenMask(wordIds).mkString(", "))
       val masks = Some(TokenClassifier.mkTokenMask(wordIds))
 
@@ -102,6 +107,7 @@ class TokenClassifier(
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
     val wordIds = tokenization.wordIds
+    //val tokens = tokenization.tokens
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
