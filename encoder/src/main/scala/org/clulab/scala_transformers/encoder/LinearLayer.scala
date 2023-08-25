@@ -4,7 +4,6 @@ import breeze.linalg.`*`
 import breeze.linalg.argmax
 import breeze.linalg.DenseMatrix
 import breeze.linalg.DenseVector
-import scala.collection.mutable.ArrayBuffer
 
 /** Implements one linear layer */
 class LinearLayer(
@@ -140,27 +139,21 @@ class LinearLayer(
     assert(batchMasks.isDefined)
     val indexToLabel = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
 
-    val outputBatch = new Array[Array[String]](inputBatch.length)
-
     // we process one sentence at a time because the dual setting makes it harder to batch
-    for(i <- inputBatch.indices) {
-      val input = inputBatch(i)
-      val heads = batchHeads.get(i)
-
+    val outputBatch = inputBatch.zip(batchHeads.get).map { case (input, heads) =>
       // generate a matrix that is twice as wide to concatenate the embeddings of the mod + head
       val concatInput = concatenateModifiersAndHeads(input, heads)
-
       // get the logits for the current sentence produced by this linear layer
       val logitsPerSentence = forward(Array(concatInput))(0)
-
       // one token per row; pick argmax per token
       val bestLabels = Range(0, logitsPerSentence.rows).map { i =>
         val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
         val bestIndex = argmax(row.t)
+
         indexToLabel(bestIndex)
       }
 
-      outputBatch(i) = bestLabels.toArray
+      bestLabels.toArray
     }
 
     outputBatch                    
@@ -178,44 +171,25 @@ class LinearLayer(
     val indexToLabel = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
 
     // dimensions: sent in batch x token in sentence x label per candidate head
-    val outputBatch = new Array[Array[Array[(String, Float)]]](inputBatch.length)
-
-    // TODO: maybe the triple for loop below can be improved?
-
     // we process one sentence at a time because the dual setting makes it harder to batch
-    for (i <- inputBatch.indices) {
-      val input = inputBatch(i)
-      val headCandidatesPerSentence = batchHeads.get(i)
-
-      // now process each token separately 
-      val outputsPerSentence = new ArrayBuffer[Array[(String, Float)]]()
-      for (j <- headCandidatesPerSentence.indices) {
-        val modifierAbsolutePosition = j
-        val headCandidatesPerToken = headCandidatesPerSentence(j)
-
+    val outputBatch = inputBatch.zip(batchHeads.get).map { case (input, headCandidatesPerSentence) =>
+      // now process each token separately
+      headCandidatesPerSentence.zipWithIndex.map { case (headCandidatesPerToken, modifierAbsolutePosition) =>
         // process each head candidate for this token
-        val outputsPerToken = new ArrayBuffer[(String, Float)]()
-        for(headRelativePosition <- headCandidatesPerToken) {
+        headCandidatesPerToken.map { headRelativePosition =>
           // generate a matrix that is twice as wide to concatenate the embeddings of the mod + head
           val concatInput = concatenateModifierAndHead(input, modifierAbsolutePosition, headRelativePosition)
-
           // get the logits for the current pair of modifier and head
           val logitsPerSentence = forward(Array(concatInput))(0)
-
-          val labelScores = logitsPerSentence(0, ::) 
+          val labelScores = logitsPerSentence(0, ::)
           val bestIndex = argmax(labelScores.t)
           val bestScore = labelScores(bestIndex)
           val bestLabel = indexToLabel(bestIndex)
 
           // println(s"Top prediction for mod $modifierAbsolutePosition and relative head $headRelativePosition is $bestLabel with score $bestScore")
-
-          outputsPerToken += Tuple2(bestLabel, bestScore)
+          (bestLabel, bestScore)
         } // end head candidates for this token
-
-        outputsPerSentence += outputsPerToken.toArray
       } // end this token
-
-      outputBatch(i) = outputsPerSentence.toArray
     } // end sentence batch
 
     outputBatch                    
