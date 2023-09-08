@@ -164,6 +164,10 @@ class TokenClassificationModel(PreTrainedModel):
         with open(file_name, "w", encoding=Parameters.encoding) as file:
             file.write(f"{name}\n")
 
+    def export_maxtokens(self, file_name: str, max_tokens: int) -> None:
+        with open(file_name, "w", encoding=Parameters.encoding) as file:
+            file.write(f"{max_tokens}\n")
+
     def export_dual(self, file_name: str, dual_mode: bool) -> None:
         with open(file_name, "w", encoding=Parameters.encoding) as file:
             if dual_mode:
@@ -210,6 +214,7 @@ class TokenClassificationModel(PreTrainedModel):
         onnx_checkpoint = f"{checkpoint_dir}/encoder.onnx"
         self.export_encoder(onnx_checkpoint, tokenizer, export_device)
         self.export_name(f"{checkpoint_dir}/encoder.name", Parameters.transformer_name)
+        self.export_maxtokens(f"{checkpoint_dir}/encoder.maxtokens", self.config.max_position_embeddings)
         
 
 class TokenClassificationHead(nn.Module):

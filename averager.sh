@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python encoder/src/main/python/averager.py
+python encoder/src/main/python/averaging_trainer.py
