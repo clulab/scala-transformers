@@ -16,7 +16,13 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
   def exists(place: String): Boolean
 
   def name: String = sourceLine(newSource(tokenClassifierLayout.name))
-  def maxTokens: Int = sourceLine(newSource(tokenClassifierLayout.maxTokens)).toInt
+  def maxTokens: Int = try{
+    sourceLine(newSource(tokenClassifierLayout.maxTokens)).toInt
+  } catch {
+    case e: java.io.FileNotFoundException => 
+      logger.error(s"Could not find the ${tokenClassifierLayout.maxTokens} file. Will assume a default value of ${TokenClassifierFactory.DEFAULT_MAX_TOKENS} here.")
+      TokenClassifierFactory.DEFAULT_MAX_TOKENS
+  }
 
   def taskCount: Int = 0.until(Int.MaxValue)
       .find { index =>
@@ -58,6 +64,11 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
     logger.info("Load complete.")
     tokenClassifier
   }
+}
+
+object TokenClassifierFactory {
+  // most encoders used this as the max number of tokens
+  val DEFAULT_MAX_TOKENS = 512
 }
 
 class TokenClassifierFactoryFromFiles(modelLayout: TokenClassifierLayout) extends TokenClassifierFactory(modelLayout, "filesystem") {
