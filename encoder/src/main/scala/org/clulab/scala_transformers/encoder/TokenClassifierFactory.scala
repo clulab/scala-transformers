@@ -16,6 +16,7 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
   def exists(place: String): Boolean
 
   def name: String = sourceLine(newSource(tokenClassifierLayout.name))
+  def maxTokens: Int = sourceLine(newSource(tokenClassifierLayout.maxTokens)).toInt
 
   def taskCount: Int = 0.until(Int.MaxValue)
       .find { index =>
@@ -30,10 +31,16 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
 
   def sourceBoolean(place: String): Boolean = sourceBoolean(newSource(place))
 
-  protected def newTokenClassifier(encoder: Encoder, tokenizerName: String, addPrefixSpace: Boolean, tasks: Array[LinearLayer]): TokenClassifier = {
+  protected def newTokenClassifier(
+    encoder: Encoder, 
+    tokenizerName: String, 
+    encoderMaxTokens: Int, 
+    addPrefixSpace: Boolean, 
+    tasks: Array[LinearLayer]): TokenClassifier = {
+
     val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
 
-    new TokenClassifier(encoder, tasks, tokenizer)
+    new TokenClassifier(encoder, encoderMaxTokens, tasks, tokenizer)
   }
 
   def newTokenClassifier: TokenClassifier = {
@@ -46,7 +53,7 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
 
       linearLayerFactory.newLinearLayer
     }
-    val tokenClassifier = newTokenClassifier(newEncoder, name, addPrefixSpace, linearLayers.toArray)
+    val tokenClassifier = newTokenClassifier(newEncoder, name, maxTokens, addPrefixSpace, linearLayers.toArray)
 
     logger.info("Load complete.")
     tokenClassifier

@@ -24,6 +24,7 @@ import org.clulab.scala_transformers.tokenizer.LongTokenization
  */
 class TokenClassifier(
   val encoder: Encoder, 
+  val maxTokens: Int, 
   val tasks: Array[LinearLayer],
   val tokenizer: Tokenizer
   ) {
@@ -45,7 +46,11 @@ class TokenClassifier(
     val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
     val inputIds = tokenization.tokenIds
     val wordIds = tokenization.wordIds
-    //val tokens = tokenization.tokens
+    val tokens = tokenization.tokens
+
+    if(inputIds.length > maxTokens) {
+      throw new EncoderMaxTokensRuntimeException(s"Encoder error: the following text contains more tokens than the maximum number accepted by this encoder ($maxTokens): ${tokens.mkString(", ")}")
+    }
 
     // run the sentence through the transformer encoder
     val encOutput = encoder.forward(inputIds)
@@ -149,6 +154,8 @@ class TokenClassifier(
     allLabels
   }
 }
+
+class EncoderMaxTokensRuntimeException(msg: String) extends RuntimeException(msg)
 
 object TokenClassifier {
 
