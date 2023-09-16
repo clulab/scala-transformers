@@ -19,7 +19,7 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
   def maxTokens: Int = try{
     sourceLine(newSource(tokenClassifierLayout.maxTokens)).toInt
   } catch {
-    case e: java.io.FileNotFoundException => 
+    case e: Exception => 
       logger.error(s"Could not find the ${tokenClassifierLayout.maxTokens} file. Will assume a default value of ${TokenClassifierFactory.DEFAULT_MAX_TOKENS} here.")
       TokenClassifierFactory.DEFAULT_MAX_TOKENS
   }
