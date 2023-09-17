@@ -9,7 +9,7 @@ object TokenClassifierTimerApp extends App {
   val fileName = args.lift(0).getOrElse("../sentences.txt")
 
   class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassifier(
-    tokenClassifier.encoder, tokenClassifier.tasks, tokenClassifier.tokenizer
+    tokenClassifier.encoder, tokenClassifier.maxTokens, tokenClassifier.tasks, tokenClassifier.tokenizer
   ) {
     val tokenizeTimer = Timers.getOrNew("Tokenizer")
     val forwardTimer = Timers.getOrNew("Encoder.forward")
