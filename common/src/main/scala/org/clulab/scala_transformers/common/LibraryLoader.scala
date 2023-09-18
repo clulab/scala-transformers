@@ -1,4 +1,4 @@
-package org.clulab.scala_transformers.tokenizer
+package org.clulab.scala_transformers.common
 
 import java.io.{FileInputStream, FileOutputStream}
 

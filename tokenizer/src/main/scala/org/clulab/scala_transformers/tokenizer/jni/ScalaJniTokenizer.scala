@@ -1,6 +1,6 @@
 package org.clulab.scala_transformers.tokenizer.jni
 
-import org.clulab.scala_transformers.tokenizer.LibraryLoader
+import org.clulab.scala_transformers.common.LibraryLoader
 import org.clulab.scala_transformers.tokenizer.Tokenization
 import org.clulab.scala_transformers.tokenizer.Tokenizer
 
