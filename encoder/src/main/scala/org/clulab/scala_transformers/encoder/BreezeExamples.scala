@@ -19,6 +19,6 @@ object BreezeExamples extends App {
 
   dm(0, ::) :+= cm.t
   dm(1, ::) :+= DenseVector.vertcat(m(1, ::).t, m(1, ::).t).t
-  println("After chaning dm:")
+  println("After changing dm:")
   println(dm)
 }
