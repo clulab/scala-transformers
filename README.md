@@ -13,7 +13,7 @@ The libraries and models resulting from this project are incorporated into [proc
 To incorporate the encoder subproject as a Scala library dependency, either to access an existing model or because you've trained a new one with the Python code there, you'll need to add something like this to your `build.sbt` file:
 
 ```scala
-libraryDependencies += "org.clulab" %% "scala-transformers-encoder" % "0.3.0"
+libraryDependencies += "org.clulab" %% "scala-transformers-encoder" % "0.4.0"
 ```
 
 New models should generally be published to the [CLU Lab's artifactory server](https://artifactory.clulab.org/) so that they can be treated as library dependencies, although they can also be accessed as local files.  Two models have been generated and published.  They are incorporated into a Scala project with
@@ -36,7 +36,7 @@ Please see the [encoder README](encoder/README.md) for information about how to 
 To use the tokenizer subproject as a Scala library dependency, you'll need to add something like this to your `build.sbt` file:
 
 ```scala
-libraryDependencies += "org.clulab" %% "scala-transformers-tokenizer" % "0.3.0"
+libraryDependencies += "org.clulab" %% "scala-transformers-tokenizer" % "0.4.0"
 ```
 
 See the [tokenizer README](tokenizer/README.md) for information about which tokenizers have already been packaged and how they are accessed.
