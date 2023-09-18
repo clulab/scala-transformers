@@ -14,7 +14,13 @@ ThisBuild / scalaVersion := scala212
 name := "scala-transformers"
 
 lazy val root = (project in file("."))
-  .aggregate(common, tokenizer, encoder)
+  .aggregate(apps, common, tokenizer, encoder)
+  .settings(
+    publish / skip := true
+  )
+
+lazy val apps = project
+  .dependsOn(encoder)
   .settings(
     publish / skip := true
   )
