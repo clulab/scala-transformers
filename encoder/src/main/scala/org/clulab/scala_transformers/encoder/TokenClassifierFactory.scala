@@ -16,6 +16,13 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
   def exists(place: String): Boolean
 
   def name: String = sourceLine(newSource(tokenClassifierLayout.name))
+  def maxTokens: Int = try{
+    sourceLine(newSource(tokenClassifierLayout.maxTokens)).toInt
+  } catch {
+    case e: Exception => 
+      logger.error(s"Could not find the ${tokenClassifierLayout.maxTokens} file. Will assume a default value of ${TokenClassifierFactory.DEFAULT_MAX_TOKENS} here.")
+      TokenClassifierFactory.DEFAULT_MAX_TOKENS
+  }
 
   def taskCount: Int = 0.until(Int.MaxValue)
       .find { index =>
@@ -30,10 +37,16 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
 
   def sourceBoolean(place: String): Boolean = sourceBoolean(newSource(place))
 
-  protected def newTokenClassifier(encoder: Encoder, tokenizerName: String, addPrefixSpace: Boolean, tasks: Array[LinearLayer]): TokenClassifier = {
+  protected def newTokenClassifier(
+    encoder: Encoder, 
+    tokenizerName: String, 
+    encoderMaxTokens: Int, 
+    addPrefixSpace: Boolean, 
+    tasks: Array[LinearLayer]): TokenClassifier = {
+
     val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
 
-    new TokenClassifier(encoder, tasks, tokenizer)
+    new TokenClassifier(encoder, encoderMaxTokens, tasks, tokenizer)
   }
 
   def newTokenClassifier: TokenClassifier = {
@@ -46,11 +59,16 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
 
       linearLayerFactory.newLinearLayer
     }
-    val tokenClassifier = newTokenClassifier(newEncoder, name, addPrefixSpace, linearLayers.toArray)
+    val tokenClassifier = newTokenClassifier(newEncoder, name, maxTokens, addPrefixSpace, linearLayers.toArray)
 
     logger.info("Load complete.")
     tokenClassifier
   }
+}
+
+object TokenClassifierFactory {
+  // most encoders used this as the max number of tokens
+  val DEFAULT_MAX_TOKENS = 512
 }
 
 class TokenClassifierFactoryFromFiles(modelLayout: TokenClassifierLayout) extends TokenClassifierFactory(modelLayout, "filesystem") {

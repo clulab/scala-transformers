@@ -6,6 +6,8 @@ class TokenClassifierLayout(val baseName: String) {
 
   def name: String = s"$baseName/encoder.name"
 
+  def maxTokens: String = s"$baseName/encoder.maxtokens"
+
   def tasks: String = s"$baseName/tasks"
 
   def task(index: Int): String = s"${tasks}/$index"
