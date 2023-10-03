@@ -62,7 +62,7 @@ fn destroy_tokenizer(tokenizer_id: i64) {
     }
     let tokenizer_ptr = tokenizer_id as *mut Tokenizer;
     // This takes ownership and will cause memory to be released.
-    unsafe { Box::from_raw(tokenizer_ptr) };
+    unsafe { let _ = Box::from_raw(tokenizer_ptr); };
     return;
 }
 

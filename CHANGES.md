@@ -1,3 +1,4 @@
++ **0.5.0** - Support Linux on aarch64
 + **0.5.0** - Isolate dependencies on models to the apps subproject
 + **0.4.0** - Account for maxTokens
 + **0.3.0** - Include some tokenizers as resources and only fall back to network if necessary

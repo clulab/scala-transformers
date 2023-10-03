@@ -33,6 +33,8 @@ object LibraryLoader {
     else text
 
   def isMac: Boolean = System.getProperty("os.name").startsWith("Mac ")
+  
+  def isWin: Boolean = System.getProperty("os.name").startsWith("Win")
 
   def isApple: Boolean = System.getProperty("os.arch") == "aarch64"
 
@@ -41,7 +43,7 @@ object LibraryLoader {
     // The Mac reports a libname ending with .dylib, but Java needs .jnilib instead.
     val jniName = replaceSuffix(libName, ".dylib", ".jnilib");
     val resourceName =
-        if (!isMac) jniName
+        if (isWin) jniName
         else if (isApple) "apple-" + jniName
         else "intel-" + jniName
 
