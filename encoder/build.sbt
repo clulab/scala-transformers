@@ -13,6 +13,7 @@ libraryDependencies ++= {
 
   Seq(
     "org.scalanlp"              %% "breeze"             % breezeVersion,
+    "org.ejml"                   % "ejml-all"           % "0.43",
     "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.13.1",
     "org.slf4j"                  % "slf4j-api"          % "1.7.10"
   )

@@ -98,7 +98,7 @@ object TokenClassifierTimerApp extends App {
         val words = line.split(" ").toSeq
 
         //    println(s"Words: ${words.mkString(", ")}")
-        val allLabels = tokenClassifier.predict(words)
+        val allLabels = tokenClassifier.predictWithScores(words)
         //    for (labels <- allLabels)
         //      println(s"Labels: ${labels.mkString(", ")}")
       }
