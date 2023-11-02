@@ -29,6 +29,12 @@ class TokenClassifier(
   val tokenizer: Tokenizer
   ) {
 
+  val tokenizeTimer = Timers.getOrNew("Tokenizer")
+  val forwardTimer = Timers.getOrNew("Encoder.forward")
+  val predictTimers = tasks.indices.map { index =>
+    Timers.getOrNew(s"Encoder.predict $index")
+  }
+
   /**
     * Predict labels together with their scores for all tasks for a given sentence 
     *
@@ -43,7 +49,9 @@ class TokenClassifier(
     //   require(tasks.count(task => !task.dual && task.name == headTaskName) == 1)
 
     // tokenize to subword tokens
-    val tokenization = LongTokenization(tokenizer.tokenize(words.toArray))
+    val tokenization = tokenizeTimer.time {
+      LongTokenization(tokenizer.tokenize(words.toArray))
+    }
     val inputIds = tokenization.tokenIds
     val wordIds = tokenization.wordIds
     val tokens = tokenization.tokens
@@ -53,7 +61,9 @@ class TokenClassifier(
     }
 
     // run the sentence through the transformer encoder
-    val encOutput = encoder.forward(inputIds)
+    val encOutput = forwardTimer.time {
+      encoder.forward(inputIds)
+    }
 
     // outputs for all tasks stored here: task x tokens in sentence x scores per token
     val allLabels = new Array[Array[Array[(String, Float)]]](tasks.length)
@@ -64,7 +74,9 @@ class TokenClassifier(
     // now generate token label predictions for all primary tasks (not dual!)
     for (i <- tasks.indices) {
       if (!tasks(i).dual) {
-        val tokenLabels = tasks(i).predictWithScores(encOutput, None, None)
+        val tokenLabels = predictTimers(i).time {
+          tasks(i).predictWithScores(encOutput, None, None)
+        }
         val wordLabels = TokenClassifier.mapTokenLabelsAndScoresToWords(tokenLabels, tokenization.wordIds)
         allLabels(i) = wordLabels
 
@@ -87,7 +99,9 @@ class TokenClassifier(
 
       for (i <- tasks.indices) {
         if (tasks(i).dual) {
-          val tokenLabels = tasks(i).predictWithScores(encOutput, heads, masks)
+          val tokenLabels = predictTimers(i).time {
+            tasks(i).predictWithScores(encOutput, heads, masks)
+          }
           val wordLabels = TokenClassifier.mapTokenLabelsAndScoresToWords(tokenLabels, tokenization.wordIds)
           allLabels(i) = wordLabels
         }

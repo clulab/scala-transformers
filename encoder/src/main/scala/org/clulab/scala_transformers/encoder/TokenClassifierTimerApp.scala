@@ -1,19 +1,18 @@
-package org.clulab.scala_transformers.encoder.timer
+package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.encoder.TokenClassifier
 import org.clulab.scala_transformers.tokenizer.LongTokenization
 
 import scala.io.Source
 
 object TokenClassifierTimerApp extends App {
-  val fileName = args.lift(0).getOrElse("../sentences.txt")
+  val fileName = args.lift(0).getOrElse("../corpora/sentences/sentences.txt")
 
   class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassifier(
     tokenClassifier.encoder, tokenClassifier.maxTokens, tokenClassifier.tasks, tokenClassifier.tokenizer
   ) {
-    val tokenizeTimer = Timers.getOrNew("Tokenizer")
-    val forwardTimer = Timers.getOrNew("Encoder.forward")
-    val predictTimers = tokenClassifier.tasks.indices.map { index =>
+    override val tokenizeTimer = Timers.getOrNew("Tokenizer")
+    override val forwardTimer = Timers.getOrNew("Encoder.forward")
+    override val predictTimers = tokenClassifier.tasks.indices.map { index =>
       Timers.getOrNew(s"Encoder.predict $index")
     }
 
@@ -81,10 +80,11 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
-  val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
+//  val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
+  val tokenClassifier = TokenClassifier.fromFiles("../microsoft_deberta_v3_base_mtl/avg_export")
   val lines = {
     val source = Source.fromFile(fileName)
-    val lines = source.getLines().toArray
+    val lines = source.getLines().toArray.take(100)
 
     source.close
     lines
@@ -98,7 +98,7 @@ object TokenClassifierTimerApp extends App {
         val words = line.split(" ").toSeq
 
         //    println(s"Words: ${words.mkString(", ")}")
-        val allLabels = tokenClassifier.predict(words)
+        val allLabels = tokenClassifier.predictWithScores(words)
         //    for (labels <- allLabels)
         //      println(s"Labels: ${labels.mkString(", ")}")
       }

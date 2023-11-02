@@ -1,4 +1,4 @@
-package org.clulab.scala_transformers.encoder.timer
+package org.clulab.scala_transformers.encoder
 
 import scala.collection.mutable.{HashMap => MutableHashMap}
 
