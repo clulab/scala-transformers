@@ -17,7 +17,9 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
     val inputs = new JHashMap[String, OnnxTensor]()
     inputs.put("token_ids", OnnxTensor.createTensor(encoderEnvironment, batchInputIds))
 
-    val encoderOutput = encoderSession.run(inputs).get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
+    val result = encoderSession.run(inputs)
+    val value = result.get(0).getValue
+    val encoderOutput = value.asInstanceOf[Array[Array[Array[Float]]]]
     val outputs = encoderOutput.map(BreezeUtils.mkRowMatrix(_))
     outputs
   }
