@@ -80,8 +80,9 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
-//  val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
-  val tokenClassifier = TokenClassifier.fromFiles("../microsoft_deberta_v3_base_mtl/avg_export")
+//  val tokenClassifier = new TokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
+  val tokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl/avg_export")
+//  val tokenClassifier = TokenClassifier.fromFiles("../microsoft_deberta_v3_base_mtl/avg_export")
   val lines = {
     val source = Source.fromFile(fileName)
     val lines = source.getLines().toArray.take(100)

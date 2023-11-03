@@ -32,7 +32,9 @@ class TokenClassifier(
   val tokenizeTimer = Timers.getOrNew("Tokenizer")
   val forwardTimer = Timers.getOrNew("Encoder.forward")
   val predictTimers = tasks.indices.map { index =>
-    Timers.getOrNew(s"Encoder.predict $index")
+    val name = tasks(index).name
+
+    Timers.getOrNew(s"Encoder.predict $index\t$name")
   }
 
   /**

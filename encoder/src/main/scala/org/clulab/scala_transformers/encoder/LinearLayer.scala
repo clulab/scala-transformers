@@ -25,14 +25,17 @@ class LinearLayer(
    * @param inputBatch Each matrix in the batch has dimensions (sentence size x hidden state size)
    * @return Each output matrix has dimensions (sentence size x labels size)
    */
+
+  def forwardOne(input: DenseMatrix[Float]): DenseMatrix[Float] = {
+    val output = input * weights
+
+    for (b <- biasesOpt) output(*, ::) :+= b
+    output
+  }
+
   def forward(inputBatch: Array[DenseMatrix[Float]]): Array[DenseMatrix[Float]] = {
     inputBatch.map { input =>
-      //println("INPUT:\n" + input)
-      val output = input * weights
-      //println("OUTPUT before bias:\n" + output)
-      for (b <- biasesOpt) output(*, ::) :+= b
-      //println("OUTPUT after bias:\n" + output)
-      output
+      forwardOne(input)
     }
   }
 
@@ -178,9 +181,13 @@ class LinearLayer(
         // process each head candidate for this token
         headCandidatesPerToken.map { headRelativePosition =>
           // generate a matrix that is twice as wide to concatenate the embeddings of the mod + head
-          val concatInput = concatenateModifierAndHead(input, modifierAbsolutePosition, headRelativePosition)
+          val concatInput = LinearLayer.concatenationTimer.time {
+            concatenateModifierAndHead(input, modifierAbsolutePosition, headRelativePosition)
+          }
           // get the logits for the current pair of modifier and head
-          val logitsPerSentence = forward(Array(concatInput))(0)
+          val logitsPerSentence = LinearLayer.dualForwardTimer.time {
+            forward(concatInput)
+          }
           val labelScores = logitsPerSentence(0, ::)
           val bestIndex = argmax(labelScores.t)
           val bestScore = labelScores(bestIndex)
@@ -239,6 +246,8 @@ class LinearLayer(
 }
 
 object LinearLayer {
+  val concatenationTimer = Timers.getOrNew("LinearLayer.concatenation")
+  val dualForwardTimer = Timers.getOrNew("LinearLayer.dualForward")
 
   def fromFiles(layerDir: String): LinearLayer = {
     val linearLayerLayout = new LinearLayerLayout(layerDir)
