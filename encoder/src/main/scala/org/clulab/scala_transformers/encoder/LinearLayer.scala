@@ -25,7 +25,7 @@ class LinearLayer(
   def forward(inputBatch: Array[MathMatrix]): Array[MathMatrix] = {
     inputBatch.map { input =>
       //println("INPUT:\n" + input)
-      val output = input * weights
+      val output = Mathematician.mul(input, weights)
       //println("OUTPUT before bias:\n" + output)
       for (b <- biasesOpt) Mathematician.inplaceAddition(output, b)
       //println("OUTPUT after bias:\n" + output)
@@ -75,15 +75,15 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = number of tokens in the sentence; cols = hidden state size x 2
-    val concatMatrix = MathMatrix.zeros[MathValue](rows = sentenceHiddenStates.rows, cols = 2 * sentenceHiddenStates.cols)
+    val concatMatrix = Mathematician.zeros(rows = Mathematician.rows(sentenceHiddenStates), cols = 2 * Mathematician.cols(sentenceHiddenStates))
 
     // traverse all modifiers
-    for(i <- 0 until sentenceHiddenStates.rows) {
-      val modHiddenState = sentenceHiddenStates(i, ::)
+    for(i <- 0 until Mathematician.rows(sentenceHiddenStates)) {
+      val modHiddenState = Mathematician.row(sentenceHiddenStates, i)
       // what is the absolute position of the head token in the sentence?
       val rawHeadAbsPos = i + headRelativePositions(i)
       val headAbsolutePosition = 
-        if(rawHeadAbsPos >= 0 && rawHeadAbsPos < sentenceHiddenStates.rows) rawHeadAbsPos
+        if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Mathematician.rows(sentenceHiddenStates)) rawHeadAbsPos
         else i // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
       val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
 
@@ -108,7 +108,7 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = 1; cols = hidden state size x 2
-    val concatMatrix = MathMatrix.zeros[MathValue](rows = 1, cols = 2 * sentenceHiddenStates.cols)
+    val concatMatrix = Mathematician.zeros(rows = 1, cols = 2 * Mathematician.cols(sentenceHiddenStates))
 
     // embedding of the modifier
     val modHiddenState = sentenceHiddenStates(modifierAbsolutePosition, ::)
@@ -116,7 +116,7 @@ class LinearLayer(
     // embedding of the head
     val rawHeadAbsPos = modifierAbsolutePosition + headRelativePosition
     val headAbsolutePosition = 
-      if(rawHeadAbsPos >= 0 && rawHeadAbsPos < sentenceHiddenStates.rows) rawHeadAbsPos
+      if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Mathematician.rows(sentenceHiddenStates)) rawHeadAbsPos
       else modifierAbsolutePosition // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
     val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
 
@@ -143,7 +143,7 @@ class LinearLayer(
       // get the logits for the current sentence produced by this linear layer
       val logitsPerSentence = forward(Array(concatInput))(0)
       // one token per row; pick argmax per token
-      val bestLabels = Range(0, logitsPerSentence.rows).map { i =>
+      val bestLabels = Range(0, Mathematician.rows(logitsPerSentence)).map { i =>
         val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
         val bestIndex = Mathematician.argmax(row.t)
 
@@ -198,7 +198,7 @@ class LinearLayer(
     val logits = forward(inputBatch)
     val outputBatch = logits.map { logitsPerSentence =>
       // one token per row; pick argmax per token
-      val bestLabels = Range(0, logitsPerSentence.rows).map { i =>
+      val bestLabels = Range(0, Mathematician.rows(logitsPerSentence)).map { i =>
         val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
         val bestIndex = Mathematician.argmax(row.t)
 
@@ -219,7 +219,7 @@ class LinearLayer(
     val logits = forward(inputBatch)
     val outputBatch = logits.map { logitsPerSentence =>
       // one token per row; store scores for all labels for this token
-      val allLabels = Range(0, logitsPerSentence.rows).map { i =>
+      val allLabels = Range(0, Mathematician.rows(logitsPerSentence)).map { i =>
         // picks line i from a 2D matrix and converts it to Array
         val scores = logitsPerSentence(i, ::).t.toArray
         val labelsAndScores = labels.zip(scores)

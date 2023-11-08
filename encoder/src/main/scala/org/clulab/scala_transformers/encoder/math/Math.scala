@@ -1,5 +1,6 @@
 package org.clulab.scala_transformers.encoder.math
 
+import ai.onnxruntime.OnnxTensor
 import breeze.linalg.{DenseMatrix, DenseVector}
 
 object Math {
@@ -16,4 +17,10 @@ object Math {
 
 //  type Mathematician = OnnxMath // This takes care of the class.
 //  val Mathematician = OnnxMath // This takes care of the companion object.
+//
+//  type MathMatrix = OnnxTensor
+//  val MathMatrix = OnnxTensorObject
+
+//  type MathVector = OnnxTensor
+//  val MathVector = OnnxTensorObject
 }

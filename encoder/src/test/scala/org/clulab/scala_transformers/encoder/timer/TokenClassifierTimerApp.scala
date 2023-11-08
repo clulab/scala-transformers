@@ -6,7 +6,7 @@ import org.clulab.scala_transformers.tokenizer.LongTokenization
 import scala.io.Source
 
 object TokenClassifierTimerApp extends App {
-  val fileName = args.lift(0).getOrElse("../sentences.txt")
+  val fileName = args.lift(0).getOrElse("../corpora/sentences/sentences.txt")
 
   class TimedTokenClassifier(tokenClassifier: TokenClassifier) extends TokenClassifier(
     tokenClassifier.encoder, tokenClassifier.maxTokens, tokenClassifier.tasks, tokenClassifier.tokenizer
