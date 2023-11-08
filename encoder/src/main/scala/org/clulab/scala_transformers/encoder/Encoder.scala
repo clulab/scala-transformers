@@ -1,7 +1,7 @@
 package org.clulab.scala_transformers.encoder
 
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
-import org.clulab.scala_transformers.encoder.math.Math.{MathMatrix, Mathematician}
+import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, Math}
 
 import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
@@ -18,7 +18,7 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
     inputs.put("token_ids", OnnxTensor.createTensor(encoderEnvironment, batchInputIds))
 
     val result: OrtSession.Result = encoderSession.run(inputs)
-    val outputs = Mathematician.fromResult(result)
+    val outputs = Math.fromResult(result)
     outputs
   }
 

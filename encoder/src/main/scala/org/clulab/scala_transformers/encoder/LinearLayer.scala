@@ -1,6 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.encoder.math.Math.{MathMatrix, MathValue, MathVector, Mathematician}
+import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathValue, MathVector, Math}
 
 /** Implements one linear layer */
 class LinearLayer(
@@ -25,9 +25,9 @@ class LinearLayer(
   def forward(inputBatch: Array[MathMatrix]): Array[MathMatrix] = {
     inputBatch.map { input =>
       //println("INPUT:\n" + input)
-      val output = Mathematician.mul(input, weights)
+      val output = Math.mul(input, weights)
       //println("OUTPUT before bias:\n" + output)
-      for (b <- biasesOpt) Mathematician.inplaceAddition(output, b)
+      for (b <- biasesOpt) Math.inplaceAddition(output, b)
       //println("OUTPUT after bias:\n" + output)
       output
     }
@@ -75,21 +75,20 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = number of tokens in the sentence; cols = hidden state size x 2
-    val concatMatrix = Mathematician.zeros(rows = Mathematician.rows(sentenceHiddenStates), cols = 2 * Mathematician.cols(sentenceHiddenStates))
+    val concatMatrix = Math.zeros(rows = Math.rows(sentenceHiddenStates), cols = 2 * Math.cols(sentenceHiddenStates))
 
     // traverse all modifiers
-    for(i <- 0 until Mathematician.rows(sentenceHiddenStates)) {
-      val modHiddenState = Mathematician.row(sentenceHiddenStates, i)
+    for(i <- 0 until Math.rows(sentenceHiddenStates)) {
+      val modHiddenState = Math.row(sentenceHiddenStates, i)
       // what is the absolute position of the head token in the sentence?
       val rawHeadAbsPos = i + headRelativePositions(i)
       val headAbsolutePosition = 
-        if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Mathematician.rows(sentenceHiddenStates)) rawHeadAbsPos
+        if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
         else i // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
-      val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
+      val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
 
       // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
-      val concatState = MathVector.vertcat(modHiddenState.t, headHiddenState.t).t
-
+      val concatState = Math.cat(modHiddenState, headHiddenState)
       // row i in the concatenated matrix contains the embedding of modifier i and its head
       concatMatrix(i, ::) :+= concatState
     }
@@ -108,21 +107,21 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = 1; cols = hidden state size x 2
-    val concatMatrix = Mathematician.zeros(rows = 1, cols = 2 * Mathematician.cols(sentenceHiddenStates))
+    val concatMatrix = Math.zeros(rows = 1, cols = 2 * Math.cols(sentenceHiddenStates))
 
     // embedding of the modifier
-    val modHiddenState = sentenceHiddenStates(modifierAbsolutePosition, ::)
+    val modHiddenState = Math.row(sentenceHiddenStates, modifierAbsolutePosition)
 
     // embedding of the head
     val rawHeadAbsPos = modifierAbsolutePosition + headRelativePosition
     val headAbsolutePosition = 
-      if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Mathematician.rows(sentenceHiddenStates)) rawHeadAbsPos
+      if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
       else modifierAbsolutePosition // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
-    val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
+    val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
 
     // concatenation of the modifier and head embeddings
     // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
-    val concatState = MathVector.vertcat(modHiddenState.t, headHiddenState.t).t
+    val concatState = Math.cat(modHiddenState, headHiddenState)
 
     concatMatrix(0, ::) :+= concatState
     concatMatrix
@@ -143,9 +142,9 @@ class LinearLayer(
       // get the logits for the current sentence produced by this linear layer
       val logitsPerSentence = forward(Array(concatInput))(0)
       // one token per row; pick argmax per token
-      val bestLabels = Range(0, Mathematician.rows(logitsPerSentence)).map { i =>
-        val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
-        val bestIndex = Mathematician.argmax(row.t)
+      val bestLabels = Range(0, Math.rows(logitsPerSentence)).map { i =>
+        val row = Math.row(logitsPerSentence, i) // picks line i from a 2D matrix
+        val bestIndex = Math.argmax(row)
 
         indexToLabel(bestIndex)
       }
@@ -178,8 +177,8 @@ class LinearLayer(
           val concatInput = concatenateModifierAndHead(input, modifierAbsolutePosition, headRelativePosition)
           // get the logits for the current pair of modifier and head
           val logitsPerSentence = forward(Array(concatInput))(0)
-          val labelScores = logitsPerSentence(0, ::)
-          val bestIndex = Mathematician.argmax(labelScores.t)
+          val labelScores = Math.row(logitsPerSentence, 0)
+          val bestIndex = Math.argmax(labelScores)
           val bestScore = labelScores(bestIndex)
           val bestLabel = indexToLabel(bestIndex)
 
@@ -198,9 +197,9 @@ class LinearLayer(
     val logits = forward(inputBatch)
     val outputBatch = logits.map { logitsPerSentence =>
       // one token per row; pick argmax per token
-      val bestLabels = Range(0, Mathematician.rows(logitsPerSentence)).map { i =>
-        val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
-        val bestIndex = Mathematician.argmax(row.t)
+      val bestLabels = Range(0, Math.rows(logitsPerSentence)).map { i =>
+        val row = Math.row(logitsPerSentence, i) // picks line i from a 2D matrix
+        val bestIndex = Math.argmax(row)
 
         labels(bestIndex)
       }
@@ -219,9 +218,9 @@ class LinearLayer(
     val logits = forward(inputBatch)
     val outputBatch = logits.map { logitsPerSentence =>
       // one token per row; store scores for all labels for this token
-      val allLabels = Range(0, Mathematician.rows(logitsPerSentence)).map { i =>
+      val allLabels = Range(0, Math.rows(logitsPerSentence)).map { i =>
         // picks line i from a 2D matrix and converts it to Array
-        val scores = logitsPerSentence(i, ::).t.toArray
+        val scores = Math.toArray(Math.row(logitsPerSentence, i))
         val labelsAndScores = labels.zip(scores)
 
         // keep scores in descending order (largest first) 

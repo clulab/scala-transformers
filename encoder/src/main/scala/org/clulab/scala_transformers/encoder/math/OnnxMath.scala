@@ -51,4 +51,8 @@ object OnnxMath {
   def row(matrix: OnnxTensor, index: Int): OnnxTensor = {
     ???
   }
+
+  def toArray(vector: OnnxTensor): Array[Float] = {
+    ???
+  }
 }

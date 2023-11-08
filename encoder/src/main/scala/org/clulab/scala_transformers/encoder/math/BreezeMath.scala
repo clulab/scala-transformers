@@ -16,7 +16,7 @@ object BreezeMath {
     outputs
   }
 
-  def argmax(row: DenseVector[Float]): Int = {
+  def argmax(row: Transpose[DenseVector[Float]]): Int = {
     val bestIndex = BreezeArgmax(row.t)
 
     bestIndex
@@ -52,5 +52,13 @@ object BreezeMath {
 
   def row(matrix: DenseMatrix[Float], index: Int): Transpose[DenseVector[Float]] = {
     matrix(index, ::)
+  }
+
+  def cat(left: Transpose[DenseVector[Float]], right: Transpose[DenseVector[Float]]): Transpose[DenseVector[Float]] = {
+    DenseVector.vertcat(left.t, right.t).t
+  }
+
+  def toArray(vector: Transpose[DenseVector[Float]]): Array[Float] = {
+    vector.t.toArray
   }
 }
