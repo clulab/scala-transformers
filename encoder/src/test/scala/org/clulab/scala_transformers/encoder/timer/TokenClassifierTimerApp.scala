@@ -84,7 +84,7 @@ object TokenClassifierTimerApp extends App {
   val tokenClassifier = new TimedTokenClassifier(TokenClassifier.fromFiles("../roberta-base-mtl/avg_export"))
   val lines = {
     val source = Source.fromFile(fileName)
-    val lines = source.getLines().toArray
+    val lines = source.getLines().take(100).toArray
 
     source.close
     lines

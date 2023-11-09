@@ -90,7 +90,7 @@ class LinearLayer(
       // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
       val concatState = Math.cat(modHiddenState, headHiddenState)
       // row i in the concatenated matrix contains the embedding of modifier i and its head
-      Math.inplaceVectorAddition(Math.row(concatMatrix, i), concatState)
+      Math.inplaceMatrixAddition(concatMatrix, i, concatState)
     }
     
     concatMatrix
@@ -122,8 +122,7 @@ class LinearLayer(
     // concatenation of the modifier and head embeddings
     // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
     val concatState = Math.cat(modHiddenState, headHiddenState)
-    val row = Math.row(concatMatrix, 0)
-    Math.inplaceVectorAddition(row, concatState)
+    Math.inplaceMatrixAddition(concatMatrix, 0, concatState)
     concatMatrix
   }
 

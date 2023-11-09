@@ -22,12 +22,13 @@ object BreezeMath {
     bestIndex
   }
 
-  def inplaceMatrixAddition(matrix: DenseMatrix[Float], b: DenseVector[Float]): Unit = {
-    matrix(*, ::) :+= b
+  def inplaceMatrixAddition(matrix: DenseMatrix[Float], vector: DenseVector[Float]): Unit = {
+    matrix(*, ::) :+= vector
   }
 
-  def inplaceVectorAddition(matrix: Transpose[DenseVector[Float]], b: Transpose[DenseVector[Float]]): Unit = {
-    ??? // matrix(*, ::) :+= b
+  def inplaceMatrixAddition(matrix: DenseMatrix[Float], rowIndex: Int, vector: Transpose[DenseVector[Float]]): Unit = {
+
+    matrix(rowIndex, ::) :+= vector
   }
 
   def mul(left: DenseMatrix[Float], right: DenseMatrix[Float]): DenseMatrix[Float] = {
@@ -62,6 +63,7 @@ object BreezeMath {
     matrix(index, ::)
   }
 
+  // Is this horcat?
   def cat(left: Transpose[DenseVector[Float]], right: Transpose[DenseVector[Float]]): Transpose[DenseVector[Float]] = {
     DenseVector.vertcat(left.t, right.t).t
   }
