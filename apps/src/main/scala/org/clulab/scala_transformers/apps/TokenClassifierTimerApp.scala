@@ -90,6 +90,7 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
+  val log = true
   val fileName = args.lift(0).getOrElse("../corpora/sentences/sentences.txt")
   val untimedTokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl/avg_export")
   val tokenClassifier = new TimedTokenClassifier(untimedTokenClassifier)
@@ -107,11 +108,17 @@ object TokenClassifierTimerApp extends App {
       println(s"$index $line")
       if (index != 1382) {
         val words = line.split(" ").toSeq
+        val allLabelSeqs = tokenClassifier.predictWithScores(words)
 
-        //    println(s"Words: ${words.mkString(", ")}")
-        val allLabels = tokenClassifier.predictWithScores(words)
-        //    for (labels <- allLabels)
-        //      println(s"Labels: ${labels.mkString(", ")}")
+        if (log) {
+          println(s"Words: ${words.mkString(", ")}")
+          for (layer <- allLabelSeqs) {
+            val words = layer.map(_.head) // Collapse the next layer by just taking the head.
+            val wordLabels = words.map(_._1)
+
+            println(s"Labels: ${wordLabels.mkString(", ")}")
+          }
+        }
       }
     }
   }
