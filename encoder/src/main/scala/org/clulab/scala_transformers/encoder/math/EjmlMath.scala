@@ -1,6 +1,5 @@
 package org.clulab.scala_transformers.encoder.math
 
-import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtSession.Result
 import org.ejml.data.FMatrixRMaj
 import org.ejml.simple.SimpleMatrix
@@ -34,11 +33,23 @@ object EjmlMath {
   }
 
   def inplaceMatrixAddition(matrix: FMatrixRMaj, vector: FMatrixRMaj): Unit = {
-    ???
+    0.until(matrix.getNumRows) foreach { row =>
+      0.until(matrix.getNumCols) foreach { col =>
+        val oldVal = matrix.get(row, col)
+        val newVal = oldVal + vector.get(col, 0)
+
+        matrix.set(row, col, newVal)
+      }
+    }
   }
 
   def inplaceMatrixAddition(matrix: FMatrixRMaj, rowIndex: Int, vector: FMatrixRMaj): Unit = {
-    ???
+    0.until(matrix.getNumCols) foreach { col =>
+      val oldVal = matrix.get(rowIndex, col)
+      val newVal = oldVal + vector.get(0, col)
+
+      matrix.set(rowIndex, col, newVal)
+    }
   }
 
   def mul(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
@@ -59,7 +70,8 @@ object EjmlMath {
   }
 
   def length(vector: FMatrixRMaj): Int = {
-    vector.getNumCols
+    // This will be a vertical vector.
+    vector.getNumRows
   }
 
   def t(matrix: FMatrixRMaj): FMatrixRMaj = {
@@ -71,7 +83,7 @@ object EjmlMath {
   def vertcat(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
     val leftSimple = SimpleMatrix.wrap(left)
     val rightSimple = SimpleMatrix.wrap(right)
-    val result = leftSimple.concatColumns(rightSimple).getMatrix[FMatrixRMaj]
+    val result = leftSimple.concatRows(rightSimple).getMatrix[FMatrixRMaj]
 
     result
   }
