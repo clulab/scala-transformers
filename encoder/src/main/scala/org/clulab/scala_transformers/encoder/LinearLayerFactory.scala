@@ -1,6 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix, MathVector}
+import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix, MathColVector}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.io.Source
@@ -27,7 +27,7 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
     weights
   }
 
-  def getBiasesOpt: Option[MathVector] = {
+  def getBiasesOpt: Option[MathColVector] = {
     val place = linearLayerLayout.biases
     if (exists(place)) {
       val values = sourceFloatVector(newSource(place))

@@ -4,24 +4,31 @@ import ai.onnxruntime.OrtSession.Result
 import org.ejml.data.FMatrixRMaj
 import org.ejml.simple.SimpleMatrix
 
-object EjmlMath {
-  type MathMatrix = FMatrixRMaj
-  type MathVector = FMatrixRMaj
+object EjmlMath extends Math {
+  type MathValue = Float
+  type MathRowMatrix = FMatrixRMaj
+  type MathColVector = FMatrixRMaj
   type MathRowVector = FMatrixRMaj
 
-  def fromResult(result: Result): Array[FMatrixRMaj] = {
+  protected def isRowVector(rowVector: MathRowVector): Boolean = rowVector.getNumRows == 1
+
+  protected def isColVector(colVector: MathColVector): Boolean = colVector.getNumCols == 1
+
+  def fromResult(result: Result): Array[MathRowMatrix] = {
     val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
-    val outputs = array.map(new FMatrixRMaj(_)) // FMatrixRMaj
+    val outputs = array.map(new FMatrixRMaj(_))
 
     outputs
   }
 
-  def argmax(row: FMatrixRMaj): Int = {
-    var maxIndex = 0
-    var maxValue = row.get(maxIndex)
+  def argmax(rowVector: MathRowVector): Int = {
+    assert(isRowVector(rowVector))
 
-    1.until(row.getNumCols).foreach { index =>
-      val value = row.get(index)
+    var maxIndex = 0
+    var maxValue = rowVector.get(maxIndex)
+
+    1.until(rowVector.getNumCols).foreach { index =>
+      val value = rowVector.get(index)
 
       if (value > maxValue) {
         maxValue = value
@@ -32,95 +39,109 @@ object EjmlMath {
     maxIndex
   }
 
-  def inplaceMatrixAddition(matrix: FMatrixRMaj, vector: FMatrixRMaj): Unit = {
+  def inplaceMatrixAddition(matrix: MathRowMatrix, colVector: MathColVector): Unit = {
+    assert(isColVector(colVector))
     0.until(matrix.getNumRows) foreach { row =>
       0.until(matrix.getNumCols) foreach { col =>
         val oldVal = matrix.get(row, col)
-        val newVal = oldVal + vector.get(col, 0)
+        val newVal = oldVal + colVector.get(col, 0)
 
         matrix.set(row, col, newVal)
       }
     }
   }
 
-  def inplaceMatrixAddition(matrix: FMatrixRMaj, rowIndex: Int, vector: FMatrixRMaj): Unit = {
+  def inplaceMatrixAddition(matrix: MathRowMatrix, rowIndex: Int, rowVector: MathRowVector): Unit = {
+    assert(isRowVector(rowVector))
     0.until(matrix.getNumCols) foreach { col =>
       val oldVal = matrix.get(rowIndex, col)
-      val newVal = oldVal + vector.get(0, col)
+      val newVal = oldVal + rowVector.get(0, col)
 
       matrix.set(rowIndex, col, newVal)
     }
   }
 
-  def mul(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
-    val leftSimple = SimpleMatrix.wrap(left)
-    val rightSimple = SimpleMatrix.wrap(right)
+  def mul(leftMatrix: MathRowMatrix, rightMatrix: MathRowMatrix): MathRowMatrix = {
+    val leftSimple = SimpleMatrix.wrap(leftMatrix)
+    val rightSimple = SimpleMatrix.wrap(rightMatrix)
     val product = leftSimple.mult(rightSimple)
     val matrix = product.getMatrix.asInstanceOf[FMatrixRMaj]
 
     matrix
   }
 
-  def rows(matrix: FMatrixRMaj): Int = {
+  def rows(matrix: MathRowMatrix): Int = {
     matrix.getNumRows
   }
 
-  def cols(matrix: FMatrixRMaj): Int = {
+  def cols(matrix: MathRowMatrix): Int = {
     matrix.getNumCols
   }
 
-  def length(vector: FMatrixRMaj): Int = {
-    // This will be a vertical vector.
-    vector.getNumRows
+  def length(colVector: MathColVector): Int = {
+    assert(isColVector(colVector))
+    colVector.getNumRows
   }
 
-  def t(matrix: FMatrixRMaj): FMatrixRMaj = {
+  def t(matrix: MathRowMatrix): MathRowMatrix = {
     val result = SimpleMatrix.wrap(matrix).transpose().getMatrix[FMatrixRMaj]
 
     result
   }
 
-  def vertcat(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
-    val leftSimple = SimpleMatrix.wrap(left)
-    val rightSimple = SimpleMatrix.wrap(right)
+  def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector = {
+    assert(isColVector(leftColVector))
+    assert(isColVector(rightColVector))
+    val leftSimple = SimpleMatrix.wrap(leftColVector)
+    val rightSimple = SimpleMatrix.wrap(rightColVector)
     val result = leftSimple.concatRows(rightSimple).getMatrix[FMatrixRMaj]
 
+    assert(isColVector(result))
     result
   }
 
-  def zeros(rows: Int, cols: Int): FMatrixRMaj = {
+  def zeros(rows: Int, cols: Int): MathRowMatrix = {
     new FMatrixRMaj(rows, cols)
   }
 
-  def row(matrix: FMatrixRMaj, index: Int): FMatrixRMaj = {
+  def row(matrix: MathRowMatrix, index: Int): MathRowVector = {
     val result = SimpleMatrix.wrap(matrix).rows(index, index + 1).getMatrix[FMatrixRMaj]
 
+    assert(isRowVector(result))
     result
   }
 
-  def cat(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
-    val leftSimple = SimpleMatrix.wrap(left)
-    val rightSimple = SimpleMatrix.wrap(right)
-    val result = leftSimple.concatRows(rightSimple).getMatrix[FMatrixRMaj]
+  def cat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
+    assert(isRowVector(leftRowVector))
+    assert(isRowVector(rightRowVector))
+    val leftSimple = SimpleMatrix.wrap(leftRowVector)
+    val rightSimple = SimpleMatrix.wrap(rightRowVector)
+    val result = leftSimple.concatColumns(rightSimple).getMatrix[FMatrixRMaj]
+
+    assert(isRowVector(result))
+    result
+  }
+
+  def toArray(rowVector: MathRowVector): Array[MathValue] = {
+    assert(isRowVector(rowVector))
+    val result = rowVector.getData
 
     result
   }
 
-  def toArray(vector: FMatrixRMaj): Array[Float] = {
-    val result = vector.getData
-
-    result
+  def get(rowVector: MathRowVector, index: Int): MathValue = {
+    assert(isRowVector(rowVector))
+    rowVector.get(index)
   }
 
-  def get(vector: FMatrixRMaj, index: Int): Float = {
-    vector.get(index)
-  }
-
-  def mkRowMatrix(values: Array[Array[Float]]): FMatrixRMaj = {
+  def mkRowMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
     new FMatrixRMaj(values)
   }
 
-  def mkVector(values: Array[Float]): FMatrixRMaj = {
-    new FMatrixRMaj(values)
+  def mkVector(values: Array[MathValue]): MathColVector = {
+    val result = new FMatrixRMaj(values)
+
+    assert(isColVector(result))
+    result
   }
 }

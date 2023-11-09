@@ -1,13 +1,13 @@
 package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathVector, Math}
+import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathColVector, Math}
 
 /** Implements one linear layer */
 class LinearLayer(
   val name: String,
   val dual: Boolean, 
   val weights: MathMatrix, // dimensions (hidden state size x labels size)
-  val biasesOpt: Option[MathVector], // column vector with length = labels size
+  val biasesOpt: Option[MathColVector], // column vector with length = labels size
   val labelsOpt: Option[Array[String]]
 ) {
 
