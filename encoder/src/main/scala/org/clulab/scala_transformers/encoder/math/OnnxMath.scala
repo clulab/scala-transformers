@@ -20,7 +20,11 @@ object OnnxMath {
     ???
   }
 
-  def inplaceAddition(matrix: OnnxTensor, b: OnnxTensor): Unit = {
+  def inplaceMatrixAddition(matrix: OnnxTensor, b: OnnxTensor): Unit = {
+    ???
+  }
+
+  def inplaceVectorAddition(matrix: OnnxTensor, b: OnnxTensor): Unit = {
     ???
   }
 
@@ -33,6 +37,10 @@ object OnnxMath {
   }
 
   def cols(matrix: OnnxTensor): Int = {
+    ???
+  }
+
+  def length(vector: OnnxTensor): Int = {
     ???
   }
 
@@ -52,7 +60,23 @@ object OnnxMath {
     ???
   }
 
+  def cat(left: OnnxTensor, right: OnnxTensor): OnnxTensor = {
+    ???
+  }
+
   def toArray(vector: OnnxTensor): Array[Float] = {
+    ???
+  }
+
+  def get(vector: OnnxTensor, index: Int): Float = {
+    ???
+  }
+
+  def mkRowMatrix(values: Array[Array[Float]]): OnnxTensor = {
+    ???
+  }
+
+  def mkVector(values: Array[Float]): OnnxTensor = {
     ???
   }
 }

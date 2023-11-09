@@ -22,8 +22,12 @@ object BreezeMath {
     bestIndex
   }
 
-  def inplaceAddition(matrix: DenseMatrix[Float], b: DenseVector[Float]): Unit = {
+  def inplaceMatrixAddition(matrix: DenseMatrix[Float], b: DenseVector[Float]): Unit = {
     matrix(*, ::) :+= b
+  }
+
+  def inplaceVectorAddition(matrix: Transpose[DenseVector[Float]], b: Transpose[DenseVector[Float]]): Unit = {
+    ??? // matrix(*, ::) :+= b
   }
 
   def mul(left: DenseMatrix[Float], right: DenseMatrix[Float]): DenseMatrix[Float] = {
@@ -36,6 +40,10 @@ object BreezeMath {
 
   def cols(matrix: DenseMatrix[Float]): Int = {
     matrix.cols
+  }
+
+  def length(vector: DenseVector[Float]): Int = {
+    vector.length
   }
 
   def t(matrix: DenseMatrix[Float]): DenseMatrix[Float] = {
@@ -60,5 +68,17 @@ object BreezeMath {
 
   def toArray(vector: Transpose[DenseVector[Float]]): Array[Float] = {
     vector.t.toArray
+  }
+
+  def get(vector: Transpose[DenseVector[Float]], index: Int): Float = {
+    vector(index)
+  }
+
+  def mkRowMatrix(values: Array[Array[Float]]): DenseMatrix[Float] = {
+    BreezeUtils.mkRowMatrix(values).t
+  }
+
+  def mkVector(values: Array[Float]): DenseVector[Float] = {
+    DenseVector(values)
   }
 }

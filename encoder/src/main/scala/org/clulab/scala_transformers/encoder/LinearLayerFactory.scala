@@ -1,6 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
-import breeze.linalg.{DenseMatrix, DenseVector}
+import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix, MathVector}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.io.Source
@@ -15,26 +15,26 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
 
   def dual: Boolean = sourceBoolean(newSource(linearLayerLayout.dual))
 
-  def getWeights: DenseMatrix[Float] = {
+  def getWeights: MathMatrix = {
     val place = linearLayerLayout.weights
     if (!exists(place))
       throw new RuntimeException(s"ERROR: you need at least a weights file for linear layer $name!")
     val values = sourceFloatMatrix(newSource(place))
     // dimensions: rows = hidden state size, columns = labels' count
-    val weights = BreezeUtils.mkRowMatrix(values).t
+    val weights = Math.mkRowMatrix(values)
 
-    logger.info(s"Found weights with dimension ${weights.rows} x ${weights.cols}")
+    logger.info(s"Found weights with dimension ${Math.rows(weights)} x ${Math.cols(weights)}")
     weights
   }
 
-  def getBiasesOpt: Option[DenseVector[Float]] = {
+  def getBiasesOpt: Option[MathVector] = {
     val place = linearLayerLayout.biases
     if (exists(place)) {
       val values = sourceFloatVector(newSource(place))
       // the bias is a column vector
-      val biases = DenseVector(values)
+      val biases = Math.mkVector(values)
 
-      logger.info(s"Found biases with dimension ${biases.length}")
+      logger.info(s"Found biases with dimension ${Math.length(biases)}")
       Some(biases)
     }
     else None

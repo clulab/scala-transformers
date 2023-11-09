@@ -27,7 +27,7 @@ class LinearLayer(
       //println("INPUT:\n" + input)
       val output = Math.mul(input, weights)
       //println("OUTPUT before bias:\n" + output)
-      for (b <- biasesOpt) Math.inplaceAddition(output, b)
+      for (b <- biasesOpt) Math.inplaceMatrixAddition(output, b)
       //println("OUTPUT after bias:\n" + output)
       output
     }
@@ -90,7 +90,7 @@ class LinearLayer(
       // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
       val concatState = Math.cat(modHiddenState, headHiddenState)
       // row i in the concatenated matrix contains the embedding of modifier i and its head
-      concatMatrix(i, ::) :+= concatState
+      Math.inplaceVectorAddition(Math.row(concatMatrix, i), concatState)
     }
     
     concatMatrix
@@ -122,8 +122,8 @@ class LinearLayer(
     // concatenation of the modifier and head embeddings
     // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
     val concatState = Math.cat(modHiddenState, headHiddenState)
-
-    concatMatrix(0, ::) :+= concatState
+    val row = Math.row(concatMatrix, 0)
+    Math.inplaceVectorAddition(row, concatState)
     concatMatrix
   }
 
@@ -179,7 +179,7 @@ class LinearLayer(
           val logitsPerSentence = forward(Array(concatInput))(0)
           val labelScores = Math.row(logitsPerSentence, 0)
           val bestIndex = Math.argmax(labelScores)
-          val bestScore = labelScores(bestIndex)
+          val bestScore = Math.get(labelScores, bestIndex)
           val bestLabel = indexToLabel(bestIndex)
 
           // println(s"Top prediction for mod $modifierAbsolutePosition and relative head $headRelativePosition is $bestLabel with score $bestScore")
