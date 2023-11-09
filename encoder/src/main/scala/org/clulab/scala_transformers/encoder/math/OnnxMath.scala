@@ -13,9 +13,10 @@ object OnnxMath {
   // Turn it into an Array[OnnxTensor] with the tne tensor at 72 x 768
   def fromResult(result: Result): Array[OnnxTensor] = {
     val outputs = result.get("sequence_output").asInstanceOf[OnnxTensor]
-    val ans = outputs.getValue(0)
-
-    Array(ans)
+//    val ans = outputs.getValue(0)
+//
+//    Array(ans)
+    ???
   }
 
   def argmax(row: OnnxTensor): Int = {
@@ -71,7 +72,8 @@ object OnnxMath {
   }
 
   def get(vector: OnnxTensor, index: Int): Float = {
-    vector.getValue(index).asInstanceOf[Float]
+//    vector.getValue(index).asInstanceOf[Float]
+    ???
   }
 
   def mkRowMatrix(values: Array[Array[Float]]): OnnxTensor = {

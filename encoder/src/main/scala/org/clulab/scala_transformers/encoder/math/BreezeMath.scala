@@ -63,7 +63,6 @@ object BreezeMath {
     matrix(index, ::)
   }
 
-  // Is this horcat?
   def cat(left: Transpose[DenseVector[Float]], right: Transpose[DenseVector[Float]]): Transpose[DenseVector[Float]] = {
     DenseVector.vertcat(left.t, right.t).t
   }
@@ -77,7 +76,7 @@ object BreezeMath {
   }
 
   def mkRowMatrix(values: Array[Array[Float]]): DenseMatrix[Float] = {
-    BreezeUtils.mkRowMatrix(values).t
+    BreezeUtils.mkRowMatrix(values)
   }
 
   def mkVector(values: Array[Float]): DenseVector[Float] = {

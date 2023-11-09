@@ -20,13 +20,11 @@ object Mathematics {
 //  val Math = OnnxMath // This takes care of the companion object.
 //
 //  type MathMatrix = OnnxTensor
-//
 //  type MathVector = OnnxTensor
 
   type Math = EjmlMath
-  val math = EjmlMath
+  val Math = EjmlMath
 
   type MathMatrix = FMatrixRMaj
-
   type MathVector = FMatrixRMaj
 }

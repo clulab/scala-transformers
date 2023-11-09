@@ -1,7 +1,9 @@
 package org.clulab.scala_transformers.encoder.math
 
+import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtSession.Result
 import org.ejml.data.FMatrixRMaj
+import org.ejml.simple.SimpleMatrix
 
 class EjmlMath {
 
@@ -16,19 +18,36 @@ object EjmlMath {
   }
 
   def argmax(row: FMatrixRMaj): Int = {
-    row.
+    var maxIndex = 0
+    var maxValue = row.get(maxIndex)
+
+    1.until(row.getNumCols).foreach { index =>
+      val value = row.get(index)
+
+      if (value > maxValue) {
+        maxValue = value
+        maxIndex = index
+      }
+    }
+
+    maxIndex
   }
 
-  def inplaceMatrixAddition(matrix: OnnxTensor, vector: OnnxTensor): Unit = {
+  def inplaceMatrixAddition(matrix: FMatrixRMaj, vector: FMatrixRMaj): Unit = {
     ???
   }
 
-  def inplaceMatrixAddition(matrix: OnnxTensor, rowIndex: Int, vector: OnnxTensor): Unit = {
+  def inplaceMatrixAddition(matrix: FMatrixRMaj, rowIndex: Int, vector: FMatrixRMaj): Unit = {
     ???
   }
 
-  def mul(left: SimpleMatrix, right: SimpleMatrix): SimpleMatrix = {
+  def mul(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
+    val leftSimple = SimpleMatrix.wrap(left)
+    val rightSimple = SimpleMatrix.wrap(right)
+    val product = leftSimple.mult(rightSimple)
+    val matrix = product.getMatrix.asInstanceOf[FMatrixRMaj]
 
+    matrix
   }
 
   def rows(matrix: FMatrixRMaj): Int = {
@@ -44,11 +63,17 @@ object EjmlMath {
   }
 
   def t(matrix: FMatrixRMaj): FMatrixRMaj = {
-    matrix.transpose
+    val result = SimpleMatrix.wrap(matrix).transpose().getMatrix[FMatrixRMaj]
+
+    result
   }
 
-  def vertcat(left: OnnxTensor, right: OnnxTensor): OnnxTensor = {
-    ???
+  def vertcat(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
+    val leftSimple = SimpleMatrix.wrap(left)
+    val rightSimple = SimpleMatrix.wrap(right)
+    val result = leftSimple.concatColumns(rightSimple).getMatrix[FMatrixRMaj]
+
+    result
   }
 
   def zeros(rows: Int, cols: Int): FMatrixRMaj = {
@@ -56,11 +81,17 @@ object EjmlMath {
   }
 
   def row(matrix: FMatrixRMaj, index: Int): FMatrixRMaj = {
-    matrix.rows(index, index + 1)
+    val result = SimpleMatrix.wrap(matrix).rows(index, index + 1).getMatrix[FMatrixRMaj]
+
+    result
   }
 
-  def cat(left: OnnxTensor, right: OnnxTensor): OnnxTensor = {
-    ???
+  def cat(left: FMatrixRMaj, right: FMatrixRMaj): FMatrixRMaj = {
+    val leftSimple = SimpleMatrix.wrap(left)
+    val rightSimple = SimpleMatrix.wrap(right)
+    val result = leftSimple.concatRows(rightSimple).getMatrix[FMatrixRMaj]
+
+    result
   }
 
   def toArray(vector: FMatrixRMaj): Array[Float] = {
@@ -70,7 +101,7 @@ object EjmlMath {
   }
 
   def get(vector: FMatrixRMaj, index: Int): Float = {
-    vector.get(0, index)
+    vector.get(index)
   }
 
   def mkRowMatrix(values: Array[Array[Float]]): FMatrixRMaj = {
