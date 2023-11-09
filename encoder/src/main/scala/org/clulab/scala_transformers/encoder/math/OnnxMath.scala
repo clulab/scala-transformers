@@ -3,10 +3,11 @@ package org.clulab.scala_transformers.encoder.math
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment}
 import ai.onnxruntime.OrtSession.Result
 
-class OnnxMath {
-}
-
 object OnnxMath {
+  type MathMatrix = OnnxTensor
+  type MathVector = OnnxTensor
+  type MathRowVector = OnnxTensor
+
   val ortEnvironment = OrtEnvironment.getEnvironment
 
   // This is 1 x 72 x 768

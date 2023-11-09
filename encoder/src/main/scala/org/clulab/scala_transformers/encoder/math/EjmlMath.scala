@@ -4,11 +4,11 @@ import ai.onnxruntime.OrtSession.Result
 import org.ejml.data.FMatrixRMaj
 import org.ejml.simple.SimpleMatrix
 
-class EjmlMath {
-
-}
-
 object EjmlMath {
+  type MathMatrix = FMatrixRMaj
+  type MathVector = FMatrixRMaj
+  type MathRowVector = FMatrixRMaj
+
   def fromResult(result: Result): Array[FMatrixRMaj] = {
     val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
     val outputs = array.map(new FMatrixRMaj(_)) // FMatrixRMaj

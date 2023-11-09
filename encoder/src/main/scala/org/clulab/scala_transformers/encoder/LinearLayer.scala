@@ -1,6 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathValue, MathVector, Math}
+import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathVector, Math}
 
 /** Implements one linear layer */
 class LinearLayer(

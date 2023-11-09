@@ -4,10 +4,11 @@ import ai.onnxruntime.OrtSession.Result
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose, `*`, argmax => BreezeArgmax}
 import org.clulab.scala_transformers.encoder.BreezeUtils
 
-class BreezeMath {
-}
-
 object BreezeMath {
+  type MathValue = Float
+  type MathMatrix = DenseMatrix[MathValue]
+  type MathVector = DenseVector[MathValue]
+  type MathRowVector = Transpose[DenseVector[MathValue]]
 
   def fromResult(result: Result): Array[DenseMatrix[Float]] = {
     val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]

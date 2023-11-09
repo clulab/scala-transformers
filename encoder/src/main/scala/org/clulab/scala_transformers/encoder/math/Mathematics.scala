@@ -1,30 +1,16 @@
 package org.clulab.scala_transformers.encoder.math
 
 import ai.onnxruntime.OnnxTensor
-import breeze.linalg.{DenseMatrix, DenseVector}
+import breeze.linalg.{DenseMatrix, DenseVector, Transpose}
 import org.ejml.data.FMatrixRMaj
 
 object Mathematics {
-  type MathValue = Float
+  // Pick one of these.
+  val Math = BreezeMath // This takes care of the companion object.
+//  val Math = EjmlMath
+//  val Math = OnnxMath
 
-//  type Math = BreezeMath // This takes care of the class.
-//  val Math = BreezeMath // This takes care of the companion object.
-//
-//  type MathMatrix = DenseMatrix[MathValue]
-//  val MathMatrix = DenseMatrix
-//
-//  type MathVector = DenseVector[MathValue]
-//  val MathVector = DenseVector
-
-//  type Math = OnnxMath // This takes care of the class.
-//  val Math = OnnxMath // This takes care of the companion object.
-//
-//  type MathMatrix = OnnxTensor
-//  type MathVector = OnnxTensor
-
-  type Math = EjmlMath
-  val Math = EjmlMath
-
-  type MathMatrix = FMatrixRMaj
-  type MathVector = FMatrixRMaj
+  type MathMatrix = Math.MathMatrix
+  type MathVector = Math.MathVector
+  type MathRowVector = Math.MathRowVector
 }
