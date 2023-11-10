@@ -20,7 +20,7 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = BreezeMath.mkRowMatrix(matrixValues)
+    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
     val vector = BreezeMath.mkColVector(vectorValues)
     val expectedResult = Array(
@@ -42,7 +42,7 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = BreezeMath.mkRowMatrix(matrixValues)
+    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
     val vector = BreezeMath.mkColVector(vectorValues).t
     val expectedResult = Array(
@@ -64,13 +64,13 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val leftMatrix = BreezeMath.mkRowMatrix(leftMatrixValues)
+    val leftMatrix = BreezeMath.mkMatrixFromRows(leftMatrixValues)
     val rightMatrixValues = Array(
       Array(1f, 2f),
       Array(3f, 2f),
       Array(4f, 6f)
     )
-    val rightMatrix = BreezeMath.mkRowMatrix(rightMatrixValues)
+    val rightMatrix = BreezeMath.mkMatrixFromRows(rightMatrixValues)
     val expectedResult = Array(
       Array(19f, 24f),
       Array(38f, 48f)
@@ -89,7 +89,7 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = BreezeMath.mkRowMatrix(matrixValues)
+    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val expectedResult = 2
     val actualResult = BreezeMath.rows(matrix)
 
@@ -101,7 +101,7 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = BreezeMath.mkRowMatrix(matrixValues)
+    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val expectedResult = 3
     val actualResult = BreezeMath.cols(matrix)
 
@@ -122,7 +122,7 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = BreezeMath.mkRowMatrix(matrixValues)
+    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val expectedResult = Array(
       Array(1f, 2f),
       Array(2f, 4f),
@@ -170,7 +170,7 @@ class BreezeMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = BreezeMath.mkRowMatrix(matrixValues)
+    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val expectedResult = Array(2f, 4f, 6f)
     val actualResult = BreezeMath.row(matrix, 1)
 
@@ -218,7 +218,7 @@ class BreezeMathTest extends Test {
       Array(2f, 4f, 6f)
     )
     val expectedResult = matrix
-    val actualResult = BreezeMath.mkRowMatrix(matrix)
+    val actualResult = BreezeMath.mkMatrixFromRows(matrix)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
@@ -237,7 +237,7 @@ class BreezeMathTest extends Test {
       Array(2f, 4f),
       Array(3f, 6f)
     )
-    val actualResult = BreezeMath.mkColMatrix(matrix)
+    val actualResult = BreezeMath.mkMatrixFromCols(matrix)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>

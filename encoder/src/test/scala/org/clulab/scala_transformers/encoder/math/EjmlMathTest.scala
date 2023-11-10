@@ -20,7 +20,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkRowMatrix(matrixValues)
+    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
     val vector = EjmlMath.mkColVector(vectorValues)
     val expectedResult = Array(
@@ -42,7 +42,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkRowMatrix(matrixValues)
+    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
     val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
     val expectedResult = Array(
@@ -64,13 +64,13 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val leftMatrix = EjmlMath.mkRowMatrix(leftMatrixValues)
+    val leftMatrix = EjmlMath.mkMatrixFromRows(leftMatrixValues)
     val rightMatrixValues = Array(
       Array(1f, 2f),
       Array(3f, 2f),
       Array(4f, 6f)
     )
-    val rightMatrix = EjmlMath.mkRowMatrix(rightMatrixValues)
+    val rightMatrix = EjmlMath.mkMatrixFromRows(rightMatrixValues)
     val expectedResult = Array(
       Array(19f, 24f),
       Array(38f, 48f)
@@ -89,7 +89,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkRowMatrix(matrixValues)
+    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val expectedResult = 2
     val actualResult = EjmlMath.rows(matrix)
 
@@ -101,7 +101,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkRowMatrix(matrixValues)
+    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val expectedResult = 3
     val actualResult = EjmlMath.cols(matrix)
 
@@ -122,7 +122,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkRowMatrix(matrixValues)
+    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val expectedResult = Array(
       Array(1f, 2f),
       Array(2f, 4f),
@@ -170,7 +170,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkRowMatrix(matrixValues)
+    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val expectedResult = Array(2f, 4f, 6f)
     val actualResult = EjmlMath.row(matrix, 1)
 
@@ -218,7 +218,7 @@ class EjmlMathTest extends Test {
       Array(2f, 4f, 6f)
     )
     val expectedResult = matrixValues
-    val actualResult = EjmlMath.mkRowMatrix(matrixValues)
+    val actualResult = EjmlMath.mkMatrixFromRows(matrixValues)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
@@ -237,7 +237,7 @@ class EjmlMathTest extends Test {
       Array(2f, 4f),
       Array(3f, 6f)
     )
-    val actualResult = EjmlMath.mkColMatrix(matrixValues)
+    val actualResult = EjmlMath.mkMatrixFromCols(matrixValues)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>

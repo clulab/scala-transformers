@@ -21,7 +21,7 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
       throw new RuntimeException(s"ERROR: you need at least a weights file for linear layer $name!")
     val values = sourceFloatMatrix(newSource(place))
     // dimensions: rows = hidden state size, columns = labels' count
-    val weights = Math.mkColMatrix(values)
+    val weights = Math.mkMatrixFromCols(values)
 
     logger.info(s"Found weights with dimension ${Math.rows(weights)} x ${Math.cols(weights)}")
     weights

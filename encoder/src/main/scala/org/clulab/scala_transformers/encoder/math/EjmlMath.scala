@@ -134,11 +134,11 @@ object EjmlMath extends Math {
     rowVector.get(index)
   }
 
-  def mkRowMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
+  def mkMatrixFromRows(values: Array[Array[MathValue]]): MathRowMatrix = {
     new FMatrixRMaj(values)
   }
 
-  def mkColMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
+  def mkMatrixFromCols(values: Array[Array[MathValue]]): MathRowMatrix = {
     val rows = values.length
     val cols = values.head.length
     val matrix = new FMatrixRMaj(cols, rows)

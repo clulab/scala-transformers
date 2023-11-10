@@ -4,7 +4,7 @@ import breeze.linalg._
 import org.clulab.scala_transformers.encoder.math.BreezeMath
 
 object BreezeExamples extends App {
-  val m = BreezeMath.mkRowMatrix(Array(Array(1f, 2f), Array(3f, 4f)))
+  val m = BreezeMath.mkMatrixFromRows(Array(Array(1f, 2f), Array(3f, 4f)))
   println(m)
   
   println("Row 0: " + m(0, ::))

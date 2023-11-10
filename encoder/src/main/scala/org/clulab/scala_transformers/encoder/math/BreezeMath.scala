@@ -11,7 +11,7 @@ object BreezeMath extends Math {
 
   def fromResult(result: Result): Array[MathRowMatrix] = {
     val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
-    val outputs = array.map(mkRowMatrix(_))
+    val outputs = array.map(mkMatrixFromRows(_))
 
     outputs
   }
@@ -72,7 +72,7 @@ object BreezeMath extends Math {
     rowVector(index)
   }
 
-  def mkRowMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
+  def mkMatrixFromRows(values: Array[Array[MathValue]]): MathRowMatrix = {
     val rows = values.length
     val cols = values.head.length
     val denseMatrix = new DenseMatrix[Float](rows, cols)
@@ -83,7 +83,7 @@ object BreezeMath extends Math {
     denseMatrix
   }
 
-  def mkColMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
+  def mkMatrixFromCols(values: Array[Array[MathValue]]): MathRowMatrix = {
     val rows = values.length
     val cols = values.head.length
     val denseMatrix = new DenseMatrix[Float](cols, rows)

@@ -2,7 +2,6 @@ package org.clulab.scala_transformers.encoder
 
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
 import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix}
-import org.clulab.scala_transformers.encoder.math.OnnxMath
 
 import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
@@ -35,7 +34,7 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
 }
 
 object Encoder {
-  val ortEnvironment = OnnxMath.ortEnvironment
+  val ortEnvironment = OrtEnvironment.getEnvironment
 
   protected def fromSession(ortSession: OrtSession): Encoder =
       new Encoder(ortEnvironment, ortSession)
