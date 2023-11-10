@@ -3,8 +3,8 @@ package org.clulab.scala_transformers.encoder.math
 import ai.onnxruntime.OrtSession.Result
 
 trait Math {
-  type MathRowMatrix
   type MathValue
+  type MathRowMatrix
   type MathColVector
   type MathRowVector
 

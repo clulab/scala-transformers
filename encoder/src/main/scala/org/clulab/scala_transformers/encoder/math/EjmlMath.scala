@@ -6,7 +6,6 @@ import org.ejml.simple.SimpleMatrix
 
 object EjmlMath extends Math {
   type MathValue = Float
-  type MathColMatrix = FMatrixRMaj
   type MathRowMatrix = FMatrixRMaj
   type MathColVector = FMatrixRMaj
   type MathRowVector = FMatrixRMaj
@@ -139,7 +138,7 @@ object EjmlMath extends Math {
     new FMatrixRMaj(values)
   }
 
-  def mkColMatrix(values: Array[Array[MathValue]]): MathColMatrix = {
+  def mkColMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
     val rows = values.length
     val cols = values.head.length
     val matrix = new FMatrixRMaj(cols, rows)

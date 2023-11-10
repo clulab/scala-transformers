@@ -5,7 +5,6 @@ import breeze.linalg.{DenseMatrix, DenseVector, Transpose, `*`, argmax => Breeze
 
 object BreezeMath extends Math {
   type MathValue = Float
-  type MathColMatrix = DenseMatrix[MathValue]
   type MathRowMatrix = DenseMatrix[MathValue]
   type MathColVector = DenseVector[MathValue]
   type MathRowVector = Transpose[DenseVector[MathValue]]
@@ -84,7 +83,7 @@ object BreezeMath extends Math {
     denseMatrix
   }
 
-  def mkColMatrix(values: Array[Array[MathValue]]): MathColMatrix = {
+  def mkColMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
     val rows = values.length
     val cols = values.head.length
     val denseMatrix = new DenseMatrix[Float](cols, rows)

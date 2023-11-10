@@ -90,7 +90,7 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
-  val verbose = false
+  val verbose = true
   val fileName = args.lift(0).getOrElse("../corpora/sentences/sentences.txt")
   val untimedTokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl/avg_export")
   val tokenClassifier = new TimedTokenClassifier(untimedTokenClassifier)
