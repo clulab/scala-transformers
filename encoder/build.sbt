@@ -13,7 +13,9 @@ libraryDependencies ++= {
 
   Seq(
     "org.scalanlp"              %% "breeze"             % breezeVersion,
-    "org.ejml"                   % "ejml-all"           % "0.41", // for Java 8
+    "org.ejml"                   % "ejml-core"          % "0.41", // for Java 8
+    "org.ejml"                   % "ejml-fdense"        % "0.41", // for Java 8
+    "org.ejml"                   % "ejml-simple"        % "0.41", // for Java 8
     "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.13.1",
     "org.slf4j"                  % "slf4j-api"          % "1.7.10"
   )
