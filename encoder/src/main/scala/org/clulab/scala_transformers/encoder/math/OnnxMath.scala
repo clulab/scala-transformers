@@ -65,7 +65,7 @@ object OnnxMath extends Math {
     ???
   }
 
-  def cat(left: OnnxTensor, right: OnnxTensor): OnnxTensor = {
+  def horcat(left: OnnxTensor, right: OnnxTensor): OnnxTensor = {
     ???
   }
 
@@ -82,7 +82,11 @@ object OnnxMath extends Math {
     OnnxTensor.createTensor(ortEnvironment, values)
   }
 
-  def mkVector(values: Array[Float]): OnnxTensor = {
+  def mkColMatrix(values: Array[Array[Float]]): OnnxTensor = {
+    ???
+  }
+
+  def mkColVector(values: Array[Float]): OnnxTensor = {
     OnnxTensor.createTensor(ortEnvironment, values)
   }
 }

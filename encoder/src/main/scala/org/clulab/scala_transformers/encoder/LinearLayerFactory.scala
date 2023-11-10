@@ -32,7 +32,7 @@ abstract class LinearLayerFactory(val linearLayerLayout: LinearLayerLayout) exte
     if (exists(place)) {
       val values = sourceFloatVector(newSource(place))
       // the bias is a column vector
-      val biases = Math.mkVector(values)
+      val biases = Math.mkColVector(values)
 
       logger.info(s"Found biases with dimension ${Math.length(biases)}")
       Some(biases)

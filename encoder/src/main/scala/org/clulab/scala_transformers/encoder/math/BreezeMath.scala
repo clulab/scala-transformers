@@ -2,25 +2,23 @@ package org.clulab.scala_transformers.encoder.math
 
 import ai.onnxruntime.OrtSession.Result
 import breeze.linalg.{DenseMatrix, DenseVector, Transpose, `*`, argmax => BreezeArgmax}
-import org.clulab.scala_transformers.encoder.BreezeUtils
 
 object BreezeMath extends Math {
   type MathValue = Float
+  type MathColMatrix = DenseMatrix[MathValue]
   type MathRowMatrix = DenseMatrix[MathValue]
   type MathColVector = DenseVector[MathValue]
   type MathRowVector = Transpose[DenseVector[MathValue]]
 
   def fromResult(result: Result): Array[MathRowMatrix] = {
     val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
-    val outputs = array.map(BreezeUtils.mkRowMatrix(_))
+    val outputs = array.map(mkRowMatrix(_))
 
     outputs
   }
 
   def argmax(rowVector: MathRowVector): Int = {
-    val bestIndex = BreezeArgmax(rowVector.t)
-
-    bestIndex
+    BreezeArgmax(rowVector)
   }
 
   def inplaceMatrixAddition(matrix: MathRowMatrix, colVector: MathColVector): Unit = {
@@ -28,7 +26,6 @@ object BreezeMath extends Math {
   }
 
   def inplaceMatrixAddition(matrix: MathRowMatrix, rowIndex: Int, rowVector: MathRowVector): Unit = {
-
     matrix(rowIndex, ::) :+= rowVector
   }
 
@@ -64,7 +61,7 @@ object BreezeMath extends Math {
     matrix(index, ::)
   }
 
-  def cat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
+  def horcat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
     DenseVector.vertcat(leftRowVector.t, rightRowVector.t).t
   }
 
@@ -77,10 +74,28 @@ object BreezeMath extends Math {
   }
 
   def mkRowMatrix(values: Array[Array[MathValue]]): MathRowMatrix = {
-    BreezeUtils.mkRowMatrix(values)
+    val rows = values.length
+    val cols = values.head.length
+    val denseMatrix = new DenseMatrix[Float](rows, cols)
+
+    for (row <- 0 until rows)
+      for (col <- 0 until cols)
+        denseMatrix(row, col) = values(row)(col)
+    denseMatrix
   }
 
-  def mkVector(values: Array[MathValue]): MathColVector = {
+  def mkColMatrix(values: Array[Array[MathValue]]): MathColMatrix = {
+    val rows = values.length
+    val cols = values.head.length
+    val denseMatrix = new DenseMatrix[Float](cols, rows)
+
+    for (row <- 0 until rows)
+      for (col <- 0 until cols)
+        denseMatrix(col, row) = values(row)(col)
+    denseMatrix
+  }
+
+  def mkColVector(values: Array[MathValue]): MathColVector = {
     DenseVector(values)
   }
 }

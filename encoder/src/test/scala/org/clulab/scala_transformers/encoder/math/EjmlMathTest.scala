@@ -7,8 +7,8 @@ class EjmlMathTest extends Test {
   behavior of "Math"
 
   it should "argmax" in {
-    val values = Array(1f, 3f, 2f)
-    val vector = EjmlMath.t(EjmlMath.mkVector(values))
+    val vectorValues = Array(1f, 3f, 2f)
+    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
     val expectedResult = 1
     val actualResult = EjmlMath.argmax(vector)
 
@@ -22,7 +22,7 @@ class EjmlMathTest extends Test {
     )
     val matrix = EjmlMath.mkRowMatrix(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.mkVector(vectorValues)
+    val vector = EjmlMath.mkColVector(vectorValues)
     val expectedResult = Array(
       Array(2f, 4f, 6f),
       Array(3f, 6f, 9f)
@@ -44,7 +44,7 @@ class EjmlMathTest extends Test {
     )
     val matrix = EjmlMath.mkRowMatrix(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.t(EjmlMath.mkVector(vectorValues))
+    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
     val expectedResult = Array(
       Array(1f, 2f, 3f),
       Array(3f, 6f, 9f)
@@ -109,8 +109,8 @@ class EjmlMathTest extends Test {
   }
 
   it should "length" in {
-    val values = Array(1f, 2f, 3f)
-    val vector = EjmlMath.mkVector(values)
+    val vectorValues = Array(1f, 2f, 3f)
+    val vector = EjmlMath.mkColVector(vectorValues)
     val expectedResult = 3
     val actualResult = EjmlMath.length(vector)
 
@@ -140,8 +140,8 @@ class EjmlMathTest extends Test {
   it should "vertcat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)
-    val leftVector = EjmlMath.mkVector(leftVectorValues)
-    val rightVector = EjmlMath.mkVector(rightVectorValues)
+    val leftVector = EjmlMath.mkColVector(leftVectorValues)
+    val rightVector = EjmlMath.mkColVector(rightVectorValues)
     val expectedResult = Array(1f, 2f, 3f, 2f, 4f, 6f)
     val actualResult = EjmlMath.vertcat(leftVector, rightVector)
 
@@ -182,10 +182,10 @@ class EjmlMathTest extends Test {
   it should "cat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)
-    val leftVector = EjmlMath.t(EjmlMath.mkVector(leftVectorValues))
-    val rightVector = EjmlMath.t(EjmlMath.mkVector(rightVectorValues))
+    val leftVector = EjmlMath.t(EjmlMath.mkColVector(leftVectorValues))
+    val rightVector = EjmlMath.t(EjmlMath.mkColVector(rightVectorValues))
     val expectedResult = Array(1f, 2f, 3f, 2f, 4f, 6f)
-    val actualResult = EjmlMath.cat(leftVector, rightVector)
+    val actualResult = EjmlMath.horcat(leftVector, rightVector)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
       actualResult.get(index) should be(expectedValue)
@@ -193,9 +193,9 @@ class EjmlMathTest extends Test {
   }
 
   it should "toArray" in {
-    val values = Array(1f, 2f, 3f)
-    val vector = EjmlMath.t(EjmlMath.mkVector(values))
-    val expectedResult = values
+    val vectorValues = Array(1f, 2f, 3f)
+    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
+    val expectedResult = vectorValues
     val actualResult = EjmlMath.toArray(vector)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
@@ -204,8 +204,8 @@ class EjmlMathTest extends Test {
   }
 
   it should "get" in {
-    val values = Array(1f, 2f, 3f)
-    val vector = EjmlMath.t(EjmlMath.mkVector(values))
+    val vectorValues = Array(1f, 2f, 3f)
+    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
     val expectedResult = 2f
     val actualResult = EjmlMath.get(vector, 1)
 
@@ -213,12 +213,12 @@ class EjmlMathTest extends Test {
   }
 
   it should "mkRowMatrix" in {
-    val values = Array(
+    val matrixValues = Array(
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val expectedResult = values
-    val actualResult = EjmlMath.mkRowMatrix(values)
+    val expectedResult = matrixValues
+    val actualResult = EjmlMath.mkRowMatrix(matrixValues)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
@@ -227,10 +227,29 @@ class EjmlMathTest extends Test {
     }
   }
 
+  it should "mkColMatrix" in {
+    val matrixValues = Array(
+      Array(1f, 2f, 3f),
+      Array(2f, 4f, 6f)
+    )
+    val expectedResult = Array(
+      Array(1f, 2f),
+      Array(2f, 4f),
+      Array(3f, 6f)
+    )
+    val actualResult = EjmlMath.mkColMatrix(matrixValues)
+
+    expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
+      expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
+        actualResult.get(rowIndex, colIndex) should be(expectedValue)
+      }
+    }
+  }
+
   it should "mkVector" in {
-    val values = Array(1f, 2f, 3f)
-    val expectedResult = values
-    val actualResult = EjmlMath.mkVector(expectedResult)
+    val vectorValues = Array(1f, 2f, 3f)
+    val expectedResult = vectorValues
+    val actualResult = EjmlMath.mkColVector(expectedResult)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
       actualResult.get(index) should be (expectedValue)

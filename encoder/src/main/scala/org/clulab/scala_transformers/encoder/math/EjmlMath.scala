@@ -6,6 +6,7 @@ import org.ejml.simple.SimpleMatrix
 
 object EjmlMath extends Math {
   type MathValue = Float
+  type MathColMatrix = FMatrixRMaj
   type MathRowMatrix = FMatrixRMaj
   type MathColVector = FMatrixRMaj
   type MathRowVector = FMatrixRMaj
@@ -111,7 +112,7 @@ object EjmlMath extends Math {
     result
   }
 
-  def cat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
+  def horcat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
     assert(isRowVector(leftRowVector))
     assert(isRowVector(rightRowVector))
     val leftSimple = SimpleMatrix.wrap(leftRowVector)
@@ -138,7 +139,18 @@ object EjmlMath extends Math {
     new FMatrixRMaj(values)
   }
 
-  def mkVector(values: Array[MathValue]): MathColVector = {
+  def mkColMatrix(values: Array[Array[MathValue]]): MathColMatrix = {
+    val rows = values.length
+    val cols = values.head.length
+    val matrix = new FMatrixRMaj(cols, rows)
+
+    for (row <- 0 until rows)
+      for (col <- 0 until cols)
+        matrix.set(col, row, values(row)(col))
+    matrix
+  }
+
+  def mkColVector(values: Array[MathValue]): MathColVector = {
     val result = new FMatrixRMaj(values)
 
     assert(isColVector(result))

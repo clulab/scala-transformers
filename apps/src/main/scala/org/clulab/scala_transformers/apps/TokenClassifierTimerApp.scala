@@ -90,7 +90,7 @@ object TokenClassifierTimerApp extends App {
     }
   }
 
-  val log = true
+  val verbose = false
   val fileName = args.lift(0).getOrElse("../corpora/sentences/sentences.txt")
   val untimedTokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl/avg_export")
   val tokenClassifier = new TimedTokenClassifier(untimedTokenClassifier)
@@ -110,7 +110,7 @@ object TokenClassifierTimerApp extends App {
         val words = line.split(" ").toSeq
         val allLabelSeqs = tokenClassifier.predictWithScores(words)
 
-        if (log) {
+        if (verbose) {
           println(s"Words: ${words.mkString(", ")}")
           for (layer <- allLabelSeqs) {
             val words = layer.map(_.head) // Collapse the next layer by just taking the head.

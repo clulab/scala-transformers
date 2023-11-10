@@ -20,9 +20,13 @@ trait Math {
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector
   def zeros(rows: Int, cols: Int): MathRowMatrix
   def row(matrix: MathRowMatrix, index: Int): MathRowVector
-  def cat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector
+  def horcat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector
   def toArray(rowVector: MathRowVector): Array[MathValue]
   def get(rowVector: MathRowVector, index: Int): MathValue
   def mkRowMatrix(values: Array[Array[MathValue]]): MathRowMatrix
-  def mkVector(values: Array[MathValue]): MathColVector
+
+  // For this, the array is specified in column-major order,
+  // but it should be converted to the normal representation.
+  def mkColMatrix(values: Array[Array[MathValue]]): MathRowMatrix
+  def mkColVector(values: Array[MathValue]): MathColVector
 }
