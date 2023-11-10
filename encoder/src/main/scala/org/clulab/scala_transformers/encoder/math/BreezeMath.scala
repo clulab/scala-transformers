@@ -10,8 +10,8 @@ object BreezeMath extends Math {
   type MathRowVector = Transpose[DenseVector[MathValue]]
 
   def fromResult(result: Result): Array[MathRowMatrix] = {
-    val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
-    val outputs = array.map(mkMatrixFromRows(_))
+    val arrays = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
+    val outputs = arrays.map(mkMatrixFromRows(_))
 
     outputs
   }
