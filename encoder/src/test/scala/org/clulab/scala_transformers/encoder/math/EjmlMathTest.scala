@@ -4,11 +4,15 @@ import org.clulab.transformers.test.Test
 
 class EjmlMathTest extends Test {
 
+  def mkRowVector(values: Array[Float]): EjmlMath.MathRowVector = {
+    EjmlMath.t(EjmlMath.mkColVector(values))
+  }
+
   behavior of "Math"
 
   it should "argmax" in {
     val vectorValues = Array(1f, 3f, 2f)
-    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
+    val vector = mkRowVector(vectorValues)
     val expectedResult = 1
     val actualResult = EjmlMath.argmax(vector)
 
@@ -30,8 +34,8 @@ class EjmlMathTest extends Test {
     val actualResult = matrix
 
     EjmlMath.inplaceMatrixAddition(matrix, vector)
-    expectedResult.zipWithIndex.foreach { case (expecteedValues, rowIndex) =>
-      expecteedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
+    expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
+      expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
         actualResult.get(rowIndex, colIndex) should be (expectedValue)
       }
     }
@@ -44,7 +48,7 @@ class EjmlMathTest extends Test {
     )
     val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
+    val vector = mkRowVector(vectorValues)
     val expectedResult = Array(
       Array(1f, 2f, 3f),
       Array(3f, 6f, 9f)
@@ -182,8 +186,8 @@ class EjmlMathTest extends Test {
   it should "cat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)
-    val leftVector = EjmlMath.t(EjmlMath.mkColVector(leftVectorValues))
-    val rightVector = EjmlMath.t(EjmlMath.mkColVector(rightVectorValues))
+    val leftVector = mkRowVector(leftVectorValues)
+    val rightVector = mkRowVector(rightVectorValues)
     val expectedResult = Array(1f, 2f, 3f, 2f, 4f, 6f)
     val actualResult = EjmlMath.horcat(leftVector, rightVector)
 
@@ -194,7 +198,7 @@ class EjmlMathTest extends Test {
 
   it should "toArray" in {
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
+    val vector = mkRowVector(vectorValues)
     val expectedResult = vectorValues
     val actualResult = EjmlMath.toArray(vector)
 
@@ -205,7 +209,7 @@ class EjmlMathTest extends Test {
 
   it should "get" in {
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.t(EjmlMath.mkColVector(vectorValues))
+    val vector = mkRowVector(vectorValues)
     val expectedResult = 2f
     val actualResult = EjmlMath.get(vector, 1)
 

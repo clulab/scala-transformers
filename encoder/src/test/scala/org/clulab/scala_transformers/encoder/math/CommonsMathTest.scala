@@ -1,13 +1,12 @@
 package org.clulab.scala_transformers.encoder.math
 
 import org.apache.commons.math3.linear.ArrayRealVector
-import org.clulab.scala_transformers.encoder.math.CommonsMath.{MathColVector, mkColVector}
 import org.clulab.transformers.test.Test
 
 class CommonsMathTest extends Test {
 
-  def mkRowVector(values: Array[Float]): MathColVector = {
-    mkColVector(values)
+  def mkRowVector(values: Array[Float]): CommonsMath.MathColVector = {
+    CommonsMath.mkColVector(values)
   }
 
   behavior of "Math"
