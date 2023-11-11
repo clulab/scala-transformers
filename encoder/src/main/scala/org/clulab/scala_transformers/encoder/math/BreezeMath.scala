@@ -29,6 +29,7 @@ object BreezeMath extends Math {
   }
 
   def mul(leftMatrix: MathRowMatrix, rightMatrix: MathRowMatrix): MathRowMatrix = {
+//    println(s"${leftMatrix.rows} * ${leftMatrix.cols} x ${rightMatrix.rows} * ${leftMatrix.cols}")
     leftMatrix * rightMatrix
   }
 
