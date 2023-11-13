@@ -41,11 +41,11 @@ class Parameters:
     # see this page for other options: https://huggingface.co/google/bert_uncased_L-4_H-256_A-4
     # transformer_name: str = "bert-base-cased" 
     # transformer_name: str = "distilbert-base-cased"
-    # transformer_name: str = "roberta-base" 
+    transformer_name: str = "roberta-base" 
     # transformer_name: str = "xlm-roberta-base" 
     # transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
     # transformer_name: str = "google/electra-small-discriminator"
-    transformer_name: str = "microsoft/deberta-v3-base" 
+    # transformer_name: str = "microsoft/deberta-v3-base" 
 
     # the encoding used by default for reading and writing files       
     encoding = "UTF-8"
