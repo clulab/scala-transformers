@@ -4,6 +4,9 @@ import ai.onnxruntime.OrtSession.Result
 
 object CluMath extends Math {
 
+  // The use of a template seems to prevent the generation of an apply method
+  // so that the construction of CluMatrix requires new.  However, the
+  // arguments are automatically converted into accessible vals.
   case class CluMatrix[T](rowCount: Int, colCount: Int, data: Array[Array[T]])
 
   sealed trait Orientation
@@ -11,7 +14,10 @@ object CluMath extends Math {
   final class RowOrientation extends Orientation
   final class ColOrientation extends Orientation
 
-  case class CluVector[R <: Orientation, T](count: Int, data: Array[T])
+  // This <: prevents other kinds of CluVectors from being imagined.
+  // The U isn't used, but it does result in the CluRowMatrix and
+  // CluColMatrix being different types and not interchangeable.
+  case class CluVector[U <: Orientation, T](count: Int, data: Array[T])
 
   type ColVector[T] = CluVector[ColOrientation, T]
   type RowVector[T] = CluVector[RowOrientation, T]
@@ -26,7 +32,6 @@ object CluMath extends Math {
   type MathColVector = CluColVector
   type MathRowVector = CluRowVector
 
-  // TODO: How to get case class without the new?  Do I need the val thing?
   def fromResult(result: Result): Array[MathRowMatrix] = {
     val array = result.get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
     val outputs = array.map { array2d =>
