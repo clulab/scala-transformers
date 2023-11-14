@@ -12,8 +12,8 @@ libraryDependencies ++= {
   }
 
   Seq(
-    "org.apache.commons"         % "commons-math3"      % "3.6.1",
-    "org.scalanlp"              %% "breeze"             % breezeVersion,
+//    "org.apache.commons"         % "commons-math3"      % "3.6.1",
+//    "org.scalanlp"              %% "breeze"             % breezeVersion,
     "org.ejml"                   % "ejml-core"          % "0.41", // for Java 8
     "org.ejml"                   % "ejml-fdense"        % "0.41", // for Java 8
     "org.ejml"                   % "ejml-simple"        % "0.41", // for Java 8
