@@ -2,19 +2,19 @@ package org.clulab.scala_transformers.encoder.math
 
 import org.clulab.transformers.test.Test
 
-class EjmlMathTest extends Test {
+class CluMathTest extends Test {
 
-  def mkRowVector(values: Array[Float]): EjmlMath.MathRowVector = {
-    EjmlMath.t(EjmlMath.mkColVector(values))
+  def mkRowVector(values: Array[Float]): CluMath.CluRowVector = {
+    new CluMath.CluRowVector(values.length, values)
   }
 
-  behavior of "EjmlMath"
+  behavior of "CluMath"
 
   it should "argmax" in {
-    val vectorValues = Array(1f, 3f, 2f)
-    val vector = mkRowVector(vectorValues)
+    val values = Array(1f, 3f, 2f)
+    val vector = mkRowVector(values)
     val expectedResult = 1
-    val actualResult = EjmlMath.argmax(vector)
+    val actualResult = CluMath.argmax(vector)
 
     actualResult should be (expectedResult)
   }
@@ -24,19 +24,19 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
+    val matrix = CluMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.mkColVector(vectorValues)
+    val vector = CluMath.mkColVector(vectorValues)
     val expectedResult = Array(
       Array(2f, 4f, 6f),
       Array(3f, 6f, 9f)
     )
     val actualResult = matrix
 
-    EjmlMath.inplaceMatrixAddition(matrix, vector)
+    CluMath.inplaceMatrixAddition(matrix, vector)
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be (expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be (expectedValue)
       }
     }
   }
@@ -46,7 +46,7 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
+    val matrix = CluMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
     val vector = mkRowVector(vectorValues)
     val expectedResult = Array(
@@ -55,10 +55,10 @@ class EjmlMathTest extends Test {
     )
     val actualResult = matrix
 
-    EjmlMath.inplaceMatrixAddition(matrix, 1, vector)
+    CluMath.inplaceMatrixAddition(matrix, 1, vector)
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be(expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be(expectedValue)
       }
     }
   }
@@ -68,22 +68,22 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val leftMatrix = EjmlMath.mkMatrixFromRows(leftMatrixValues)
+    val leftMatrix = CluMath.mkMatrixFromRows(leftMatrixValues)
     val rightMatrixValues = Array(
       Array(1f, 2f),
       Array(3f, 2f),
       Array(4f, 6f)
     )
-    val rightMatrix = EjmlMath.mkMatrixFromRows(rightMatrixValues)
+    val rightMatrix = CluMath.mkMatrixFromRows(rightMatrixValues)
     val expectedResult = Array(
       Array(19f, 24f),
       Array(38f, 48f)
     )
-    val actualResult = EjmlMath.mul(leftMatrix, rightMatrix)
+    val actualResult = CluMath.mul(leftMatrix, rightMatrix)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be(expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be(expectedValue)
       }
     }
   }
@@ -93,9 +93,9 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
+    val matrix = CluMath.mkMatrixFromRows(matrixValues)
     val expectedResult = 2
-    val actualResult = EjmlMath.rows(matrix)
+    val actualResult = CluMath.rows(matrix)
 
     actualResult should be (expectedResult)
   }
@@ -105,18 +105,18 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
+    val matrix = CluMath.mkMatrixFromRows(matrixValues)
     val expectedResult = 3
-    val actualResult = EjmlMath.cols(matrix)
+    val actualResult = CluMath.cols(matrix)
 
     actualResult should be(expectedResult)
   }
 
   it should "length" in {
-    val vectorValues = Array(1f, 2f, 3f)
-    val vector = EjmlMath.mkColVector(vectorValues)
+    val values = Array(1f, 2f, 3f)
+    val vector = CluMath.mkColVector(values)
     val expectedResult = 3
-    val actualResult = EjmlMath.length(vector)
+    val actualResult = CluMath.length(vector)
 
     actualResult should be(expectedResult)
   }
@@ -126,17 +126,17 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
+    val matrix = CluMath.mkMatrixFromRows(matrixValues)
     val expectedResult = Array(
       Array(1f, 2f),
       Array(2f, 4f),
       Array(3f, 6f)
     )
-    val actualResult = EjmlMath.t(matrix)
+    val actualResult = CluMath.t(matrix)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be(expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be(expectedValue)
       }
     }
   }
@@ -144,13 +144,13 @@ class EjmlMathTest extends Test {
   it should "vertcat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)
-    val leftVector = EjmlMath.mkColVector(leftVectorValues)
-    val rightVector = EjmlMath.mkColVector(rightVectorValues)
+    val leftVector = CluMath.mkColVector(leftVectorValues)
+    val rightVector = CluMath.mkColVector(rightVectorValues)
     val expectedResult = Array(1f, 2f, 3f, 2f, 4f, 6f)
-    val actualResult = EjmlMath.vertcat(leftVector, rightVector)
+    val actualResult = CluMath.vertcat(leftVector, rightVector)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
-      actualResult.get(index) should be(expectedValue)
+      actualResult.data(index) should be(expectedValue)
     }
   }
 
@@ -160,11 +160,11 @@ class EjmlMathTest extends Test {
       Array(0f, 0f, 0f)
     )
     val expectedResult = matrixValues
-    val actualResult = EjmlMath.zeros(2, 3)
+    val actualResult = CluMath.zeros(2, 3)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be (expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be (expectedValue)
       }
     }
   }
@@ -174,12 +174,12 @@ class EjmlMathTest extends Test {
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
+    val matrix = CluMath.mkMatrixFromRows(matrixValues)
     val expectedResult = Array(2f, 4f, 6f)
-    val actualResult = EjmlMath.row(matrix, 1)
+    val actualResult = CluMath.row(matrix, 1)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
-      actualResult.get(index) should be(expectedValue)
+      actualResult.data(index) should be(expectedValue)
     }
   }
 
@@ -189,18 +189,18 @@ class EjmlMathTest extends Test {
     val leftVector = mkRowVector(leftVectorValues)
     val rightVector = mkRowVector(rightVectorValues)
     val expectedResult = Array(1f, 2f, 3f, 2f, 4f, 6f)
-    val actualResult = EjmlMath.horcat(leftVector, rightVector)
+    val actualResult = CluMath.horcat(leftVector, rightVector)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
-      actualResult.get(index) should be(expectedValue)
+      actualResult.data(index) should be(expectedValue)
     }
   }
 
   it should "toArray" in {
-    val vectorValues = Array(1f, 2f, 3f)
-    val vector = mkRowVector(vectorValues)
-    val expectedResult = vectorValues
-    val actualResult = EjmlMath.toArray(vector)
+    val values = Array(1f, 2f, 3f)
+    val vector = mkRowVector(values)
+    val expectedResult = values
+    val actualResult = CluMath.toArray(vector)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
       actualResult(index) should be (expectedValue)
@@ -208,31 +208,31 @@ class EjmlMathTest extends Test {
   }
 
   it should "get" in {
-    val vectorValues = Array(1f, 2f, 3f)
-    val vector = mkRowVector(vectorValues)
+    val values = Array(1f, 2f, 3f)
+    val vector = mkRowVector(values)
     val expectedResult = 2f
-    val actualResult = EjmlMath.get(vector, 1)
+    val actualResult = CluMath.get(vector, 1)
 
     actualResult should be (expectedResult)
   }
 
   it should "mkRowMatrix" in {
-    val matrixValues = Array(
+    val matrix = Array(
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
-    val expectedResult = matrixValues
-    val actualResult = EjmlMath.mkMatrixFromRows(matrixValues)
+    val expectedResult = matrix
+    val actualResult = CluMath.mkMatrixFromRows(matrix)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be (expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be (expectedValue)
       }
     }
   }
 
   it should "mkColMatrix" in {
-    val matrixValues = Array(
+    val matrix = Array(
       Array(1f, 2f, 3f),
       Array(2f, 4f, 6f)
     )
@@ -241,11 +241,11 @@ class EjmlMathTest extends Test {
       Array(2f, 4f),
       Array(3f, 6f)
     )
-    val actualResult = EjmlMath.mkMatrixFromCols(matrixValues)
+    val actualResult = CluMath.mkMatrixFromCols(matrix)
 
     expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
       expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be(expectedValue)
+        actualResult.data(rowIndex)(colIndex) should be (expectedValue)
       }
     }
   }
@@ -253,10 +253,10 @@ class EjmlMathTest extends Test {
   it should "mkVector" in {
     val vectorValues = Array(1f, 2f, 3f)
     val expectedResult = vectorValues
-    val actualResult = EjmlMath.mkColVector(expectedResult)
+    val actualResult = CluMath.mkColVector(expectedResult)
 
     expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
-      actualResult.get(index) should be (expectedValue)
+      actualResult.data(index) should be (expectedValue)
     }
   }
 }

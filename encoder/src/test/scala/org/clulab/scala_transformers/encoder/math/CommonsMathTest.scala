@@ -9,7 +9,7 @@ class CommonsMathTest extends Test {
     CommonsMath.mkColVector(values)
   }
 
-  behavior of "Math"
+  behavior of "CommonsMath"
 
   it should "argmax" in {
     val vectorValues = Array(1f, 3f, 2f)

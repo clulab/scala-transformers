@@ -4,11 +4,15 @@ import org.clulab.transformers.test.Test
 
 class BreezeMathTest extends Test {
 
-  behavior of "Math"
+  def mkRowVector(values: Array[Float]): BreezeMath.MathRowVector = {
+    BreezeMath.mkColVector(values).t
+  }
+
+  behavior of "BreezeMath"
 
   it should "argmax" in {
     val values = Array(1f, 3f, 2f)
-    val vector = BreezeMath.mkColVector(values).t
+    val vector = mkRowVector(values)
     val expectedResult = 1
     val actualResult = BreezeMath.argmax(vector)
 
@@ -44,7 +48,7 @@ class BreezeMathTest extends Test {
     )
     val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
     val vectorValues = Array(1f, 2f, 3f)
-    val vector = BreezeMath.mkColVector(vectorValues).t
+    val vector = mkRowVector(vectorValues)
     val expectedResult = Array(
       Array(1f, 2f, 3f),
       Array(3f, 6f, 9f)
@@ -182,8 +186,8 @@ class BreezeMathTest extends Test {
   it should "cat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)
-    val leftVector = BreezeMath.mkColVector(leftVectorValues).t
-    val rightVector = BreezeMath.mkColVector(rightVectorValues).t
+    val leftVector = mkRowVector(leftVectorValues)
+    val rightVector = mkRowVector(rightVectorValues)
     val expectedResult = Array(1f, 2f, 3f, 2f, 4f, 6f)
     val actualResult = BreezeMath.horcat(leftVector, rightVector)
 
@@ -194,7 +198,7 @@ class BreezeMathTest extends Test {
 
   it should "toArray" in {
     val values = Array(1f, 2f, 3f)
-    val vector = BreezeMath.mkColVector(values).t
+    val vector = mkRowVector(values)
     val expectedResult = values
     val actualResult = BreezeMath.toArray(vector)
 
@@ -205,7 +209,7 @@ class BreezeMathTest extends Test {
 
   it should "get" in {
     val values = Array(1f, 2f, 3f)
-    val vector = BreezeMath.mkColVector(values).t
+    val vector = mkRowVector(values)
     val expectedResult = 2f
     val actualResult = BreezeMath.get(vector, 1)
 
@@ -247,14 +251,12 @@ class BreezeMathTest extends Test {
   }
 
   it should "mkVector" in {
-    val values = Array(1f, 2f, 3f)
-    val vector = BreezeMath.mkColVector(values)
-    val expectedResult = "DenseVector(1.0, 2.0, 3.0)"
-    val actualResult = vector.toString
+    val vectorValues = Array(1f, 2f, 3f)
+    val expectedResult = vectorValues
+    val actualResult = BreezeMath.mkColVector(vectorValues)
 
-    actualResult should be (expectedResult)
-    values.zipWithIndex.foreach { case (value, index) =>
-      vector(index) should be (value)
+    expectedResult.zipWithIndex.foreach { case (expectedValue, index) =>
+      actualResult(index) should be (expectedValue)
     }
   }
 }
