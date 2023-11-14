@@ -65,13 +65,6 @@ object CommonsMath extends Math {
     colVector.getDimension
   }
 
-  def t(matrix: MathRowMatrix): MathRowMatrix = {
-    val transposed = matrix.transpose
-    val result = transposed.asInstanceOf[Array2DRowRealMatrix]
-
-    result
-  }
-
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector = {
     new ArrayRealVector(leftColVector, rightColVector)
   }

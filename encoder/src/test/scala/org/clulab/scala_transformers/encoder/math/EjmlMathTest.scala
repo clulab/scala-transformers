@@ -1,11 +1,16 @@
 package org.clulab.scala_transformers.encoder.math
 
 import org.clulab.transformers.test.Test
+import org.ejml.data.FMatrixRMaj
+import org.ejml.simple.SimpleMatrix
 
 class EjmlMathTest extends Test {
 
   def mkRowVector(values: Array[Float]): EjmlMath.MathRowVector = {
-    EjmlMath.t(EjmlMath.mkColVector(values))
+    val matrix =  new FMatrixRMaj(values)
+    val result = SimpleMatrix.wrap(matrix).transpose().getMatrix[FMatrixRMaj]
+
+    result
   }
 
   behavior of "EjmlMath"
@@ -119,26 +124,6 @@ class EjmlMathTest extends Test {
     val actualResult = EjmlMath.length(vector)
 
     actualResult should be(expectedResult)
-  }
-
-  it should "t" in {
-    val matrixValues = Array(
-      Array(1f, 2f, 3f),
-      Array(2f, 4f, 6f)
-    )
-    val matrix = EjmlMath.mkMatrixFromRows(matrixValues)
-    val expectedResult = Array(
-      Array(1f, 2f),
-      Array(2f, 4f),
-      Array(3f, 6f)
-    )
-    val actualResult = EjmlMath.t(matrix)
-
-    expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
-      expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult.get(rowIndex, colIndex) should be(expectedValue)
-      }
-    }
   }
 
   it should "vertcat" in {

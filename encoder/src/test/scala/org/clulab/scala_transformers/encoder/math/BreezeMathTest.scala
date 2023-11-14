@@ -121,26 +121,6 @@ class BreezeMathTest extends Test {
     actualResult should be(expectedResult)
   }
 
-  it should "t" in {
-    val matrixValues = Array(
-      Array(1f, 2f, 3f),
-      Array(2f, 4f, 6f)
-    )
-    val matrix = BreezeMath.mkMatrixFromRows(matrixValues)
-    val expectedResult = Array(
-      Array(1f, 2f),
-      Array(2f, 4f),
-      Array(3f, 6f)
-    )
-    val actualResult = BreezeMath.t(matrix)
-
-    expectedResult.zipWithIndex.foreach { case (expectedValues, rowIndex) =>
-      expectedValues.zipWithIndex.foreach { case (expectedValue, colIndex) =>
-        actualResult(rowIndex, colIndex) should be(expectedValue)
-      }
-    }
-  }
-
   it should "vertcat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)

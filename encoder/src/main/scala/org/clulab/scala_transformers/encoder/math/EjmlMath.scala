@@ -83,12 +83,6 @@ object EjmlMath extends Math {
     colVector.getNumRows
   }
 
-  def t(matrix: MathRowMatrix): MathRowMatrix = {
-    val result = SimpleMatrix.wrap(matrix).transpose().getMatrix[FMatrixRMaj]
-
-    result
-  }
-
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector = {
     assert(isColVector(leftColVector))
     assert(isColVector(rightColVector))

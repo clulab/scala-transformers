@@ -96,17 +96,6 @@ object CluMath extends Math {
     colVector.count
   }
 
-  // TODO: How often is this used?
-  def t(matrix: MathRowMatrix): MathRowMatrix = {
-    val rowCount = matrix.colCount
-    val colCount = matrix.rowCount
-    val data = Array.tabulate[MathValue](rowCount, colCount) { (rowIndex, colIndex) =>
-      matrix.data(colIndex)(rowIndex)
-    }
-
-    new CluRowMatrix(rowCount, colCount, data)
-  }
-
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector = {
     val data = {
       val data = new Array[MathValue](leftColVector.count + rightColVector.count)

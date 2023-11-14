@@ -45,10 +45,6 @@ object BreezeMath extends Math {
     colVector.length
   }
 
-  def t(matrix: MathRowMatrix): MathRowMatrix = {
-    matrix.t
-  }
-
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector = {
     DenseVector.vertcat(leftColVector, rightColVector)
   }

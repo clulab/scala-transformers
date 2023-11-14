@@ -16,7 +16,6 @@ trait Math {
   def rows(matrix: MathRowMatrix): Int
   def cols(matrix: MathRowMatrix): Int
   def length(colVector: MathColVector): Int
-  def t(matrix: MathRowMatrix): MathRowMatrix
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector
   def zeros(rows: Int, cols: Int): MathRowMatrix
   def row(matrix: MathRowMatrix, index: Int): MathRowVector
