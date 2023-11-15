@@ -111,7 +111,8 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = 1; cols = hidden state size x 2
-    val concatMatrix = DenseMatrix.zeros[Float](rows = 1, cols = 2 * sentenceHiddenStates.cols)
+    // val concatMatrix = DenseMatrix.zeros[Float](rows = 1, cols = 2 * sentenceHiddenStates.cols) // USE SUM
+    val concatMatrix = DenseMatrix.zeros[Float](rows = 1, cols = sentenceHiddenStates.cols) // USE SUM
 
     // embedding of the modifier
     val modHiddenState = sentenceHiddenStates(modifierAbsolutePosition, ::)
@@ -125,7 +126,8 @@ class LinearLayer(
 
     // concatenation of the modifier and head embeddings
     // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
-    val concatState = DenseVector.vertcat(modHiddenState.t, headHiddenState.t).t
+    // val concatState = DenseVector.vertcat(modHiddenState.t, headHiddenState.t).t // USE SUM
+    val concatState = modHiddenState +:+ headHiddenState
 
     concatMatrix(0, ::) :+= concatState
     concatMatrix
