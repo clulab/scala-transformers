@@ -28,6 +28,9 @@ class LinearLayer(
   def forward(inputBatch: Array[DenseMatrix[Float]]): Array[DenseMatrix[Float]] = {
     inputBatch.map { input =>
       //println("INPUT:\n" + input)
+      //println(s"input size: ${input.rows} x ${input.cols}")
+      //println(s"weights size: ${weights.rows} x ${weights.cols}")
+
       val output = input * weights
       //println("OUTPUT before bias:\n" + output)
       for (b <- biasesOpt) output(*, ::) :+= b
@@ -78,7 +81,8 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = number of tokens in the sentence; cols = hidden state size x 2
-    val concatMatrix = DenseMatrix.zeros[Float](rows = sentenceHiddenStates.rows, cols = 2 * sentenceHiddenStates.cols)
+    //val concatMatrix = DenseMatrix.zeros[Float](rows = sentenceHiddenStates.rows, cols = 2 * sentenceHiddenStates.cols) // USE SUM
+    val concatMatrix = DenseMatrix.zeros[Float](rows = sentenceHiddenStates.rows, cols = sentenceHiddenStates.cols) // USE SUM
 
     // traverse all modifiers
     for(i <- 0 until sentenceHiddenStates.rows) {
@@ -91,12 +95,14 @@ class LinearLayer(
       val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
 
       // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
-      val concatState = DenseVector.vertcat(modHiddenState.t, headHiddenState.t).t
+      //val concatState = DenseVector.vertcat(modHiddenState.t, headHiddenState.t).t // USE SUM
+      val concatState = modHiddenState +:+ headHiddenState
 
       // row i in the concatenated matrix contains the embedding of modifier i and its head
       concatMatrix(i, ::) :+= concatState
     }
     
+    //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
     concatMatrix
   }
 
@@ -130,6 +136,8 @@ class LinearLayer(
     val concatState = modHiddenState +:+ headHiddenState
 
     concatMatrix(0, ::) :+= concatState
+
+    //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
     concatMatrix
   }
 
