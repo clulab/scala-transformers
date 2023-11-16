@@ -12,6 +12,7 @@ trait Math {
   def argmax(rowVector: MathRowVector): Int
   def inplaceMatrixAddition(matrix: MathRowMatrix, colVector: MathColVector): Unit
   def inplaceMatrixAddition(matrix: MathRowMatrix, rowIndex: Int, rowVector: MathRowVector): Unit
+//  def rowVectorAddition(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector
   def mul(leftMatrix: MathRowMatrix, rightMatrix: MathRowMatrix): MathRowMatrix
   def rows(matrix: MathRowMatrix): Int
   def cols(matrix: MathRowMatrix): Int

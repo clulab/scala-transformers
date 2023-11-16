@@ -1,0 +1,720 @@
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+[Tokenizer] Checking /home/kwa/Projects/clulab/scala-transformers-project/scala-transformers for intel-librust_tokenizer.so...
+[Tokenizer] Checking /home/kwa for intel-librust_tokenizer.so...
+[Tokenizer] Extracting resource intel-librust_tokenizer.so to /tmp/intel-librust_tokenizer-3511755484489880274.so...
+[Tokenizer] Loading rust interface from /tmp/intel-librust_tokenizer-3511755484489880274.so...
+[Tokenizer] => create_from_bytes(...)
+[Tokenizer] <= 139828167507328
+0 Food and Agriculture Organization of the United Nations HE STA E ' OF VOOD Food and Agriculture Organization of the United Nations HE STA E ' OF VOOD AND AGRICULTURE : : 194 / Prepared for the Third Session of the Conference of FAO , Geneva , Switzerland , 25 August 1947 Prive : 20 cents Geneva Aigcs .
+Nov 16, 2023 1:51:09 PM dev.ludovic.netlib.blas.InstanceBuilder initializeNative
+WARNING: Failed to load implementation from:dev.ludovic.netlib.blas.JNIBLAS
+return java 8 instance
+Words: Food, and, Agriculture, Organization, of, the, United, Nations, HE, STA, E, ', OF, VOOD, Food, and, Agriculture, Organization, of, the, United, Nations, HE, STA, E, ', OF, VOOD, AND, AGRICULTURE, :, :, 194, /, Prepared, for, the, Third, Session, of, the, Conference, of, FAO, ,, Geneva, ,, Switzerland, ,, 25, August, 1947, Prive, :, 20, cents, Geneva, Aigcs, .
+Labels: B-ORG, I-ORG, I-ORG, I-ORG, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O, I-ORG, I-ORG, I-ORG, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, O, I-ORG, O, B-LOC, O, B-LOC, O, O, O, O, O, O, O, O, B-ORG, I-ORG, I-LOC
+Labels: NNP, CC, NNP, NNP, IN, DT, NNP, NNPS, PRP, NNP, NNP, '', IN, NNP, NNP, CC, NNP, NNP, IN, DT, NNP, NNPS, PRP, NNP, NNP, '', IN, NN, CC, NN, :, :, CD, CC, VBN, IN, DT, JJ, NN, IN, DT, NNP, IN, NNP, ,, NNP, ,, NNP, ,, CD, NNP, CD, NNP, :, CD, NNS, NNP, NNP, .
+Labels: B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-NP, I-NP, I-NP, O, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-NP, I-NP, I-NP, O, B-PP, B-NP, I-NP, I-NP, O, O, B-NP, O, B-VP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, O, B-NP, O, B-NP, O, B-NP, I-NP, I-NP, I-NP, O, B-NP, I-NP, B-NP, I-NP, O
+Labels: 3, -1, -2, 0, 3, 2, 1, -4, 2, 1, 0, -1, 2, 1, -4, -1, 1, -3, 3, 2, 1, -7, 2, 1, -10, -1, 1, -3, -1, -2, -6, 1, -23, -1, -2, 3, 2, 1, -4, 2, 1, -3, 1, -2, -1, -2, -1, -2, -5, 1, 2, 1, -13, -26, 1, -20, 1, -2, -29
+Labels: compound, cc, conj, root, case, det, compound, nmod, dep, compound, dep, punct, case, compound, punct, cc, compound, conj, case, det, compound, nmod, compound, compound, nmod, punct, case, nmod, cc, conj, punct, punct, nmod, dep, dep, case, det, amod, nmod, case, det, nmod, case, nmod, punct, appos, punct, appos, punct, nummod, nmod:tmod, nummod, det, punct, nummod, amod, compound, dep, punct
+1 : SUMMARY The world food situation and outlook , in the near future and further ahead , will be the central topic of discussion at the Geneva Conference of the Food and Agriculture Organization of the United Nations , beginning 25 August .
+Words: :, SUMMARY, The, world, food, situation, and, outlook, ,, in, the, near, future, and, further, ahead, ,, will, be, the, central, topic, of, discussion, at, the, Geneva, Conference, of, the, Food, and, Agriculture, Organization, of, the, United, Nations, ,, beginning, 25, August, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, B-ORG, I-ORG, O, O, O, O, O
+Labels: :, NN, DT, NN, NN, NN, CC, NN, ,, IN, DT, JJ, NN, CC, RB, RB, ,, MD, VB, DT, JJ, NN, IN, NN, IN, DT, NNP, NNP, IN, DT, NNP, CC, NNP, NNP, IN, DT, NNP, NNP, ,, VBG, CD, NNP, .
+Labels: O, B-VP, B-NP, I-NP, I-NP, I-NP, I-NP, I-NP, O, B-PP, B-NP, I-NP, I-NP, O, B-ADVP, I-ADVP, O, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-VP, B-NP, I-NP, O
+Labels: 22, 21, 3, 2, 1, 16, -1, -2, 13, 3, 2, 1, -7, -1, 1, -3, 5, 4, 3, 2, 1, 0, 1, -2, 3, 2, 1, -4, 5, 4, 3, -1, -2, -6, 3, 2, 1, -4, -11, -12, 1, -2, -21
+Labels: amod, amod, det, compound, compound, nsubj, cc, conj, punct, case, det, amod, nmod, cc, advmod, conj, punct, aux, cop, det, amod, root, case, nmod, case, det, compound, nmod, case, det, compound, cc, conj, nmod, case, det, compound, nmod, punct, acl, nummod, nmod:tmod, punct
+2 Needed lines of action will be decided on by representatives of some 50 nations .
+Words: Needed, lines, of, action, will, be, decided, on, by, representatives, of, some, 50, nations, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: JJ, NNS, IN, NN, MD, VB, VBN, IN, IN, NNS, IN, DT, CD, NNS, .
+Labels: B-NP, I-NP, B-PP, B-NP, B-VP, I-VP, I-VP, B-PP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 1, 5, 1, -2, 2, 1, 0, -1, 1, -3, 3, 1, 1, -4, -8
+Labels: amod, nsubjpass, case, nmod, aux, auxpass, root, nmod, case, nmod, case, advmod, nummod, nmod, punct
+3 Scarcity , not only of foodstuffs but of lumber and other forest products , textiles , seeds , fertilizers , draught power , and farm equipment will continue throughout most of Europe and Asia during the coming year .
+Words: Scarcity, ,, not, only, of, foodstuffs, but, of, lumber, and, other, forest, products, ,, textiles, ,, seeds, ,, fertilizers, ,, draught, power, ,, and, farm, equipment, will, continue, throughout, most, of, Europe, and, Asia, during, the, coming, year, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, O, B-LOC, O, O, O, O, O
+Labels: NN, ,, RB, RB, IN, NNS, CC, IN, NN, CC, JJ, NN, NNS, ,, NNS, ,, NNS, ,, NNS, ,, NN, NN, ,, CC, NN, NN, MD, VB, IN, JJS, IN, NNP, CC, NNP, IN, DT, JJ, NN, .
+Labels: B-NP, O, B-CONJP, I-CONJP, B-PP, B-NP, B-PP, B-PP, B-NP, O, B-NP, I-NP, I-NP, O, B-NP, O, B-NP, O, B-NP, O, B-NP, I-NP, O, O, B-NP, I-NP, B-VP, I-VP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 27, -1, 1, 2, 1, -5, -1, 1, -3, -1, 2, 1, -4, -5, -6, -7, -8, -9, -10, -11, 1, -13, -14, -15, 1, -17, 1, 0, 1, -2, 1, -2, -1, -2, 3, 2, 1, -10, -11
+Labels: conj, punct, neg, cc:preconj, case, nmod, cc, case, nmod, cc, amod, compound, conj, punct, conj, punct, cc, punct, cc, punct, compound, compound, punct, cc, compound, compound, aux, root, case, nmod, case, nmod, cc, conj, case, det, amod, nmod, punct
+4 Hopes of continued recovery in Europe 's indigenous food supplies were checked by last winter 's bad weather .
+Words: Hopes, of, continued, recovery, in, Europe, 's, indigenous, food, supplies, were, checked, by, last, winter, 's, bad, weather, .
+Labels: O, O, O, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNS, IN, VBN, NN, IN, NNP, POS, JJ, NN, NNS, VBD, VBN, IN, JJ, NN, POS, JJ, NN, .
+Labels: B-NP, B-PP, B-NP, I-NP, B-PP, B-NP, B-NP, I-NP, I-NP, I-NP, B-VP, I-VP, B-PP, B-NP, I-NP, B-NP, I-NP, I-NP, O
+Labels: 11, 2, 1, -3, 5, 4, -1, 2, 1, -6, 1, 0, 5, 1, 3, -1, 1, -6, -7
+Labels: nmod, case, amod, nmod, case, compound, case, amod, compound, case, auxpass, root, case, amod, amod, case, amod, case, punct
+5 Diets in Western and Central Europe will be still lower next year , and in Asia they will remain at present very low levels , unless imports can be increased .
+Words: Diets, in, Western, and, Central, Europe, will, be, still, lower, next, year, ,, and, in, Asia, they, will, remain, at, present, very, low, levels, ,, unless, imports, can, be, increased, .
+Labels: O, O, B-MISC, O, B-LOC, I-LOC, O, O, O, O, O, O, O, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNS, IN, JJ, CC, NNP, NNP, MD, VB, RB, JJR, JJ, NN, ,, CC, IN, NNP, PRP, MD, VB, IN, JJ, RB, JJ, NNS, ,, IN, NNS, MD, VB, VBN, .
+Labels: B-NP, B-PP, B-NP, I-NP, I-NP, I-NP, B-VP, I-VP, B-ADVP, B-ADJP, B-NP, I-NP, O, O, B-PP, B-NP, B-NP, B-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, O, B-SBAR, B-NP, B-VP, I-VP, I-VP, O
+Labels: 9, 4, 3, -1, -2, -5, 3, 2, 1, 0, 1, -2, -3, -4, 1, 3, 2, 1, -9, 4, 3, 1, 1, -5, -6, 4, 3, 2, 1, -11, -21
+Labels: advmod, case, amod, cc, conj, nmod, aux, cop, advmod, root, amod, nmod:tmod, punct, cc, case, nmod, nsubj, aux, conj, case, amod, advmod, amod, nmod, punct, mark, nsubjpass, aux, auxpass, advcl, punct
+6 Even to hold the present line will require drastic action .
+Words: Even, to, hold, the, present, line, will, require, drastic, action, .
+Labels: O, O, O, O, O, O, O, O, O, O, O
+Labels: RB, TO, VB, DT, JJ, NN, MD, VB, JJ, NN, .
+Labels: B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-VP, I-VP, B-NP, I-NP, O
+Labels: 2, 1, 5, 2, 1, -3, 1, 0, 1, -2, -3
+Labels: advmod, mark, csubj, det, amod, dobj, aux, root, amod, dobj, punct
+7 Twenty-eight million tons * of grain were imported into the deficit areas in 1946/47 .
+Words: Twenty-eight, million, tons, *, of, grain, were, imported, into, the, deficit, areas, in, 1946/47, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: CD, CD, NNS, POS, IN, NN, VBD, VBN, IN, DT, NN, NNS, IN, CD, .
+Labels: B-NP, I-NP, I-NP, O, B-PP, B-NP, B-VP, I-VP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, O
+Labels: 1, 1, 5, -1, 1, -3, 1, 0, 3, 2, 1, -4, 1, -6, -7
+Labels: compound, nummod, nsubjpass, dep, case, nmod, auxpass, root, case, det, compound, nmod, case, nmod, det
+8 Minimum import needs for Europe , North Africa , and Asia in 1947/48 may be estimated at 34 to 38 million tons without allowing for any improvement in bread rations , any additional livestock feeding , or any increase in working reserves .
+Words: Minimum, import, needs, for, Europe, ,, North, Africa, ,, and, Asia, in, 1947/48, may, be, estimated, at, 34, to, 38, million, tons, without, allowing, for, any, improvement, in, bread, rations, ,, any, additional, livestock, feeding, ,, or, any, increase, in, working, reserves, .
+Labels: O, O, O, O, B-LOC, O, B-LOC, I-LOC, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NN, NN, NNS, IN, NNP, ,, NNP, NNP, ,, CC, NNP, IN, CD, MD, VB, VBN, IN, CD, TO, CD, CD, NNS, IN, VBG, IN, DT, NN, IN, NN, NNS, ,, DT, JJ, NN, NN, ,, CC, DT, NN, IN, VBG, NNS, .
+Labels: B-NP, I-NP, I-NP, B-PP, B-NP, O, B-NP, I-NP, O, O, B-NP, B-PP, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-VP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, O, B-NP, I-NP, I-NP, I-NP, O, O, B-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 2, 1, 13, 1, -2, -1, 1, -3, -4, -5, -6, 1, -8, 2, 1, 0, 5, 3, 2, 1, 1, -6, 1, -8, 2, 1, -3, 2, 1, -3, -4, 3, 2, 1, -8, -9, -10, 1, -12, 2, 1, -3, -27
+Labels: compound, compound, aux, case, nmod, punct, compound, conj, punct, cc, conj, case, nmod, aux, auxpass, root, case, compound, dep, compound, nummod, nmod, mark, advcl, case, det, nmod, case, compound, nmod, punct, det, amod, compound, case, punct, case, det, case, case, amod, nmod, case
+9 Against this need , supplies of grain available for export from the surplus countries may be tentatively estimated at 30 to 34 million tons .
+Words: Against, this, need, ,, supplies, of, grain, available, for, export, from, the, surplus, countries, may, be, tentatively, estimated, at, 30, to, 34, million, tons, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: IN, DT, NN, ,, NNS, IN, NN, JJ, IN, NN, IN, DT, NN, NNS, MD, VB, RB, VBN, IN, CD, TO, CD, CD, NNS, .
+Labels: B-PP, B-NP, I-NP, O, B-NP, B-PP, B-NP, B-ADJP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, O
+Labels: 2, 1, 15, 14, 13, 1, -2, -1, 1, -2, 3, 2, 1, -4, 3, 2, 1, 0, 5, 3, 2, 1, 1, -6, -7
+Labels: case, det, advmod, advmod, advmod, case, nmod, amod, case, nmod, case, det, compound, nmod, aux, auxpass, advmod, root, case, compound, dep, compound, nummod, nmod, punct
+10 Even with somewhat larger supplies of certain other foods particularly potatoes , sugar , and fats the situation will continue to be grim .
+Words: Even, with, somewhat, larger, supplies, of, certain, other, foods, particularly, potatoes, ,, sugar, ,, and, fats, the, situation, will, continue, to, be, grim, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: RB, IN, RB, JJR, NNS, IN, JJ, JJ, NNS, RB, NNS, ,, NN, ,, CC, NNS, DT, NN, MD, VB, TO, VB, JJ, .
+Labels: B-ADVP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-ADVP, B-NP, O, B-NP, O, O, B-NP, B-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-ADJP, O
+Labels: 4, 3, 1, 1, 15, 3, 2, 1, -4, 1, -2, -1, -2, -3, -4, -5, 1, 2, 1, 0, 2, 1, -3, -4
+Labels: advmod, case, advmod, amod, nmod, case, amod, amod, nmod, advmod, appos, punct, conj, punct, cc, conj, det, nsubj, aux, root, mark, cop, xcomp, punct
+11 Cessation of UNRRA activities and accumulated foreign exchange difficulties worsen the problem for nations in a weak bargaining position .
+Words: Cessation, of, UNRRA, activities, and, accumulated, foreign, exchange, difficulties, worsen, the, problem, for, nations, in, a, weak, bargaining, position, .
+Labels: O, O, B-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NN, IN, NNP, NNS, CC, VBN, JJ, NN, NNS, VBP, DT, NN, IN, NNS, IN, DT, JJ, NN, NN, .
+Labels: B-NP, B-PP, B-NP, I-NP, O, B-NP, I-NP, I-NP, I-NP, B-VP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, I-NP, O
+Labels: 9, 2, 1, -3, -4, 3, 2, 1, -8, 0, 1, -2, 1, -2, 4, 3, 2, 1, -7, -10
+Labels: amod, case, compound, compound, cc, amod, amod, compound, compound, root, det, dobj, case, nmod, case, det, amod, compound, nmod, punct
+12 Every delay in improving this situation further impairs the working ability of labour , slows up reconstruction , adds to the physical damage caused by prolonged undernourishment , and accelerates social unrest .
+Words: Every, delay, in, improving, this, situation, further, impairs, the, working, ability, of, labour, ,, slows, up, reconstruction, ,, adds, to, the, physical, damage, caused, by, prolonged, undernourishment, ,, and, accelerates, social, unrest, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NN, IN, VBG, DT, NN, RBR, VBZ, DT, NN, NN, IN, NN, ,, VBZ, RP, NN, ,, VBZ, TO, DT, JJ, NN, VBN, IN, VBN, NN, ,, CC, VBZ, JJ, NN, .
+Labels: B-NP, I-NP, B-PP, B-VP, B-NP, I-NP, B-ADVP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, O, B-VP, B-PRT, B-NP, O, B-VP, B-PP, B-NP, I-NP, I-NP, B-VP, B-PP, B-NP, I-NP, O, O, B-VP, B-NP, I-NP, O
+Labels: 1, 6, 1, -2, 1, -2, 1, 0, 2, 1, -3, 1, -2, -6, -7, -1, -2, -10, -11, 3, 2, 1, -4, -1, 2, 1, -3, -20, -21, -22, 1, -2, -25
+Labels: det, nsubj, mark, acl, det, dobj, advmod, root, det, compound, dobj, case, nmod, punct, conj, compound:prt, dobj, punct, conj, case, det, amod, nmod, acl, case, amod, nmod, punct, cc, dobj, amod, dobj, case
+13 s. \ \ Steps can still be taken to improve the 1948 harvest .
+Words: s., \, \, Steps, can, still, be, taken, to, improve, the, 1948, harvest, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: SYM, SYM, JJ, NNS, MD, RB, VB, VBN, TO, VB, DT, CD, NN, .
+Labels: B-NP, O, O, B-NP, B-VP, I-VP, I-VP, I-VP, B-VP, I-VP, B-NP, I-NP, I-NP, O
+Labels: 7, 6, 5, 4, 3, 2, 1, 0, 1, -2, 2, 1, -3, -6
+Labels: auxpass, punct, punct, nsubjpass, aux, advmod, auxpass, root, mark, xcomp, det, nummod, dobj, punct
+14 More fertilizers , farm machinery , and pesticides could be delivered within the next six months to areas of great need .
+Words: More, fertilizers, ,, farm, machinery, ,, and, pesticides, could, be, delivered, within, the, next, six, months, to, areas, of, great, need, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: JJR, NNS, ,, NN, NN, ,, CC, NNS, MD, VB, VBN, IN, DT, JJ, CD, NNS, TO, NNS, IN, JJ, NN, .
+Labels: B-NP, I-NP, I-NP, I-NP, I-NP, O, I-NP, I-NP, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, O
+Labels: 1, 9, -1, 1, -3, -4, -5, -6, 2, 1, 0, 4, 3, 2, 1, -5, 1, -7, 2, 1, -3, -11
+Labels: amod, auxpass, punct, compound, conj, punct, cc, conj, aux, auxpass, root, case, det, amod, nummod, nmod, case, nmod, case, amod, nmod, punct
+15 To accomplish this , the first step would be the immediate establishment of an intergovernmental committee for each main deficit area .
+Words: To, accomplish, this, ,, the, first, step, would, be, the, immediate, establishment, of, an, intergovernmental, committee, for, each, main, deficit, area, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: TO, VB, DT, ,, DT, JJ, NN, MD, VB, DT, JJ, NN, IN, DT, JJ, NN, IN, DT, JJ, NN, NN, .
+Labels: B-VP, I-VP, B-NP, O, B-NP, I-NP, I-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, O
+Labels: 1, 10, -1, 8, 2, 1, 5, 4, 3, 2, 1, 0, 3, 2, 1, -4, 4, 3, 2, 1, -5, -10
+Labels: mark, advcl, dobj, punct, det, amod, nsubj, aux, cop, det, amod, root, case, det, amod, case, case, det, amod, compound, nmod, punct
+16 These committees would co-ordinate the requirements of the individual nations and discuss delivery possibilities with the supplying countries .
+Words: These, committees, would, co-ordinate, the, requirements, of, the, individual, nations, and, discuss, delivery, possibilities, with, the, supplying, countries, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NNS, MD, VB, DT, NNS, IN, DT, JJ, NNS, CC, VB, NN, NNS, IN, DT, VBG, NNS, .
+Labels: B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 1, 2, 1, 0, 1, -2, 3, 2, 1, -4, -7, -8, 1, -2, 3, 2, 1, -6, -15
+Labels: det, nsubj, aux, root, det, dobj, case, det, amod, nmod, cc, conj, compound, dobj, case, det, amod, nmod, punct
+17 Restoration of food output to pre-war levels is not enough .
+Words: Restoration, of, food, output, to, pre-war, levels, is, not, enough, .
+Labels: O, O, O, O, O, O, O, O, O, O, O
+Labels: NN, IN, NN, NN, TO, JJ, NNS, VBZ, RB, RB, .
+Labels: B-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, O, B-ADJP, O
+Labels: 9, 2, 1, -3, 2, 1, -6, 2, 1, 0, -1
+Labels: cop, case, compound, nmod, case, amod, compound, cop, neg, root, punct
+18 World population is increasing by 15 to 20 millions each year , and consumer demand for food is everywhere higher than before the war .
+Words: World, population, is, increasing, by, 15, to, 20, millions, each, year, ,, and, consumer, demand, for, food, is, everywhere, higher, than, before, the, war, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NN, NN, VBZ, VBG, IN, CD, TO, CD, NNS, DT, NN, ,, CC, NN, NN, IN, NN, VBZ, RB, JJR, IN, IN, DT, NN, .
+Labels: B-NP, I-NP, B-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, B-NP, I-NP, O, O, B-NP, I-NP, B-PP, B-NP, B-VP, B-ADJP, I-ADJP, B-PP, B-PP, B-NP, I-NP, O
+Labels: 1, 2, 1, 0, 4, 2, 1, 1, -5, 1, -7, -8, -9, 1, 5, 1, -2, 2, 1, -16, 3, 2, 1, -4, -21
+Labels: compound, nsubj, aux, root, case, compound, dep, nummod, nmod, det, nmod:tmod, punct, cc, compound, nsubj, case, nmod, cop, advmod, conj, case, case, det, nmod, punct
+19 The answer to short-term scarcity is sustained expansion of production .
+Words: The, answer, to, short-term, scarcity, is, sustained, expansion, of, production, .
+Labels: O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NN, TO, JJ, NN, VBZ, VBN, NN, IN, NN, .
+Labels: B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, I-VP, B-NP, B-PP, B-NP, O
+Labels: 1, 5, 2, 1, -3, 1, 0, -1, 1, -2, -4
+Labels: det, nmod, case, amod, amod, auxpass, root, dobj, case, nmod, punct
+20 In Asia , where the food problem is of long standing , the basic difficulty is overcrowding of the land .
+Words: In, Asia, ,, where, the, food, problem, is, of, long, standing, ,, the, basic, difficulty, is, overcrowding, of, the, land, .
+Labels: O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: IN, NNP, ,, WRB, DT, NN, NN, VBZ, IN, JJ, NN, ,, DT, JJ, NN, VBZ, VBG, IN, DT, NN, .
+Labels: B-PP, B-NP, O, B-ADVP, B-NP, I-NP, I-NP, B-VP, B-PP, B-NP, I-NP, O, B-NP, I-NP, I-NP, B-VP, I-VP, B-PP, B-NP, I-NP, O
+Labels: 1, 15, -1, 7, 2, 1, 4, 3, 2, 1, -9, -10, 2, 1, 2, 1, 0, 2, 1, -3, -4
+Labels: case, nmod, punct, advmod, det, compound, nsubj, cop, case, amod, acl:relcl, punct, det, amod, nsubj, aux, root, case, det, nmod, punct
+21 r ; t < ' * Throughout this document , weights are in ' metric tons .
+Words: r, ;, t, <, ', *, Throughout, this, document, ,, weights, are, in, ', metric, tons, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: SYM, :, UH, SYM, '', :, IN, DT, NN, ,, NNS, VBP, IN, '', JJ, NNS, .
+Labels: B-NP, O, B-NP, O, O, O, B-PP, B-NP, I-NP, O, B-NP, B-VP, B-PP, O, I-NP, I-NP, O
+Labels: 15, -1, -2, -3, -4, 10, 2, 1, 7, 6, 5, 4, 3, 2, 1, 0, -1
+Labels: dep, punct, dep, dep, punct, punct, case, det, nmod, punct, nsubj, cop, case, punct, amod, root, punct
+22 hi Agricultural modernization is needed to increase output per acre , and alternative employment must be provided for millions who will not be required - on the land if agriculture is improved .
+Words: hi, Agricultural, modernization, is, needed, to, increase, output, per, acre, ,, and, alternative, employment, must, be, provided, for, millions, who, will, not, be, required, -, on, the, land, if, agriculture, is, improved, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: FW, JJ, NN, VBZ, VBN, TO, VB, NN, IN, NN, ,, CC, JJ, NN, MD, VB, VBN, IN, NNS, WP, MD, RB, VB, VBN, :, IN, DT, NN, IN, NN, VBZ, VBN, .
+Labels: B-NP, I-NP, I-NP, B-VP, I-VP, B-VP, I-VP, B-NP, B-PP, B-NP, O, O, B-NP, I-NP, B-VP, I-VP, I-VP, B-PP, B-NP, B-NP, B-VP, I-VP, I-VP, I-VP, O, B-PP, B-NP, I-NP, B-SBAR, B-NP, B-VP, I-VP, O
+Labels: 2, 1, 2, 1, 0, 1, -2, -1, 1, -2, -6, -7, 1, 3, 2, 1, -12, 1, -2, 4, 3, 2, 1, -5, 3, 2, 1, -4, 3, 2, 1, -8, -28
+Labels: compound, amod, nsubjpass, auxpass, root, mark, xcomp, dobj, case, nmod, punct, cc, amod, nsubjpass, aux, auxpass, conj, case, nmod, nsubjpass, aux, neg, auxpass, acl:relcl, punct, case, det, nmod, mark, nsubjpass, auxpass, advcl, punct
+23 Even with modernized production , Asiatic countries will need large-scale food imports to obtain adequate diets .
+Words: Even, with, modernized, production, ,, Asiatic, countries, will, need, large-scale, food, imports, to, obtain, adequate, diets, .
+Labels: O, O, O, O, O, B-MISC, O, O, O, O, O, O, O, O, O, O, O
+Labels: RB, IN, JJ, NN, ,, JJ, NNS, MD, VB, JJ, NN, NNS, TO, VB, JJ, NNS, .
+Labels: B-PP, B-PP, B-NP, I-NP, O, B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-VP, I-VP, B-NP, I-NP, O
+Labels: 3, 2, 1, 5, 4, 1, 2, 1, 0, 2, 1, -3, 1, -5, 1, -2, -8
+Labels: advmod, case, amod, nsubj, punct, amod, nsubj, aux, root, amod, compound, amod, mark, advcl, amod, dobj, punct
+24 Long-term programmes for the improvement and reorientation of agriculture are also needed in Europe .
+Words: Long-term, programmes, for, the, improvement, and, reorientation, of, agriculture, are, also, needed, in, Europe, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, O
+Labels: JJ, NNS, IN, DT, NN, CC, NN, IN, NN, VBP, RB, VBN, IN, NNP, .
+Labels: B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, O
+Labels: 1, 10, 2, 1, -3, -1, -2, 1, -4, 2, 1, 0, 1, -2, -3
+Labels: amod, auxpass, case, det, nmod, cc, conj, case, conj, auxpass, advmod, root, case, nmod, punct
+25 Two safety-valves for relieving the growing pressure of world population upon the world food supply are Latin America and Africa .
+Words: Two, safety-valves, for, relieving, the, growing, pressure, of, world, population, upon, the, world, food, supply, are, Latin, America, and, Africa, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, I-LOC, O, B-LOC, O
+Labels: CD, NNS, IN, VBG, DT, VBG, NN, IN, NN, NN, IN, DT, NN, NN, NN, VBP, NNP, NNP, CC, NNP, .
+Labels: B-NP, I-NP, B-PP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, B-VP, B-NP, I-NP, O, B-NP, O
+Labels: 1, 16, 1, -2, 2, 1, -3, 2, 1, -3, 4, 3, 2, 1, -8, 2, 1, 0, -1, -2, -3
+Labels: nummod, compound, mark, acl, det, amod, dobj, case, compound, nmod, case, det, compound, compound, nmod, cop, compound, root, cc, conj, punct
+26 Both continents are sparsely populated , with great undeveloped or partially developed land resources .
+Words: Both, continents, are, sparsely, populated, ,, with, great, undeveloped, or, partially, developed, land, resources, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NNS, VBP, RB, JJ, ,, IN, JJ, JJ, CC, RB, JJ, NN, NNS, .
+Labels: B-NP, I-NP, B-VP, B-ADJP, I-ADJP, O, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, I-NP, I-NP, O
+Labels: 1, 3, 2, 1, 0, -1, 7, 6, 5, -1, 1, -3, 1, -9, -10
+Labels: det, nsubj, cop, advmod, root, punct, case, amod, conj, cc, advmod, conj, compound, case, punct
+27 Both could produce food far in excess of their own needs .
+Words: Both, could, produce, food, far, in, excess, of, their, own, needs, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, MD, VB, NN, RB, IN, NN, IN, PRP$, JJ, NNS, .
+Labels: B-NP, B-VP, I-VP, B-NP, B-ADVP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 2, 1, 0, -1, 2, 1, -3, 3, 2, 1, -4, -9
+Labels: nsubj, aux, root, dobj, advmod, case, nmod, case, nmod:poss, amod, nmod, punct
+28 The possibilities are as yet unexplored and uncomprehended .
+Words: The, possibilities, are, as, yet, unexplored, and, uncomprehended, .
+Labels: O, O, O, O, O, O, O, O, O
+Labels: DT, NNS, VBP, RB, RB, JJ, CC, JJ, .
+Labels: B-NP, I-NP, B-VP, B-ADJP, I-ADJP, I-ADJP, I-ADJP, I-ADJP, O
+Labels: 1, 4, 3, 2, 1, 0, -1, -2, -3
+Labels: det, nsubj, cop, advmod, advmod, root, cc, conj, punct
+29 A start is being made with land settlement programmes and mechanized farming .
+Words: A, start, is, being, made, with, land, settlement, programmes, and, mechanized, farming, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NN, VBZ, VBG, VBN, IN, NN, NN, NNS, CC, VBN, NN, .
+Labels: B-NP, I-NP, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, O, B-NP, I-NP, O
+Labels: 1, 3, 2, 1, 0, 3, 2, 1, -4, -1, 1, -3, -8
+Labels: det, nsubjpass, aux, auxpass, root, case, compound, compound, nmod, cc, amod, cc, punct
+30 FAO is prepared to make its services available to assist in further development .
+Words: FAO, is, prepared, to, make, its, services, available, to, assist, in, further, development, .
+Labels: B-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNP, VBZ, VBN, TO, VB, PRP$, NNS, JJ, TO, VB, IN, JJ, NN, .
+Labels: B-NP, B-VP, I-VP, I-VP, I-VP, B-NP, I-NP, B-ADJP, B-VP, I-VP, B-PP, B-NP, I-NP, O
+Labels: 2, 1, 0, 1, -2, 1, 1, -3, 1, -2, 2, 1, -3, -11
+Labels: auxpass, auxpass, root, mark, xcomp, nmod:poss, nsubj, xcomp, mark, xcomp, case, amod, nmod, punct
+31 The weak link in planning to meet the overwhelming need for greater production , both now and in the future , is the fear of surpluses .
+Words: The, weak, link, in, planning, to, meet, the, overwhelming, need, for, greater, production, ,, both, now, and, in, the, future, ,, is, the, fear, of, surpluses, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, JJ, NN, IN, NN, TO, VB, DT, JJ, NN, IN, JJR, NN, ,, DT, RB, CC, IN, DT, NN, ,, VBZ, DT, NN, IN, NNS, .
+Labels: B-NP, I-NP, I-NP, B-PP, B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O, O, B-ADVP, O, B-PP, B-NP, I-NP, O, B-VP, B-NP, I-NP, B-PP, B-NP, O
+Labels: 2, 1, 21, 1, -2, 1, -2, 2, 1, -3, 2, 1, -3, -1, 1, -3, -1, 2, 1, -4, -8, 2, 1, 0, 1, -2, -3
+Labels: det, amod, nsubj, case, nmod, mark, xcomp, det, amod, dobj, case, amod, nmod, punct, cc:preconj, advmod, cc, case, det, conj, punct, cop, det, root, case, nmod, punct
+32 The fear is that shortage of foreign exchange will reduce demand for imports ; that in any case demand will shrink when rehabilitation needs have been met ; or again , that synthetics will displace many farm products .
+Words: The, fear, is, that, shortage, of, foreign, exchange, will, reduce, demand, for, imports, ;, that, in, any, case, demand, will, shrink, when, rehabilitation, needs, have, been, met, ;, or, again, ,, that, synthetics, will, displace, many, farm, products, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NN, VBZ, DT, NN, IN, JJ, NN, MD, VB, NN, IN, NNS, :, IN, IN, DT, NN, NN, MD, VB, WRB, NN, NNS, VBP, VBN, VBN, :, CC, RB, ,, IN, NNS, MD, VB, JJ, NN, NNS, .
+Labels: B-NP, I-NP, B-VP, O, B-NP, B-PP, B-NP, I-NP, B-VP, I-VP, B-NP, B-PP, B-NP, O, B-SBAR, B-PP, B-NP, I-NP, B-NP, B-VP, I-VP, B-ADVP, B-NP, I-NP, B-VP, I-VP, I-VP, O, O, B-ADVP, O, B-SBAR, B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, O
+Labels: 1, 1, 0, 6, 5, 2, 1, -3, 1, -7, -1, 1, -2, -4, 6, 2, 1, 3, 2, 1, -11, 5, 1, 3, 2, 1, -6, -18, -18, 5, 4, 3, 2, 1, -25, 2, 1, -3, -36
+Labels: det, nsubj, root, mark, nsubj, case, amod, nmod, aux, ccomp, dobj, case, nmod, punct, mark, case, det, nmod, nsubj, aux, conj, advmod, compound, nsubjpass, aux, auxpass, advcl, punct, cc, aux, punct, aux, aux, aux, dobj, amod, compound, dobj, nsubj
+33 Therefore heavy investments in developing new production for export may not pay .
+Words: Therefore, heavy, investments, in, developing, new, production, for, export, may, not, pay, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: RB, JJ, NNS, IN, VBG, JJ, NN, IN, NN, MD, RB, VB, .
+Labels: B-ADVP, B-NP, I-NP, B-PP, B-VP, B-NP, I-NP, B-PP, B-NP, B-VP, I-VP, I-VP, O
+Labels: 11, 1, 9, 1, -2, 1, -2, 1, -4, 2, 1, 0, -1
+Labels: advmod, amod, nsubj, mark, acl, amod, dobj, case, nmod, aux, neg, root, punct
+34 Anxiety about future markets inhibits all out efforts to expand production of many agricultural commodities .
+Words: Anxiety, about, future, markets, inhibits, all, out, efforts, to, expand, production, of, many, agricultural, commodities, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NN, IN, JJ, NNS, VBZ, DT, RP, NNS, TO, VB, NN, IN, JJ, JJ, NNS, .
+Labels: B-NP, B-PP, B-NP, I-NP, B-VP, B-NP, I-NP, B-NP, B-VP, I-VP, B-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 4, 2, 1, -3, 0, 2, 1, -3, 1, -2, -1, 3, 2, 1, -4, -11
+Labels: nsubj, case, amod, nmod, root, det, amod, dobj, mark, acl, dobj, case, amod, amod, nmod, punct
+35 Already producers of some productsnatural rubber , for examplefind their livelihood threatened .
+Words: Already, producers, of, some, productsnatural, rubber, ,, for, examplefind, their, livelihood, threatened, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: RB, NNS, IN, DT, JJ, NN, ,, IN, NN, PRP$, NN, VBN, .
+Labels: B-ADVP, B-NP, B-PP, B-NP, I-NP, I-NP, O, B-PP, B-NP, B-NP, I-NP, B-VP, O
+Labels: 9, 8, 3, 2, 1, -4, 3, 1, 1, 1, 1, -3, -4
+Labels: nmod, nmod, case, det, amod, case, punct, case, nmod, nmod:poss, nsubj, dep, punct
+36 Any international programmes for full production must include some assurance of expanding markets and reasonable prices if Governments , business , and farmers are to co-operate in carrying them out .
+Words: Any, international, programmes, for, full, production, must, include, some, assurance, of, expanding, markets, and, reasonable, prices, if, Governments, ,, business, ,, and, farmers, are, to, co-operate, in, carrying, them, out, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, JJ, NNS, IN, JJ, NN, MD, VB, DT, NN, IN, VBG, NNS, CC, JJ, NNS, IN, NNPS, ,, NN, ,, CC, NNS, VBP, TO, VB, IN, VBG, PRP, RP, .
+Labels: B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, B-PP, B-VP, B-NP, O, B-NP, I-NP, B-SBAR, B-NP, O, B-NP, O, O, B-NP, B-VP, I-VP, I-VP, B-PP, B-VP, B-NP, B-PRT, O
+Labels: 2, 1, 5, 2, 1, -3, 1, 0, 1, -2, 1, -2, -1, -1, 1, -3, 7, 6, -1, -2, -3, -4, -5, -12, 1, -2, 1, -2, -1, -2, -23
+Labels: det, amod, nsubj, case, amod, nmod, aux, root, det, dobj, mark, acl, dobj, cc, amod, conj, mark, nsubj, punct, appos, punct, cc, conj, advcl, mark, xcomp, mark, advcl, dobj, compound:prt, mark
+37 Intergovernmental consultation is called for in every phase of the problem - - emergency shortages , long-term expansion , commodity surpluses .
+Words: Intergovernmental, consultation, is, called, for, in, every, phase, of, the, problem, -, -, emergency, shortages, ,, long-term, expansion, ,, commodity, surpluses, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: JJ, NN, VBZ, VBN, IN, IN, DT, NN, IN, DT, NN, :, :, NN, NNS, ,, JJ, NN, ,, NN, NNS, .
+Labels: B-NP, I-NP, B-VP, I-VP, B-PP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, O, O, B-NP, I-NP, O, B-NP, I-NP, O, B-NP, I-NP, O
+Labels: 1, 2, 1, 0, -1, 2, 1, -4, 2, 1, -3, -8, -9, 1, -11, -1, 1, -3, -4, 1, -6, -18
+Labels: amod, nsubjpass, auxpass, root, nmod, case, det, nmod, case, det, nmod, punct, punct, compound, dep, punct, amod, amod, punct, compound, amod, punct
+38 To achieve this consultation , the Preparatory Commission on World Food Proposals recommended an annual review of the situation in food and agriculture , forestry , and fisheries as a regular feature of the FAO Conference .
+Words: To, achieve, this, consultation, ,, the, Preparatory, Commission, on, World, Food, Proposals, recommended, an, annual, review, of, the, situation, in, food, and, agriculture, ,, forestry, ,, and, fisheries, as, a, regular, feature, of, the, FAO, Conference, .
+Labels: O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O
+Labels: TO, VB, DT, NN, ,, DT, NNP, NNP, IN, NNP, NNP, NNPS, VBD, DT, JJ, NN, IN, DT, NN, IN, NN, CC, NN, ,, NN, ,, CC, NNS, IN, DT, JJ, NN, IN, DT, NNP, NNP, .
+Labels: B-VP, I-VP, B-NP, I-NP, O, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, O, O, B-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 1, 11, 1, -2, 8, 2, 1, 5, 3, 2, 1, -4, 0, 2, 1, -3, 2, 1, -3, 1, -2, -1, -2, -3, -4, -5, -6, -7, 3, 2, 1, -19, 3, 2, 1, -4, -24
+Labels: mark, nmod, det, dobj, punct, det, compound, nmod, case, compound, compound, nmod, root, det, amod, dobj, case, det, nmod, case, nmod, cc, conj, punct, conj, punct, cc, conj, case, det, amod, nmod, case, det, compound, case, det
+39 The first review will be held at the Geneva Conference this year .
+Words: The, first, review, will, be, held, at, the, Geneva, Conference, this, year, .
+Labels: O, O, O, O, O, O, O, O, B-ORG, I-ORG, O, O, O
+Labels: DT, JJ, NN, MD, VB, VBN, IN, DT, NNP, NNP, DT, NN, .
+Labels: B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, B-NP, I-NP, O
+Labels: 2, 1, 3, 2, 1, 0, 3, 2, 1, -4, 1, -6, -7
+Labels: det, amod, nsubjpass, aux, auxpass, root, case, det, compound, nmod, det, nmod:tmod, punct
+40 The Commission further proposed an 18-nation council of FAO , World Food Counc4 , which would examine the changing situation at intervals between the annual reviews and advise Governments about needed adjustments .
+Words: The, Commission, further, proposed, an, 18-nation, council, of, FAO, ,, World, Food, Counc4, ,, which, would, examine, the, changing, situation, at, intervals, between, the, annual, reviews, and, advise, Governments, about, needed, adjustments, .
+Labels: O, B-ORG, O, O, O, O, O, O, B-ORG, O, B-ORG, I-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NNP, RB, VBD, DT, JJ, NN, IN, NNP, ,, NNP, NNP, NNP, ,, WDT, MD, VB, DT, VBG, NN, IN, NNS, IN, DT, JJ, NNS, CC, VB, NNS, IN, VBN, NNS, .
+Labels: B-NP, I-NP, B-ADVP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, O, B-NP, I-NP, I-NP, O, B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O, B-VP, B-NP, B-PP, B-NP, I-NP, O
+Labels: 1, 2, 1, 0, 2, 1, -3, 1, -2, -3, 2, 1, -4, -7, 2, 1, -10, 2, 1, -3, 1, -5, 3, 2, 1, -4, -10, -11, -1, 2, 1, -4, -29
+Labels: det, nsubj, advmod, root, det, amod, amod, case, nmod, punct, compound, compound, appos, punct, nsubj, aux, nmod, det, amod, dobj, case, nmod, case, det, amod, nmod, cc, conj, dobj, case, amod, nmod, punct
+41 At the first review , discussion will centre on these activities which might be undertaken by the council during the coming year Taking over international allocation of foods and fertilizers from the International Emergency Food Council , retaining its structure of commodity committees .
+Words: At, the, first, review, ,, discussion, will, centre, on, these, activities, which, might, be, undertaken, by, the, council, during, the, coming, year, Taking, over, international, allocation, of, foods, and, fertilizers, from, the, International, Emergency, Food, Council, ,, retaining, its, structure, of, commodity, committees, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, I-ORG, O, O, O, O, O, O, O, O
+Labels: IN, DT, JJ, NN, ,, NN, MD, VB, IN, DT, NNS, WDT, MD, VB, VBN, IN, DT, NN, IN, DT, JJ, NN, VBG, RP, JJ, NN, IN, NNS, CC, NNS, IN, DT, NNP, NNP, NNP, NNP, ,, VBG, PRP$, NN, IN, NN, NNS, .
+Labels: B-PP, B-NP, I-NP, I-NP, O, B-NP, B-VP, I-VP, B-PP, B-NP, I-NP, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-VP, B-PRT, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, O, B-VP, B-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 3, 2, 1, 4, 3, 2, 1, 0, 2, 1, -3, 3, 2, 1, -4, 2, 1, -3, 3, 2, 1, -7, -1, -1, 1, -3, 1, -2, -1, -2, 5, 4, 3, 2, 1, -10, -14, -15, 1, -2, 2, 1, -3, -36
+Labels: case, det, amod, nmod, punct, nsubj, aux, root, case, det, nmod, nsubjpass, aux, auxpass, acl:relcl, case, det, nmod, case, det, amod, nmod, nmod, compound:prt, amod, dobj, case, nmod, cc, conj, case, det, compound, compound, compound, case, punct, compound:prt, nmod:poss, dobj, case, compound, nmod, case
+42 Ensuring maximum mobilization of food for human use in 1947/48 , including strengthening of food collection and food economy measures , and of efforts to ship the maximum amount of foods from exporting countries .
+Words: Ensuring, maximum, mobilization, of, food, for, human, use, in, 1947/48, ,, including, strengthening, of, food, collection, and, food, economy, measures, ,, and, of, efforts, to, ship, the, maximum, amount, of, foods, from, exporting, countries, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: VBG, JJ, NN, IN, NN, IN, JJ, NN, IN, CD, ,, VBG, NN, IN, NN, NN, CC, NN, NN, NNS, ,, CC, IN, NNS, TO, VB, DT, JJ, NN, IN, NNS, IN, VBG, NNS, .
+Labels: B-VP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, B-PP, B-NP, O, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, I-NP, O, I-PP, B-PP, B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, O
+Labels: 0, 1, -2, 1, -2, 2, 1, -5, 1, -9, -10, 1, -12, 2, 1, -3, -1, 2, 1, -4, -8, -9, 1, -11, 1, -2, 2, 1, -3, 1, -2, 2, 1, -8, -34
+Labels: root, amod, dobj, case, nmod, case, amod, nmod, case, nmod, punct, case, nmod, case, compound, nmod, cc, compound, compound, conj, punct, cc, case, conj, mark, acl, det, amod, dobj, case, nmod, case, amod, nmod, punct
+43 Accelerating the supply of materials needed to expand the 1948 harvest in food-deficit countries .
+Words: Accelerating, the, supply, of, materials, needed, to, expand, the, 1948, harvest, in, food-deficit, countries, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: VBG, DT, NN, IN, NNS, VBN, TO, VB, DT, CD, NN, IN, NN, NNS, .
+Labels: B-VP, B-NP, I-NP, B-PP, B-NP, B-VP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 0, 1, -2, 1, -2, -1, 1, -2, 2, 1, -3, 2, 1, -3, -14
+Labels: root, det, dobj, case, nmod, acl, mark, xcomp, det, nummod, dobj, case, compound, compound, case
+44 iv Promoting long-term agricultural development and nutritional programmes for countries and regions , and in collaborating with other specialized agencies and with the United Nations on the more general economic aspects .
+Words: iv, Promoting, long-term, agricultural, development, and, nutritional, programmes, for, countries, and, regions, ,, and, in, collaborating, with, other, specialized, agencies, and, with, the, United, Nations, on, the, more, general, economic, aspects, .
+Labels: B-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O
+Labels: NNP, VBG, JJ, JJ, NN, CC, JJ, NNS, IN, NNS, CC, NNS, ,, CC, IN, VBG, IN, JJ, VBN, NNS, CC, IN, DT, NNP, NNPS, IN, DT, RBR, JJ, JJ, NNS, .
+Labels: B-NP, B-VP, B-NP, I-NP, I-NP, O, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-PP, B-PP, B-VP, B-PP, B-NP, I-NP, I-NP, B-PP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, O
+Labels: 0, 0, 2, 1, -3, -1, 1, -3, 1, -5, -1, -2, -8, -9, 1, -11, 3, 2, 1, -4, -1, 3, 2, 1, -5, 5, 4, 1, 2, 1, -15, -30
+Labels: nsubj, root, amod, amod, dobj, cc, amod, conj, case, nmod, cc, conj, punct, cc, mark, conj, case, amod, amod, nmod, cc, case, det, compound, conj, case, det, advmod, amod, amod, nmod, punct
+45 Reviewing commodity situations in agriculture , forestry , and fisheries and promoting joint activity among Governments , including studies leading where necessary to commodity agreements .
+Words: Reviewing, commodity, situations, in, agriculture, ,, forestry, ,, and, fisheries, and, promoting, joint, activity, among, Governments, ,, including, studies, leading, where, necessary, to, commodity, agreements, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-MISC, O, O, O, O, O, O, O, O, O, O
+Labels: VBG, NN, NNS, IN, NN, ,, NN, ,, CC, NNS, CC, VBG, JJ, NN, IN, NNPS, ,, VBG, NNS, VBG, WRB, JJ, TO, NN, NNS, .
+Labels: B-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, O, B-NP, O, B-VP, B-NP, I-NP, B-PP, B-NP, O, B-PP, B-NP, B-VP, B-ADVP, B-ADJP, B-PP, B-NP, I-NP, O
+Labels: 0, 1, -2, 1, -2, -1, -2, -3, -4, -5, -10, -11, 1, -2, 1, -2, -1, 1, -5, -1, 1, -2, 2, 1, -3, -25
+Labels: root, compound, dobj, case, nmod, punct, conj, punct, cc, conj, cc, conj, amod, dobj, case, nmod, punct, case, nmod, acl, advmod, advcl, case, compound, nmod, punct
+46 In this work the council would maintain close contact with the Interim Co-ordinating Committee on Intergovernmental Commodity Agreements .
+Words: In, this, work, the, council, would, maintain, close, contact, with, the, Interim, Co-ordinating, Committee, on, Intergovernmental, Commodity, Agreements, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, O, B-ORG, I-ORG, I-ORG, O
+Labels: IN, DT, NN, DT, NN, MD, VB, JJ, NN, IN, DT, NNP, NNP, NNP, IN, NNP, NNP, NNPS, .
+Labels: B-PP, B-NP, I-NP, B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 2, 1, 4, 1, 2, 1, 0, 1, -2, 4, 3, 2, 1, -5, 3, 2, 1, -4, -12
+Labels: case, det, nmod, det, nsubj, aux, root, amod, dobj, case, det, compound, compound, compound, case, compound, compound, compound, punct
+47 The primary decision to be made at Geneva is whether such a council is to be established to enable FAO to carry out these functions and others that may be needed in the future .
+Words: The, primary, decision, to, be, made, at, Geneva, is, whether, such, a, council, is, to, be, established, to, enable, FAO, to, carry, out, these, functions, and, others, that, may, be, needed, in, the, future, .
+Labels: O, O, O, O, O, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, B-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, JJ, NN, TO, VB, VBN, IN, NNP, VBZ, IN, JJ, DT, NN, VBZ, TO, VB, VBN, TO, VB, NNP, TO, VB, RP, DT, NNS, CC, NNS, WDT, MD, VB, VBN, IN, DT, NN, .
+Labels: B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, B-PP, B-NP, B-VP, B-SBAR, B-NP, I-NP, I-NP, B-VP, B-VP, I-VP, I-VP, B-VP, I-VP, B-NP, B-VP, I-VP, B-PRT, B-NP, I-NP, O, B-NP, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, O
+Labels: 2, 1, 6, 2, 1, -3, 1, -2, 0, 4, 2, 1, 1, -5, 2, 1, -3, 1, -2, -1, 1, -3, -1, 1, -3, -1, -2, 3, 2, 1, -6, 2, 1, -3, -26
+Labels: det, amod, nsubj, mark, auxpass, acl, case, nmod, root, mark, amod, det, nsubj, ccomp, mark, auxpass, xcomp, mark, xcomp, dobj, mark, dobj, compound:prt, det, dobj, cc, conj, nsubjpass, aux, auxpass, acl:relcl, case, det, nmod, mark
+48 CONTENTS Page Summary .
+Words: CONTENTS, Page, Summary, .
+Labels: O, O, O, O
+Labels: NNS, NNP, NNP, .
+Labels: B-NP, I-NP, I-NP, O
+Labels: 2, 1, 0, -2
+Labels: compound, compound, root, punct
+49 .
+Words: .
+Labels: O
+Labels: .
+Labels: O
+Labels: 0
+Labels: punct
+50 .
+Words: .
+Labels: O
+Labels: .
+Labels: O
+Labels: 0
+Labels: punct
+51 i i i Periodic Reports 1 Supplies in 1947/48 .
+Words: i, i, i, Periodic, Reports, 1, Supplies, in, 1947/48, .
+Labels: O, O, O, B-ORG, I-ORG, O, O, O, O, O
+Labels: FW, FW, FW, NNP, NNPS, CD, NNS, IN, CD, .
+Labels: O, I-NP, O, B-NP, I-NP, B-NP, I-NP, B-PP, B-NP, O
+Labels: 4, 3, 2, 1, 0, 1, 0, 1, -2, -3
+Labels: compound, compound, compound, compound, root, nummod, root, case, nmod, punct
+52 .
+Words: .
+Labels: O
+Labels: .
+Labels: O
+Labels: 0
+Labels: punct
+53 * * * * * Priorities for the 1948 Harvest ..
+Words: *, *, *, *, *, Priorities, for, the, 1948, Harvest, ..
+Labels: O, O, O, O, O, O, O, O, O, O, O
+Labels: SYM, SYM, SYM, SYM, SYM, NNS, IN, DT, CD, NN, .
+Labels: O, O, O, O, O, B-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 5, 4, 3, 2, 1, 0, 3, 2, 1, -4, -5
+Labels: dep, dep, dep, dep, punct, root, case, det, nummod, nmod, punct
+54 .
+Words: .
+Labels: O
+Labels: .
+Labels: O
+Labels: 0
+Labels: punct
+55 6 Agricultural Development 8 Local Surpluses 10 The Programme Review and the Council of FAO .
+Words: 6, Agricultural, Development, 8, Local, Surpluses, 10, The, Programme, Review, and, the, Council, of, FAO, .
+Labels: O, B-ORG, I-ORG, O, O, O, O, B-ORG, I-ORG, I-ORG, O, O, B-ORG, I-ORG, I-ORG, O
+Labels: CD, NNP, NNP, CD, NNP, NNS, CD, DT, NNP, NNP, CC, DT, NNP, IN, NNP, .
+Labels: B-NP, B-NP, I-NP, I-NP, I-NP, I-NP, B-NP, B-NP, I-NP, I-NP, O, B-NP, I-NP, B-PP, B-NP, O
+Labels: 5, 1, 3, 2, 1, 1, -1, 2, 1, -4, -1, 1, -3, 1, -2, -6
+Labels: nummod, compound, compound, nummod, compound, compound, nummod, det, compound, dep, cc, det, conj, case, nmod, punct
+56 12 vi In accepting the Constitution of the Food and Agriculture Organization of the United Nations , the signatory nations undertook `` to report to one another on the measures taken and the progress achieved in the fields of action set forth '' in the Preamble to the Constitution .
+Words: 12, vi, In, accepting, the, Constitution, of, the, Food, and, Agriculture, Organization, of, the, United, Nations, ,, the, signatory, nations, undertook, ``, to, report, to, one, another, on, the, measures, taken, and, the, progress, achieved, in, the, fields, of, action, set, forth, '', in, the, Preamble, to, the, Constitution, .
+Labels: O, O, O, O, O, B-ORG, O, O, B-ORG, I-ORG, I-ORG, I-ORG, I-ORG, O, B-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-MISC, O, O, B-ORG, O
+Labels: CD, NN, IN, VBG, DT, NNP, IN, DT, NNP, CC, NNP, NNP, IN, DT, NNP, NNPS, ,, DT, JJ, NNS, VBD, ``, TO, VB, TO, CD, DT, IN, DT, NNS, VBN, CC, DT, NN, VBN, IN, DT, NNS, IN, NN, VBN, RP, '', IN, DT, NNP, TO, DT, NNP, .
+Labels: B-NP, I-NP, B-PP, B-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-NP, I-NP, I-NP, B-VP, O, B-VP, I-VP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, O, B-NP, I-NP, B-VP, B-PP, B-NP, I-NP, B-PP, B-NP, B-VP, B-PRT, O, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 1, 19, 1, 17, 1, -2, 5, 4, 3, -1, -2, -6, 3, 2, 1, -4, 4, 2, 1, 1, 0, 2, 1, -3, 1, -2, -1, 2, 1, -6, -1, -2, 1, -4, -1, 2, 1, -3, 1, -2, -3, -1, -2, 2, 1, -5, 2, 1, -3, -29
+Labels: nummod, nsubj, mark, nsubj, det, dobj, case, det, compound, cc, conj, nmod, case, det, compound, nmod, punct, det, amod, nsubj, root, punct, mark, xcomp, case, nmod, dep, case, det, nmod, acl, cc, det, conj, acl, case, det, nmod, case, nmod, acl, compound:prt, punct, case, det, nmod, case, det, nmod, mark
+57 The present is not a time in which much progress toward these objectives can be recorded .
+Words: The, present, is, not, a, time, in, which, much, progress, toward, these, objectives, can, be, recorded, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NN, VBZ, RB, DT, NN, IN, WDT, JJ, NN, IN, DT, NNS, MD, VB, VBN, .
+Labels: B-NP, I-NP, B-VP, O, B-NP, I-NP, B-PP, B-NP, B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, I-VP, I-VP, O
+Labels: 1, 4, 3, 2, 1, 0, 1, 8, 1, 6, 2, 1, -3, 2, 1, -10, -11
+Labels: det, nsubj, cop, neg, det, root, case, nmod, amod, nsubjpass, case, det, nmod, aux, auxpass, acl:relcl, punct
+58 Most nations are occupied with keeping hunger from their doors .
+Words: Most, nations, are, occupied, with, keeping, hunger, from, their, doors, .
+Labels: O, O, O, O, O, O, O, O, O, O, O
+Labels: JJS, NNS, VBP, VBN, IN, VBG, NN, IN, PRP$, NNS, .
+Labels: B-NP, I-NP, B-VP, B-ADJP, B-PP, B-VP, B-NP, B-PP, B-NP, I-NP, O
+Labels: 1, 2, 1, 0, 1, -2, -1, 2, 1, -4, -7
+Labels: amod, nsubjpass, auxpass, root, mark, advcl, dobj, case, nmod:poss, nmod, punct
+59 The periodic reports , however , offer the best possible means for Governments to present the current situation in food and agriculture and the problems they face information that is needed if FAO is to be of service to them .
+Words: The, periodic, reports, ,, however, ,, offer, the, best, possible, means, for, Governments, to, present, the, current, situation, in, food, and, agriculture, and, the, problems, they, face, information, that, is, needed, if, FAO, is, to, be, of, service, to, them, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, O, O, O, O, O, O, O, O
+Labels: DT, JJ, NNS, ,, RB, ,, VBP, DT, JJS, JJ, NNS, IN, NNS, TO, VB, DT, JJ, NN, IN, NN, CC, NN, CC, DT, NNS, PRP, VBP, NN, WDT, VBZ, VBN, IN, NNP, VBZ, TO, VB, IN, NN, TO, PRP, .
+Labels: B-NP, I-NP, I-NP, O, B-ADVP, O, B-VP, B-NP, I-NP, I-NP, I-NP, B-SBAR, B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-NP, I-NP, B-NP, B-VP, B-NP, B-NP, B-VP, I-VP, B-SBAR, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, B-PP, B-NP, O
+Labels: 2, 1, 4, 3, 2, 1, 0, 3, 1, 1, -4, 3, 2, 1, -4, 2, 1, -3, 1, -2, -1, -2, -5, 1, -7, 1, -2, -1, 2, 1, -3, 2, 1, -3, 3, 2, 1, -4, 1, -2, -34
+Labels: det, amod, nsubj, punct, advmod, punct, root, det, dep, amod, dobj, mark, nsubj, mark, acl, det, amod, dobj, case, nmod, cc, conj, cc, det, conj, nsubj, acl:relcl, dobj, nsubjpass, auxpass, acl:relcl, nsubj, nsubj, mark, mark, cop, case, xcomp, case, nmod, det
+60 Member Governments were therefore urged to prepare these reports in advance of the Geneva Conference , so that they might be used in connexion with the first annual review of the world food and agriculture situation and outlook , which it is proposed should become a main feature of the Conference of FAO in accordance with the recommendations of the Preparatory Commission on World Food Proposals 1 , Altogether , 19 reports have so far been received from member Governments and others will be available before the Conference meets .
+Words: Member, Governments, were, therefore, urged, to, prepare, these, reports, in, advance, of, the, Geneva, Conference, ,, so, that, they, might, be, used, in, connexion, with, the, first, annual, review, of, the, world, food, and, agriculture, situation, and, outlook, ,, which, it, is, proposed, should, become, a, main, feature, of, the, Conference, of, FAO, in, accordance, with, the, recommendations, of, the, Preparatory, Commission, on, World, Food, Proposals, 1, ,, Altogether, ,, 19, reports, have, so, far, been, received, from, member, Governments, and, others, will, be, available, before, the, Conference, meets, .
+Labels: O, B-MISC, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, O, O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, I-MISC, I-LOC, O, I-LOC, O, O, O, O, O, O, I-MISC, O, O, I-ORG, O, O, O, O, O, O, O, B-ORG, O, I-PER
+Labels: NNP, NNPS, VBD, RB, VBN, TO, VB, DT, NNS, IN, NN, IN, DT, NNP, NNP, ,, IN, IN, PRP, MD, VB, VBN, IN, NN, IN, DT, JJ, JJ, NN, IN, DT, NN, NN, CC, NN, NN, CC, NN, ,, WDT, PRP, VBZ, VBN, MD, VB, DT, JJ, NN, IN, DT, NNP, IN, NNP, IN, NN, IN, DT, NNS, IN, DT, NNP, NNP, IN, NNP, NNP, NNPS, CD, ,, RB, ,, CD, NNS, VBP, RB, RB, VBN, VBN, IN, NN, NNPS, CC, NNS, MD, VB, JJ, IN, DT, NNP, VBZ, .
+Labels: B-NP, I-NP, B-VP, I-VP, I-VP, I-VP, I-VP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O, B-SBAR, I-SBAR, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, I-NP, I-NP, I-NP, O, B-NP, B-NP, B-VP, I-VP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, O, B-ADVP, O, B-NP, I-NP, B-VP, I-VP, I-VP, I-VP, I-VP, B-PP, B-NP, I-NP, O, B-NP, B-VP, I-VP, B-ADJP, B-SBAR, B-NP, I-NP, B-VP, O
+Labels: 1, 3, 2, 1, 0, 1, -2, 1, -2, 1, -4, 3, 2, 1, -4, -9, 5, -1, 3, 2, 1, -16, 1, -2, 4, 3, 2, 1, -5, 3, 2, 1, -4, -1, 1, -3, -4, -5, -10, 5, 2, 1, -14, 1, -16, 2, 1, -3, 2, 1, -3, 1, -2, 1, -10, 2, 1, -3, 3, 2, 1, -4, 3, 2, 1, -4, -1, 16, 6, 7, 1, 5, 4, 1, 2, 1, 40, 2, 1, -3, -4, 3, 2, 1, -8, 3, 1, 1, -4, -79
+Labels: compound, nsubjpass, auxpass, advmod, root, mark, xcomp, det, dobj, case, nmod, case, det, compound, nmod, punct, mark, mwe, nsubjpass, aux, auxpass, mark, case, nmod, case, det, amod, amod, nmod, case, det, compound, nmod, cc, compound, conj, cc, conj, punct, dobj, nsubjpass, auxpass, acl:relcl, aux, acl:relcl, det, amod, xcomp, case, det, nmod, case, nmod, case, det, case, det, nmod, case, det, compound, case, case, compound, compound, nmod, nummod, aux, advmod, punct, nummod, nsubjpass, aux, advmod, advmod, auxpass, conj, case, compound, nmod, cc, nsubj, aux, cop, conj, mark, det, nsubj, advcl, mwe
+61 This is a gratifying response when it is remembered that such reports are a new feature in international affairs and that this is a year of exceptional political and economic difficulty .
+Words: This, is, a, gratifying, response, when, it, is, remembered, that, such, reports, are, a, new, feature, in, international, affairs, and, that, this, is, a, year, of, exceptional, political, and, economic, difficulty, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, VBZ, DT, JJ, NN, WRB, PRP, VBZ, VBN, IN, JJ, NNS, VBP, DT, JJ, NN, IN, JJ, NNS, CC, IN, DT, VBZ, DT, NN, IN, JJ, JJ, CC, JJ, NN, .
+Labels: B-NP, B-VP, B-NP, I-NP, I-NP, B-ADVP, B-NP, B-VP, I-VP, B-SBAR, B-NP, I-NP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O, B-SBAR, B-NP, B-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, O
+Labels: 4, 3, 2, 1, 0, 3, 2, 1, -4, 6, 1, 4, 3, 2, 1, -7, 2, 1, -3, -4, 4, 3, 2, 1, -9, 5, 4, 3, -1, -2, -6, -27
+Labels: amod, cop, det, amod, root, advmod, nsubjpass, auxpass, advcl, mark, amod, nsubj, cop, det, amod, ccomp, case, amod, nmod, cc, mark, nsubj, cop, det, conj, case, amod, amod, cc, conj, nmod, punct
+62 Most of them onver a The world still faces scarcity .
+Words: Most, of, them, onver, a, The, world, still, faces, scarcity, .
+Labels: O, O, O, O, O, O, O, O, O, O, O
+Labels: JJS, IN, PRP, IN, DT, DT, NN, RB, VBZ, NN, .
+Labels: B-NP, B-PP, B-NP, B-PP, B-NP, B-NP, I-NP, B-ADVP, B-VP, B-NP, O
+Labels: 8, 1, -2, 3, 2, 1, -6, 1, 0, -1, -2
+Labels: advmod, case, nmod, det, det:predet, det, case, advmod, root, dobj, punct
+63 In the period from July 1947 to June 1948 , food output in the deficit countries may be somewhat less than in the previous 12 months .
+Words: In, the, period, from, July, 1947, to, June, 1948, ,, food, output, in, the, deficit, countries, may, be, somewhat, less, than, in, the, previous, 12, months, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: IN, DT, NN, IN, NNP, CD, TO, NNP, CD, ,, NN, NN, IN, DT, NN, NNS, MD, VB, RB, JJR, IN, IN, DT, JJ, CD, NNS, .
+Labels: B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, O, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-VP, I-VP, B-ADJP, I-ADJP, B-PP, B-PP, B-NP, I-NP, I-NP, I-NP, O
+Labels: 2, 1, 17, 1, -2, -1, 1, -3, -1, 10, 1, 8, 3, 2, 1, -4, 3, 2, 1, 0, 5, 4, 3, 2, 1, -6, -7
+Labels: case, det, nmod, case, nmod, nummod, case, nmod, nummod, punct, compound, nsubj, case, det, compound, nmod, aux, cop, advmod, root, case, case, det, amod, nummod, nmod, punct
+64 Although the output of potatoes , sugar , and fats `` Intergovernmental consultation on plans and programmes for agriculture , for nutrition , and for international trade in agricultural products should form an integral and important part of the regular sessions of the FAO Conference ...
+Words: Although, the, output, of, potatoes, ,, sugar, ,, and, fats, ``, Intergovernmental, consultation, on, plans, and, programmes, for, agriculture, ,, for, nutrition, ,, and, for, international, trade, in, agricultural, products, should, form, an, integral, and, important, part, of, the, regular, sessions, of, the, FAO, Conference, ...
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O
+Labels: IN, DT, NN, IN, NNS, ,, NN, ,, CC, NNS, ``, JJ, NN, IN, NNS, CC, NNS, IN, NN, ,, IN, NN, ,, CC, IN, JJ, NN, IN, JJ, NNS, MD, VB, DT, JJ, CC, JJ, NN, IN, DT, JJ, NNS, IN, DT, NNP, NNP, :
+Labels: B-SBAR, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, O, B-NP, O, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, O, B-PP, B-NP, O, O, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 11, 1, 30, 1, -2, -1, -2, -3, -4, -5, 2, 1, -10, 1, -2, -1, -2, 1, -4, -1, 1, -3, -4, -5, 2, 1, -8, 2, 1, -3, 1, 0, 4, 3, -1, -2, -5, 3, 2, 1, -4, 3, 2, 1, -4, -14
+Labels: mark, det, nsubj, case, nmod, punct, conj, punct, cc, conj, punct, amod, case, case, nmod, cc, conj, case, nmod, punct, case, conj, punct, cc, case, amod, conj, case, amod, nmod, aux, root, det, amod, cc, conj, dobj, case, det, amod, nmod, case, det, compound, case, punct
+65 We recommend that a first attempt be made to conduct such a general review at the regular 1947 session of the FAO Conference .
+Words: We, recommend, that, a, first, attempt, be, made, to, conduct, such, a, general, review, at, the, regular, 1947, session, of, the, FAO, Conference, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O
+Labels: PRP, VBP, IN, DT, JJ, NN, VB, VBN, TO, VB, JJ, DT, JJ, NN, IN, DT, JJ, CD, NN, IN, DT, NNP, NNP, .
+Labels: B-NP, B-VP, B-SBAR, B-NP, I-NP, I-NP, B-VP, I-VP, B-VP, I-VP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 1, 0, 5, 2, 1, 2, 1, -6, 1, -2, 3, 2, 1, -4, 4, 3, 2, 1, -9, 3, 2, 1, -4, -22
+Labels: nsubj, root, mark, det, amod, nsubjpass, auxpass, ccomp, mark, xcomp, amod, det, amod, dobj, case, det, amod, nummod, nmod, case, det, compound, case, mark
+66 '' FAO , Report of ' the FAO Preparatory COM7TaSSi071 On World Food Proposals , Washington , D. C ., February 1947 , pp .
+Words: '', FAO, ,, Report, of, ', the, FAO, Preparatory, COM7TaSSi071, On, World, Food, Proposals, ,, Washington, ,, D., C, .,, February, 1947, ,, pp, .
+Labels: O, B-ORG, O, O, O, O, O, B-ORG, O, O, O, B-ORG, I-ORG, O, O, B-LOC, O, B-LOC, I-LOC, O, O, O, O, O, O
+Labels: '', NNP, ,, NNP, IN, '', DT, NNP, NNP, NNP, IN, NNP, NNP, NNPS, ,, NNP, ,, NNP, NNP, ., NNP, CD, ,, NNS, .
+Labels: O, B-NP, O, B-NP, B-PP, O, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-NP, O, B-NP, I-NP, O, B-NP, I-NP, O, B-NP, O
+Labels: 1, 0, -1, -2, 5, 4, 3, 2, 1, -6, 3, 2, 1, -4, -1, -2, -1, -2, -3, -1, -8, -1, -2, -11, -22
+Labels: punct, root, punct, appos, case, punct, det, compound, compound, punct, case, compound, compound, nmod, punct, appos, punct, appos, punct, punct, punct, nummod, punct, punct, punct
+67 51 , 52 .
+Words: 51, ,, 52, .
+Labels: O, O, O, O
+Labels: CD, ,, CD, .
+Labels: B-NP, O, B-NP, O
+Labels: 0, -1, -2, -3
+Labels: root, punct, amod, punct
+68 I. PERIODIC REPORTS 2 .
+Words: I., PERIODIC, REPORTS, 2, .
+Labels: O, O, O, O, O
+Labels: NN, JJ, NNS, CD, .
+Labels: B-NP, I-NP, B-VP, B-NP, O
+Labels: 2, 1, 0, -1, -2
+Labels: compound, nsubj, root, dobj, punct
+69 SUPPLIES IN 1947/48 1 ] wide range of subjects and many contain a wealth of valuable information which will be useful in enabling FAO to strengthen its services to Governments .
+Words: SUPPLIES, IN, 1947/48, 1, ], wide, range, of, subjects, and, many, contain, a, wealth, of, valuable, information, which, will, be, useful, in, enabling, FAO, to, strengthen, its, services, to, Governments, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, O, O, O, O, O, B-MISC, O
+Labels: NNS, IN, CD, CD, -RRB-, JJ, NN, IN, NNS, CC, JJ, VBP, DT, NN, IN, JJ, NN, WDT, MD, VB, JJ, IN, VBG, NNP, TO, VB, PRP$, NNS, TO, NNPS, .
+Labels: B-NP, B-PP, B-NP, I-NP, O, B-NP, I-NP, B-PP, B-NP, O, B-NP, B-VP, B-NP, I-NP, B-PP, B-NP, I-NP, B-NP, B-VP, I-VP, B-ADJP, B-PP, B-VP, B-NP, B-VP, I-VP, B-NP, I-NP, B-PP, B-NP, O
+Labels: 10, 5, 4, 3, -2, 1, -6, 1, -2, -3, 1, 0, 1, -2, 2, 1, -3, 3, 2, 1, -4, 1, -2, -1, 1, -3, 1, -2, 1, -2, -19
+Labels: nmod, punct, punct, nummod, punct, amod, nummod, case, nmod, cc, conj, root, det, dobj, case, amod, nmod, nsubj, aux, cop, acl:relcl, mark, advcl, dobj, mark, dobj, nmod:poss, dobj, case, nmod, det
+70 Next year it is hoped that , with more ample notice in advance , all member countries will be able to submit reports .
+Words: Next, year, it, is, hoped, that, ,, with, more, ample, notice, in, advance, ,, all, member, countries, will, be, able, to, submit, reports, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: JJ, NN, PRP, VBZ, VBN, IN, ,, IN, RBR, JJ, NN, IN, NN, ,, DT, NN, NNS, MD, VB, JJ, TO, VB, NNS, .
+Labels: B-NP, I-NP, B-NP, B-VP, I-VP, B-SBAR, O, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, O, B-NP, I-NP, I-NP, B-VP, I-VP, B-ADJP, B-VP, I-VP, B-NP, O
+Labels: 1, 3, 2, 1, 0, 14, 13, 3, 1, 1, 9, 1, -2, 6, 2, 1, 3, 2, 1, -15, 1, -2, -1, -19
+Labels: amod, nmod:tmod, nsubjpass, auxpass, root, mark, punct, case, advmod, amod, nmod, case, nmod, punct, det, compound, nsubj, aux, cop, ccomp, mark, xcomp, dobj, punct
+71 Material in the reports received so far has been heavily drawn upon to build a picture of the current situation and of likely developments immediately ahead .
+Words: Material, in, the, reports, received, so, far, has, been, heavily, drawn, upon, to, build, a, picture, of, the, current, situation, and, of, likely, developments, immediately, ahead, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NN, IN, DT, NNS, VBN, RB, RB, VBZ, VBN, RB, VBN, IN, TO, VB, DT, NN, IN, DT, JJ, NN, CC, IN, JJ, NNS, RB, RB, .
+Labels: B-NP, B-PP, B-NP, I-NP, B-VP, B-ADVP, I-ADVP, B-VP, I-VP, I-VP, I-VP, B-PP, B-VP, I-VP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-PP, B-NP, I-NP, B-ADVP, I-ADVP, O
+Labels: 10, 2, 1, -3, -1, 1, 4, 3, 2, 1, 0, -1, 1, -3, 1, -2, 3, 2, 1, -4, -1, 2, 1, -4, 1, -2, -16
+Labels: nsubjpass, case, det, nmod, acl, advmod, advmod, aux, auxpass, advmod, root, nmod, mark, xcomp, det, dobj, case, det, amod, nmod, cc, case, amod, conj, advmod, advmod, punct
+72 In addition to these periodic reports , FAO has used information made available at the meetings of the Preparatory Commission and at a number of other meetings convened to discuss particular situations and important commodities , as well as statistical and other data supplied directly by Governments or collected by the Organization from other sources .
+Words: In, addition, to, these, periodic, reports, ,, FAO, has, used, information, made, available, at, the, meetings, of, the, Preparatory, Commission, and, at, a, number, of, other, meetings, convened, to, discuss, particular, situations, and, important, commodities, ,, as, well, as, statistical, and, other, data, supplied, directly, by, Governments, or, collected, by, the, Organization, from, other, sources, .
+Labels: O, O, O, O, O, O, O, B-ORG, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, O, O, O, O, B-ORG, O, O, O, B-ORG
+Labels: IN, NN, TO, DT, JJ, NNS, ,, NNP, VBZ, VBN, NN, VBN, JJ, IN, DT, NNS, IN, DT, NNP, NNP, CC, IN, DT, NN, IN, JJ, NNS, VBN, TO, VB, JJ, NNS, CC, JJ, NNS, ,, RB, RB, IN, JJ, CC, JJ, NNS, VBN, RB, IN, NNPS, CC, VBN, IN, DT, NNP, IN, JJ, NNS, .
+Labels: B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O, B-NP, B-VP, I-VP, B-NP, B-VP, B-ADJP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, B-VP, I-VP, B-NP, I-NP, O, B-NP, I-NP, O, B-CONJP, I-CONJP, I-CONJP, B-NP, I-NP, I-NP, I-NP, B-VP, B-ADVP, B-PP, B-NP, O, B-VP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 1, 8, 3, 2, 1, -4, 3, 2, 1, 0, -1, -1, -1, 2, 1, -4, 3, 2, 1, -4, -5, 2, 1, -8, 2, 1, -3, -1, 1, -2, 1, -2, -1, 1, -3, -4, -5, -1, -2, 3, -1, -2, -11, -1, -1, 1, -3, -4, -5, 2, 1, -3, 2, 1, -6, -46
+Labels: case, nmod, case, det, amod, nmod, punct, aux, aux, root, dobj, acl, xcomp, case, det, nmod, case, det, compound, case, case, case, det, case, case, amod, nmod, acl, mark, xcomp, amod, dobj, cc, amod, conj, punct, cc, mwe, mwe, amod, cc, conj, conj, dep, advmod, case, nmod, cc, conj, case, det, nmod, case, amod, nmod, acl
+73 Details are given in a series of documents on special topics already circulated to Governments .
+Words: Details, are, given, in, a, series, of, documents, on, special, topics, already, circulated, to, Governments, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNS, VBP, VBN, IN, DT, NN, IN, NNS, IN, JJ, NNS, RB, VBN, TO, NNPS, .
+Labels: B-NP, B-VP, I-VP, B-PP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, B-VP, I-VP, B-PP, B-NP, O
+Labels: 2, 1, 0, 2, 1, -3, 1, -2, 2, 1, -3, 1, -2, 1, -2, -13
+Labels: nsubjpass, auxpass, root, case, det, nmod, case, nmod, case, amod, nmod, advmod, acl, case, nmod, punct
+74 The purpose of the present review of The State of Food and Agriculture is to summarize these facts and bring out the principal issues on which the Geneva Conference will want to take decisions .
+Words: The, purpose, of, the, present, review, of, The, State, of, Food, and, Agriculture, is, to, summarize, these, facts, and, bring, out, the, principal, issues, on, which, the, Geneva, Conference, will, want, to, take, decisions, .
+Labels: O, O, O, O, O, O, O, O, I-ORG, I-ORG, I-ORG, I-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O, O, O, O, O, O
+Labels: DT, NN, IN, DT, JJ, NN, IN, DT, NNP, IN, NNP, CC, NNP, VBZ, TO, VB, DT, NNS, CC, VB, RP, DT, JJ, NNS, IN, WDT, DT, NNP, NNP, MD, VB, TO, VB, NNS, .
+Labels: B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-VP, B-VP, I-VP, B-NP, I-NP, O, B-VP, B-PRT, B-NP, I-NP, I-NP, B-PP, B-NP, B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-NP, O
+Labels: 1, 12, 3, 2, 1, -4, 2, 1, -3, 1, -2, -1, -2, 0, 1, -2, 1, -2, -3, -4, -1, 2, 1, -4, 1, 5, 2, 1, 2, 1, -7, 1, -2, -1, -21
+Labels: det, nsubj, case, det, amod, nmod, case, det, nmod, case, nmod, cc, conj, root, mark, xcomp, det, dobj, cc, conj, compound:prt, det, amod, dobj, case, nmod, det, compound, nsubj, aux, acl:relcl, mark, xcomp, dobj, punct
+75 These are primarily issues of national and international policy .
+Words: These, are, primarily, issues, of, national, and, international, policy, .
+Labels: O, O, O, O, O, O, O, O, O, O
+Labels: DT, VBP, RB, NNS, IN, JJ, CC, JJ, NN, .
+Labels: B-NP, B-VP, B-ADVP, B-NP, B-PP, B-NP, I-NP, I-NP, I-NP, O
+Labels: 3, 2, 1, 0, 4, 3, -1, -2, -5, -6
+Labels: nsubj, cop, advmod, root, case, amod, cc, conj, nmod, punct
+76 A companion report previously sent to Governments the Second Annua / Report of the DirectorGeneral to the FAO Conference = was mainly concerned with the work of FAO during the past year .
+Words: A, companion, report, previously, sent, to, Governments, the, Second, Annua, /, Report, of, the, DirectorGeneral, to, the, FAO, Conference, =, was, mainly, concerned, with, the, work, of, FAO, during, the, past, year, .
+Labels: O, O, O, O, O, O, B-ORG, O, B-MISC, I-ORG, O, O, O, O, O, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O, O, B-ORG, O, O, O, O, O
+Labels: DT, NN, NN, RB, VBN, TO, NNPS, DT, NNP, NNP, CC, NNP, IN, DT, NNP, TO, DT, NNP, NNP, IN, VBD, RB, VBN, IN, DT, NN, IN, NNP, IN, DT, JJ, NN, .
+Labels: B-NP, I-NP, I-NP, B-VP, I-VP, B-PP, B-NP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-VP, B-ADVP, I-VP, B-PP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 2, 1, 20, 1, -2, 1, -2, 4, 1, -5, 1, -2, 2, 1, -3, 3, 2, 1, -14, -1, 2, 1, 0, 2, 1, -3, 1, -2, 3, 2, 1, -6, -10
+Labels: det, compound, dep, advmod, acl, case, nmod, det, compound, dobj, dep, compound, case, det, nmod, case, det, compound, det, dep, auxpass, advmod, root, case, det, nmod, case, nmod, case, det, amod, case, punct
+77 The two documents should be considered together .
+Words: The, two, documents, should, be, considered, together, .
+Labels: O, O, O, O, O, O, O, O
+Labels: DT, CD, NNS, MD, VB, VBN, RB, .
+Labels: B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, B-ADVP, O
+Labels: 2, 1, 3, 2, 1, 0, -1, -2
+Labels: det, nummod, nsubjpass, aux, auxpass, root, xcomp, punct
+78 will probably be larger , and although a modest increase in output of livestock products may occur in certain areas , all this gain may well be offset by the fall in cereals output caused by adverse weather .
+Words: will, probably, be, larger, ,, and, although, a, modest, increase, in, output, of, livestock, products, may, occur, in, certain, areas, ,, all, this, gain, may, well, be, offset, by, the, fall, in, cereals, output, caused, by, adverse, weather, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: MD, RB, VB, JJR, ,, CC, IN, DT, JJ, NN, IN, NN, IN, NN, NNS, MD, VB, IN, JJ, NNS, ,, PDT, DT, NN, MD, RB, VB, VBN, IN, DT, NN, IN, NNS, NN, VBN, IN, JJ, NN, .
+Labels: B-VP, I-VP, I-VP, B-ADJP, O, O, B-SBAR, B-NP, I-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, B-VP, I-VP, B-PP, B-NP, I-NP, O, B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-VP, B-PP, B-NP, I-NP, O
+Labels: 3, 2, 1, 0, -1, -2, 10, 2, 1, 7, 1, -2, 2, 1, -3, 1, 11, 2, 1, -3, 7, 2, 1, 4, 3, 2, 1, -24, 2, 1, -3, 2, 1, -3, -1, 2, 1, -3, -35
+Labels: aux, advmod, cop, root, punct, cc, mark, det, amod, nsubj, case, nmod, case, compound, nmod, aux, advcl, case, amod, nmod, punct, det:predet, det, nsubjpass, aux, advmod, auxpass, conj, case, det, nmod, case, compound, case, acl, case, amod, nmod, punct
+79 The gradual post-war recovery of world agriculture has this year received a temporary check in many regions on account of factors outside the control of man .
+Words: The, gradual, post-war, recovery, of, world, agriculture, has, this, year, received, a, temporary, check, in, many, regions, on, account, of, factors, outside, the, control, of, man, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, JJ, JJ, NN, IN, NN, NN, VBZ, DT, NN, VBN, DT, JJ, NN, IN, JJ, NNS, IN, NN, IN, NNS, IN, DT, NN, IN, NN, .
+Labels: B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-VP, B-NP, I-NP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, B-PP, B-NP, I-NP, B-PP, B-NP, O
+Labels: 3, 2, 1, 7, 2, 1, -3, 3, 1, 1, 0, 2, 1, -3, 2, 1, -3, 1, -8, 1, -2, 2, 1, -3, 1, -2, -16
+Labels: det, amod, amod, nsubj, case, compound, nmod, aux, det, nmod:tmod, root, det, amod, dobj, case, amod, nmod, case, nmod, case, nmod, case, det, nmod, case, nmod, punct
+80 The export of food from surplus countries may perhaps be increased sufficiently to offset 2 FAO , Second Annua / Report of the Director-General to the FAO Conference , Washington , July 1947 .
+Words: The, export, of, food, from, surplus, countries, may, perhaps, be, increased, sufficiently, to, offset, 2, FAO, ,, Second, Annua, /, Report, of, the, Director-General, to, the, FAO, Conference, ,, Washington, ,, July, 1947, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, I-ORG, I-ORG, I-ORG, O, O, O, O, O, O, B-ORG, I-ORG, O, B-LOC, O, O, O, O
+Labels: DT, NN, IN, NN, IN, NN, NNS, MD, RB, VB, VBN, RB, TO, VB, CD, NNP, ,, NNP, NNP, :, NNP, IN, DT, NNP, TO, DT, NNP, NNP, ,, NNP, ,, NNP, CD, .
+Labels: B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-ADVP, B-VP, I-VP, B-NP, I-NP, I-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, O, B-NP, O, B-NP, I-NP, O
+Labels: 1, 9, 1, -2, 2, 1, -5, 3, 2, 1, 0, -1, 1, -2, 1, -2, -1, 1, -3, 1, -5, 2, 1, -8, 3, 2, 1, -12, -1, -2, -3, -4, -1, -23
+Labels: det, nsubjpass, case, nmod, case, compound, nmod, aux, advmod, auxpass, root, advmod, mark, dep, nummod, dobj, punct, compound, compound, punct, punct, case, det, punct, case, det, compound, nmod, punct, appos, punct, nmod:tmod, nummod, punct
+81 reduced output in deficit countries , but hardly enough to bring any significant betterment in diets .
+Words: reduced, output, in, deficit, countries, ,, but, hardly, enough, to, bring, any, significant, betterment, in, diets, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: VBN, NN, IN, NN, NNS, ,, CC, RB, RB, TO, VB, DT, JJ, NN, IN, NNS, .
+Labels: B-NP, I-NP, B-PP, B-NP, I-NP, O, O, B-ADJP, I-ADJP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, O
+Labels: 1, 0, 2, 1, -3, -4, -5, 1, -7, 1, -2, 2, 1, -3, 1, -2, -15
+Labels: amod, root, case, compound, nmod, punct, cc, advmod, conj, mark, xcomp, det, amod, dobj, case, nmod, punct
+82 In the deficit countries , the general state of malnutrition will persist and any minor or local improvement will not much lessen the cumulative effects of prolonged deprivation .
+Words: In, the, deficit, countries, ,, the, general, state, of, malnutrition, will, persist, and, any, minor, or, local, improvement, will, not, much, lessen, the, cumulative, effects, of, prolonged, deprivation, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: IN, DT, NN, NNS, ,, DT, JJ, NN, IN, NN, MD, VB, CC, DT, JJ, CC, JJ, NN, MD, RB, RB, VB, DT, JJ, NNS, IN, VBN, NN, .
+Labels: B-PP, B-NP, I-NP, I-NP, O, B-NP, I-NP, I-NP, B-PP, B-NP, B-VP, I-VP, O, B-NP, I-NP, I-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 3, 2, 1, 8, 7, 2, 1, 4, 1, -2, 1, 0, -1, 4, 3, -1, -2, 4, 3, 2, 1, -10, 2, 1, -3, 2, 1, -3, -17
+Labels: case, det, compound, nmod, punct, det, amod, nsubj, case, nmod, aux, root, cc, det, amod, cc, conj, nsubj, aux, neg, advmod, conj, det, amod, dobj, case, amod, nmod, punct
+83 CEREALS The cereals harvest in the Northern Hemisphere is expected to be lower than in 1946 , because of winterkill in Europe , rust in India , drought in China , and excessive rains in the United States of America .
+Words: CEREALS, The, cereals, harvest, in, the, Northern, Hemisphere, is, expected, to, be, lower, than, in, 1946, ,, because, of, winterkill, in, Europe, ,, rust, in, India, ,, drought, in, China, ,, and, excessive, rains, in, the, United, States, of, America, .
+Labels: O, O, O, O, O, O, B-LOC, I-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, O, O, O, B-LOC, O, O, O, B-LOC, O, O, O, O, O, O, B-LOC, I-LOC, O, B-LOC, O
+Labels: NNS, DT, NNS, NN, IN, DT, NNP, NNP, VBZ, VBN, TO, VB, JJR, IN, IN, CD, ,, IN, IN, NN, IN, NNP, ,, NN, IN, NNP, ,, NN, IN, NNP, ,, CC, JJ, NNS, IN, DT, NNP, NNPS, IN, NNP, .
+Labels: B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-ADJP, B-PP, B-PP, B-NP, O, B-PP, I-PP, B-NP, B-PP, B-NP, O, B-NP, B-PP, B-NP, O, B-NP, B-PP, B-NP, O, O, B-NP, I-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, O
+Labels: 3, 2, 1, 6, 3, 2, 1, -4, 1, 0, 2, 1, -3, 2, 1, -3, -4, 2, -1, -10, 1, -2, -3, -4, 1, -2, -7, -8, 1, -2, -11, -12, 1, -14, 3, 2, 1, -4, 1, -2, -31
+Labels: det, det, compound, nsubjpass, case, det, compound, nmod, auxpass, root, mark, cop, xcomp, case, case, nmod, punct, case, mwe, nmod, case, nmod, punct, conj, case, nmod, punct, conj, case, nmod, punct, cc, amod, conj, case, det, compound, nmod, case, nmod, mark
+84 Europe 's bread grain output may prove to be from 4 to 6 million tons lower and India 's wheat crop is reported to be down by about one million tons .
+Words: Europe, 's, bread, grain, output, may, prove, to, be, from, 4, to, 6, million, tons, lower, and, India, 's, wheat, crop, is, reported, to, be, down, by, about, one, million, tons, .
+Labels: B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNP, POS, NN, NN, NN, MD, VB, TO, VB, IN, CD, TO, CD, CD, NNS, JJR, CC, NNP, POS, NN, NN, VBZ, VBN, TO, VB, RB, IN, IN, CD, CD, NNS, .
+Labels: B-NP, B-NP, I-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, B-ADJP, O, B-NP, B-NP, I-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-ADVP, B-PP, B-NP, I-NP, I-NP, I-NP, O
+Labels: 4, -1, 2, 1, 2, 1, 0, 8, 7, 4, 3, 2, 1, 1, 1, -9, -10, 3, -1, 1, 2, 1, -16, 1, -2, -3, 4, 2, 1, 1, -5, -25
+Labels: compound, case, compound, compound, nsubj, aux, root, mark, cop, advmod, compound, dep, compound, nummod, nmod:npmod, xcomp, cc, compound, case, compound, nsubjpass, auxpass, mark, mark, xcomp, advmod, case, advmod, compound, nummod, nmod, mark
+85 The United States of America , although harvesting the largest wheat crop in its history , expects the outturn of maize and other fodder grains to be less than in 1946 , which may mean a tight feedstuffs situation in spite of a considerable carry-over of maize .
+Words: The, United, States, of, America, ,, although, harvesting, the, largest, wheat, crop, in, its, history, ,, expects, the, outturn, of, maize, and, other, fodder, grains, to, be, less, than, in, 1946, ,, which, may, mean, a, tight, feedstuffs, situation, in, spite, of, a, considerable, carry-over, of, maize, .
+Labels: O, B-LOC, I-LOC, O, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NNP, NNPS, IN, NNP, ,, IN, VBG, DT, JJS, NN, NN, IN, PRP$, NN, ,, VBZ, DT, NN, IN, NN, CC, JJ, NN, NNS, TO, VB, JJR, IN, IN, CD, ,, WDT, MD, VB, DT, JJ, NNS, NN, IN, NN, IN, DT, JJ, NN, IN, NN, .
+Labels: B-NP, I-NP, I-NP, B-PP, B-NP, O, B-SBAR, B-VP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O, B-VP, B-NP, I-NP, B-PP, B-NP, O, B-NP, I-NP, I-NP, B-VP, I-VP, B-ADJP, B-PP, B-PP, B-NP, O, B-NP, B-VP, I-VP, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, O
+Labels: 2, 1, 14, 1, -2, 11, 1, 9, 3, 2, 1, -4, 2, 1, -3, 1, 0, 1, -2, 1, -2, -1, 2, 1, -4, 2, 1, -11, 2, 1, -3, -15, 2, 1, -18, 3, 2, 1, -4, 1, -6, 3, 2, 1, -4, 1, -2, -31
+Labels: det, compound, nsubj, case, nmod, punct, mark, dep, det, amod, compound, dobj, case, nmod:poss, nmod, punct, root, det, dobj, case, nmod, cc, amod, compound, conj, mark, cop, det, case, case, nmod, punct, nsubj, aux, det, det, amod, compound, amod, case, amod, case, det, amod, nmod, case, nmod, nmod
+86 Only in the U.S.S.R. and certain other areas of Eastern Europe is a marked improvement over 1946 to be expected .
+Words: Only, in, the, U.S.S.R., and, certain, other, areas, of, Eastern, Europe, is, a, marked, improvement, over, 1946, to, be, expected, .
+Labels: O, O, O, B-LOC, O, O, O, O, O, B-ORG, I-ORG, O, O, O, O, O, O, O, O, O, O
+Labels: RB, IN, DT, NNP, CC, JJ, JJ, NNS, IN, NNP, NNP, VBZ, DT, JJ, NN, IN, CD, TO, VB, VBN, .
+Labels: B-ADVP, B-PP, B-NP, I-NP, O, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, B-VP, B-NP, I-NP, I-NP, B-PP, B-NP, B-VP, I-VP, I-VP, O
+Labels: 3, 2, 1, 11, -1, 2, 1, -4, 2, 1, -3, 3, 2, 1, 0, 1, -2, 2, 1, -5, -6
+Labels: advmod, case, det, conj, cc, amod, amod, conj, case, compound, nmod, cop, det, amod, root, case, nmod, mark, auxpass, acl, punct
+87 The U.S.S.R. has announced the abolition of bread rationing and is understood to be contracting to export substantial quantities of grain during the coming year .
+Words: The, U.S.S.R., has, announced, the, abolition, of, bread, rationing, and, is, understood, to, be, contracting, to, export, substantial, quantities, of, grain, during, the, coming, year, .
+Labels: O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: DT, NNP, VBZ, VBN, DT, NN, IN, NN, NN, CC, VBZ, VBN, TO, VB, VBG, TO, VB, JJ, NNS, IN, NN, IN, DT, VBG, NN, .
+Labels: B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, B-PP, B-NP, I-NP, O, B-VP, I-VP, I-VP, I-VP, I-VP, I-VP, I-VP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, O
+Labels: 1, 2, 1, 0, 1, -2, 2, 1, -3, -6, 1, -8, 2, 1, -3, 1, -2, 1, -2, 1, -2, 3, 2, 1, -8, -22
+Labels: det, nsubj, aux, root, det, dobj, case, compound, nmod, det, auxpass, det, mark, aux, xcomp, mark, xcomp, amod, dobj, case, nmod, case, det, amod, nmod, det
+88 It is too early to predict Southern Hemisphere grain harvests , but with average weather the outturn should exceed the drought-affected level of recent years .
+Words: It, is, too, early, to, predict, Southern, Hemisphere, grain, harvests, ,, but, with, average, weather, the, outturn, should, exceed, the, drought-affected, level, of, recent, years, .
+Labels: O, O, O, O, O, O, B-MISC, I-MISC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: PRP, VBZ, RB, JJ, TO, VB, NNP, NNP, NN, NNS, ,, CC, IN, JJ, NN, DT, NN, MD, VB, DT, JJ, NN, IN, JJ, NNS, .
+Labels: B-NP, B-VP, B-ADJP, I-ADJP, B-VP, I-VP, B-NP, I-NP, I-NP, I-NP, O, O, B-PP, B-NP, I-NP, B-NP, I-NP, B-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 3, 2, 1, 0, 1, -2, 3, 2, 1, -4, -7, -8, 2, 1, 4, 1, 2, 1, -15, 2, 1, -3, 2, 1, -3, -22
+Labels: nsubj, cop, advmod, root, mark, ccomp, compound, compound, compound, dobj, punct, cc, case, amod, aux, det, aux, aux, compound, det, amod, amod, case, amod, nmod, punct
+89 Likewise with rice it is too soon to predict , but some improvement is likely .
+Words: Likewise, with, rice, it, is, too, soon, to, predict, ,, but, some, improvement, is, likely, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: RB, IN, NN, PRP, VBZ, RB, RB, TO, VB, ,, CC, DT, NN, VBZ, JJ, .
+Labels: B-ADVP, B-PP, B-NP, B-NP, B-VP, B-ADVP, I-ADVP, B-VP, I-VP, O, O, B-NP, I-NP, B-VP, B-ADJP, O
+Labels: 4, 1, 2, 1, 0, 1, -2, 1, -2, -5, -6, 1, 2, 1, -10, -11
+Labels: advmod, case, nmod, nsubj, root, advmod, advmod, mark, dep, punct, cc, det, nsubj, cop, conj, punct
+90 Floods have damaged rice crops in South China , but India expects a better harvest than in 1946/47 .
+Words: Floods, have, damaged, rice, crops, in, South, China, ,, but, India, expects, a, better, harvest, than, in, 1946/47, .
+Labels: O, O, O, O, O, O, B-LOC, I-LOC, O, O, B-LOC, O, O, O, O, O, O, O, O
+Labels: NNS, VBP, VBN, NN, NNS, IN, NNP, NNP, ,, CC, NNP, VBZ, DT, JJR, NN, IN, IN, CD, .
+Labels: B-NP, B-VP, I-VP, B-NP, I-NP, B-PP, B-NP, I-NP, O, O, B-NP, B-VP, B-NP, I-NP, I-NP, B-PP, B-PP, B-NP, O
+Labels: 2, 1, 0, 1, -2, 2, 1, -3, -6, -7, 1, -9, 2, 1, -3, 2, 1, -3, -16
+Labels: aux, aux, root, compound, dobj, case, compound, nmod, punct, cc, nsubj, conj, det, amod, dobj, case, case, nmod, punct
+91 Japan 's harvest may even surpass the excellent one of last year .
+Words: Japan, 's, harvest, may, even, surpass, the, excellent, one, of, last, year, .
+Labels: B-LOC, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNP, POS, NN, MD, RB, VB, DT, JJ, CD, IN, JJ, NN, .
+Labels: B-NP, B-NP, I-NP, B-VP, I-VP, I-VP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 2, -1, 3, 2, 1, 0, 2, 1, -3, 2, 1, -3, -7
+Labels: case, case, nsubj, aux, advmod, root, det, amod, dobj, case, amod, nmod, punct
+92 Indo-China will probably export less but there is a prospect of improvement in Burma .
+Words: Indo-China, will, probably, export, less, but, there, is, a, prospect, of, improvement, in, Burma, .
+Labels: B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, O
+Labels: NNP, MD, RB, VB, RBR, CC, EX, VBZ, DT, NN, IN, NN, IN, NNP, .
+Labels: B-NP, B-VP, I-VP, I-VP, B-ADVP, O, B-NP, B-VP, B-NP, I-NP, B-PP, B-NP, B-PP, B-NP, O
+Labels: 3, 2, 1, 0, -1, -2, 1, -4, 1, -2, 1, -2, 1, -2, -11
+Labels: aux, aux, advmod, root, advmod, cc, expl, conj, det, nsubj, case, nmod, case, nmod, punct
+93 Altogether rice exports , including those from the Western Hemisphere and from Egypt , may be increased by perhaps half-a-million tons 3 .
+Words: Altogether, rice, exports, ,, including, those, from, the, Western, Hemisphere, and, from, Egypt, ,, may, be, increased, by, perhaps, half-a-million, tons, 3, .
+Labels: O, O, O, O, O, O, O, O, B-LOC, I-LOC, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O
+Labels: RB, NN, NNS, ,, VBG, DT, IN, DT, NNP, NNP, CC, IN, NNP, ,, MD, VB, VBN, IN, RB, JJ, NNS, CD, .
+Labels: B-NP, B-NP, I-NP, O, B-PP, B-NP, B-PP, B-NP, I-NP, I-NP, B-PP, B-PP, B-NP, O, B-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, I-NP, O
+Labels: 2, 1, 14, -1, 1, -3, 3, 2, 1, -4, -1, 1, -3, -11, 2, 1, 0, 3, 2, 1, -4, -1, -6
+Labels: compound, compound, nsubjpass, punct, case, nmod, case, det, compound, nmod, cc, case, conj, punct, aux, auxpass, root, case, advmod, amod, nummod, nummod, punct
+94 POTATOES In many countries of Europe , the potato is the next most significant food after bread .
+Words: POTATOES, In, many, countries, of, Europe, ,, the, potato, is, the, next, most, significant, food, after, bread, .
+Labels: O, O, O, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: NNS, IN, JJ, NNS, IN, NNP, ,, DT, NN, VBZ, DT, JJ, RBS, JJ, NN, IN, NN, .
+Labels: B-NP, B-PP, B-NP, I-NP, B-PP, B-NP, O, B-NP, I-NP, B-VP, B-NP, I-NP, I-NP, I-NP, I-NP, B-PP, B-NP, O
+Labels: 14, 2, 1, 11, 1, -2, 8, 1, 6, 5, 4, 3, 1, 1, 0, 1, -2, -3
+Labels: det, case, amod, nmod, case, nmod, punct, det, nsubj, cop, det, amod, advmod, amod, root, case, nmod, punct
+95 If weather conditions are average until harvest time , the coming crop , sown on a larger acreage , should be heavier than that of 1946/47 .
+Words: If, weather, conditions, are, average, until, harvest, time, ,, the, coming, crop, ,, sown, on, a, larger, acreage, ,, should, be, heavier, than, that, of, 1946/47, .
+Labels: O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: IN, NN, NNS, VBP, JJ, IN, NN, NN, ,, DT, VBG, NN, ,, NN, IN, DT, JJR, NN, ,, MD, VB, JJR, IN, DT, IN, CD, .
+Labels: B-SBAR, B-NP, I-NP, B-VP, B-ADJP, B-PP, B-NP, I-NP, O, B-NP, I-NP, I-NP, O, B-NP, B-PP, B-NP, I-NP, I-NP, O, B-VP, I-VP, B-ADJP, B-PP, B-NP, B-PP, B-NP, O
+Labels: 4, 1, 2, 1, 17, 2, 1, -3, 13, 2, 1, 10, -1, -2, 3, 2, 1, -4, -7, 2, 1, 0, 1, -2, 1, -2, -5
+Labels: mark, compound, nsubj, cop, aux, case, compound, nmod, aux, det, amod, aux, punct, appos, case, det, amod, nmod, punct, aux, cop, root, case, nmod, case, nmod, punct
+96 In several countries of Western 3 An up-to-date account of the world cereals and rice situation will be prepared and made available immediately prior to the'Geneva Conference .
+Words: In, several, countries, of, Western, 3, An, up-to-date, account, of, the, world, cereals, and, rice, situation, will, be, prepared, and, made, available, immediately, prior, to, the'Geneva, Conference, .
+Labels: O, O, O, O, B-MISC, I-MISC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-ORG, I-ORG, O
+Labels: IN, JJ, NNS, IN, NNP, CD, DT, JJ, NN, IN, DT, NN, NNS, CC, NN, NN, MD, VB, VBN, CC, VBN, JJ, RB, RB, TO, DT, NNP, .
+Labels: B-PP, B-NP, I-NP, B-PP, B-NP, I-NP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, I-NP, I-NP, I-NP, I-NP, B-VP, I-VP, I-VP, O, B-VP, B-ADJP, B-ADVP, B-ADVP, B-PP, B-NP, I-NP, O
+Labels: 2, 1, 16, 2, 1, -3, 2, 1, 10, 3, 2, 1, -4, -1, 1, -3, 2, 1, 0, -1, -2, -1, 1, -5, 2, 1, -3, -9
+Labels: case, amod, cc, case, compound, nmod, det, amod, auxpass, case, det, compound, nmod, cc, compound, conj, aux, auxpass, root, cc, conj, xcomp, advmod, advmod, case, compound, compound, punct
+97 [ 2 ] Europe , because of general food shortages , potato consumption is already well above prewar , supplies having been diverted from livestock to human use .
+Words: [, 2, ], Europe, ,, because, of, general, food, shortages, ,, potato, consumption, is, already, well, above, prewar, ,, supplies, having, been, diverted, from, livestock, to, human, use, .
+Labels: O, O, O, B-LOC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: -LRB-, LS, -RRB-, NNP, ,, IN, IN, JJ, NN, NNS, ,, NN, NN, VBZ, RB, RB, IN, NN, ,, NNS, VBG, VBN, VBN, IN, NNS, TO, JJ, NN, .
+Labels: O, B-LST, O, B-NP, O, B-PP, I-PP, B-NP, I-NP, I-NP, O, B-NP, I-NP, B-VP, B-ADVP, B-ADVP, B-PP, B-NP, O, B-NP, B-VP, I-VP, I-VP, B-PP, B-NP, B-PP, B-NP, I-NP, O
+Labels: 1, 16, -1, 14, 13, 4, -1, 2, 1, 8, 7, 1, 5, 4, 3, 2, 1, 0, -1, 3, 2, 1, -5, 1, -2, 2, 1, -5, -11
+Labels: punct, dep, punct, nsubj, punct, case, mwe, amod, compound, nmod, punct, compound, nsubj, cop, advmod, advmod, case, root, punct, nsubjpass, aux, auxpass, dep, case, nmod, case, amod, nmod, punct
+98 Further recovery in production this year , notably in Eastern Europe , should enable those peoples also to expand their potato consumption .
+Words: Further, recovery, in, production, this, year, ,, notably, in, Eastern, Europe, ,, should, enable, those, peoples, also, to, expand, their, potato, consumption, .
+Labels: O, O, O, O, O, O, O, O, O, B-LOC, I-ORG, O, O, O, O, O, O, O, O, O, O, O, O
+Labels: JJ, NN, IN, NN, DT, NN, ,, RB, IN, NNP, NNP, ,, MD, VB, DT, NNS, RB, TO, VB, PRP$, NN, NN, .
+Labels: B-NP, I-NP, B-PP, B-NP, B-NP, I-NP, O, B-PP, B-PP, B-NP, I-NP, O, B-VP, I-VP, B-NP, I-NP, B-ADVP, B-VP, I-VP, B-NP, I-NP, I-NP, O
+Labels: 1, 12, 1, -2, 1, -2, -3, 3, 2, 1, -9, -10, 1, 0, 1, -2, 2, 1, -5, 2, 1, -3, -9
+Labels: amod, nsubj, case, nmod, det, nmod:tmod, punct, advmod, case, compound, nmod, punct, aux, root, det, dobj, advmod, mark, xcomp, nmod:poss, compound, dobj, punct
+99 SUGAR World sugar supplies in 1947/48 will probably be only a little better than in 1946/47 because a substantially increased output in Europe , the U.S.S.R ., and the Philippines may be almost matched by the anticipated decline in Cuban production .
+Words: SUGAR, World, sugar, supplies, in, 1947/48, will, probably, be, only, a, little, better, than, in, 1946/47, because, a, substantially, increased, output, in, Europe, ,, the, U.S.S.R, .,, and, the, Philippines, may, be, almost, matched, by, the, anticipated, decline, in, Cuban, production, .
+Labels: B-ORG, I-MISC, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, O, B-LOC, O, O, B-LOC, O, O, O, B-MISC, O, O, O, O, O, O, O, O, O, B-MISC, O, O
+Labels: NNP, NNP, NN, NNS, IN, CD, MD, RB, VB, RB, DT, RB, JJR, IN, IN, CD, IN, DT, RB, VBN, NN, IN, NNP, ,, DT, NNP, ., CC, DT, NNPS, MD, VB, RB, VBN, IN, DT, JJ, NN, IN, JJ, NN, .
+Labels: B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, B-VP, I-VP, I-VP, B-NP, I-NP, I-NP, B-ADJP, B-PP, B-PP, B-NP, B-SBAR, B-NP, I-NP, I-NP, I-NP, B-PP, B-NP, O, B-NP, I-NP, O, O, B-NP, I-NP, B-VP, I-VP, I-VP, I-VP, B-PP, B-NP, I-NP, I-NP, B-PP, B-NP, I-NP, O
+Labels: 3, 2, 1, 9, 1, -2, 6, 5, 4, 2, 1, 1, 0, 2, 1, -3, 13, 3, 1, 1, 13, 1, -2, -1, 1, -3, -1, -7, 1, 4, 3, 2, 1, -22, 3, 2, 1, -4, 2, 1, -3, -30
+Labels: compound, compound, compound, det, case, nmod, aux, advmod, cop, advmod, det, nmod:npmod, root, case, case, nmod, mark, det, advmod, amod, punct, case, nmod, punct, det, conj, punct, cc, det, nsubjpass, aux, auxpass, advmod, advmod, case, det, amod, nmod, case, amod, nmod, advmod
+Time	Elapsed	0:00:00:13.068	13068674996
+Time	Encoder.forward	0:00:00:01.886	1886794744
+Time	Encoder.predict 0	NER	0:00:00:00.074	74832062
+Time	Encoder.predict 1	POS	0:00:00:00.103	103634520
+Time	Encoder.predict 2	Chunking	0:00:00:00.061	61822459
+Time	Encoder.predict 3	Deps Head	0:00:00:00.305	305205504
+Time	Encoder.predict 4	Deps Label	0:00:00:10.520	10520887219
+Time	Tokenizer	0:00:00:00.031	31739860
