@@ -86,9 +86,9 @@ class LinearLayer(
         if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
         else i // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
       val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
-      val concatState = Math.rowVectorAddition(modHiddenState, headHiddenState)
       // row i in the concatenated matrix contains the embedding of modifier i and its head
-      Math.inplaceMatrixAddition(concatMatrix, i, concatState)
+      Math.inplaceMatrixAddition(concatMatrix, i, modHiddenState)
+      Math.inplaceMatrixAddition(concatMatrix, i, headHiddenState)
     }
     
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
@@ -117,10 +117,9 @@ class LinearLayer(
       if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
       else modifierAbsolutePosition // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
     val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
-    val concatState = Math.rowVectorAddition(modHiddenState, headHiddenState)
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
-    Math.inplaceMatrixAddition(concatMatrix, 0, concatState)
-    // The two above need to replace 6 above those.
+    Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
+    Math.inplaceMatrixAddition(concatMatrix, 0, headHiddenState)
     concatMatrix
   }
 

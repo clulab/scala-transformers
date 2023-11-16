@@ -28,10 +28,6 @@ object BreezeMath extends Math {
     matrix(rowIndex, ::) :+= rowVector
   }
 
-  def rowVectorAddition(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
-    leftRowVector +:+ rightRowVector
-  }
-
   def mul(leftMatrix: MathRowMatrix, rightMatrix: MathRowMatrix): MathRowMatrix = {
 //    println(s"${leftMatrix.rows} * ${leftMatrix.cols} x ${rightMatrix.rows} * ${leftMatrix.cols}")
     leftMatrix * rightMatrix
