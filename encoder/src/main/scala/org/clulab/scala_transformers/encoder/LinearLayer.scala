@@ -100,22 +100,22 @@ class LinearLayer(
     *
     */
   def concatenateModifierAndHead(
-    sentenceHiddenStates: MathMatrix,
-    modifierAbsolutePosition: Int,
-    headRelativePosition: Int): MathMatrix = {
+      sentenceHiddenStates: MathMatrix,
+      modifierAbsolutePosition: Int,
+      headRelativePosition: Int): MathMatrix = {
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = 1; cols = hidden state size x 2
-    val concatMatrix = Math.zeros(rows = 1, cols =Math.cols(sentenceHiddenStates))
-
+    val concatMatrix = Math.zeros(rows = 1, cols = Math.cols(sentenceHiddenStates))
     // embedding of the modifier
     val modHiddenState = Math.row(sentenceHiddenStates, modifierAbsolutePosition)
 
     // embedding of the head
     val rawHeadAbsPos = modifierAbsolutePosition + headRelativePosition
     val headAbsolutePosition = 
-      if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
+      if (rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
       else modifierAbsolutePosition // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
+
     val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
     Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
