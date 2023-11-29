@@ -92,7 +92,11 @@ object TokenClassifierTimerApp extends App {
 
   val verbose = false
   val fileName = args.lift(0).getOrElse("../corpora/sentences/sentences.txt")
-  val untimedTokenClassifier = TokenClassifier.fromFiles("../roberta-base-mtl-new/avg_export")
+  // Choose one of these.
+  val untimedTokenClassifier = TokenClassifier.fromFiles("../models/microsoft_deberta_v3_base_mtl/avg_export")
+  // val untimedTokenClassifier = TokenClassifier.fromFiles("../models/google_electra_small_discriminator_mtl/avg_export")
+  // val untimedTokenClassifier = TokenClassifier.fromFiles("../models/roberta_base_mtl/avg_export")
+
   val tokenClassifier = new TimedTokenClassifier(untimedTokenClassifier)
   val lines = {
     val source = Source.fromFile(fileName)

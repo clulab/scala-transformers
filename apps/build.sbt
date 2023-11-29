@@ -7,8 +7,9 @@ resolvers ++= Seq(
 
 libraryDependencies ++= {
   Seq(
-    "org.clulab"     % "roberta-onnx-model" % "0.1.0",
-    "org.clulab"     % "deberta-onnx-model" % "0.1.0",
+    "org.clulab"     % "deberta-onnx-model" % "0.2.0",
+    "org.clulab"     % "electra-onnx-model" % "0.2.0",
+    "org.clulab"     % "roberta-onnx-model" % "0.2.0",
     "org.scalatest" %% "scalatest"          % "3.2.15" % "test"
   )
 }
