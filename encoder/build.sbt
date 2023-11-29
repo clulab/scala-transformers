@@ -28,3 +28,12 @@ libraryDependencies ++= {
 fork := true
 
 // assembly / mainClass := Some("com.keithalcock.tokenizer.scalapy.apps.ExampleApp")
+
+enablePlugins(ShadingPlugin)
+shadedDependencies ++= Set(
+  "org.ejml" % "ejml-core"   % "<ignored>",
+  "org.ejml" % "ejml-fdense" % "<ignored>",
+  "org.ejml" % "ejml-simple" % "<ignored>"
+)
+shadingRules += ShadingRule.moveUnder("org.ejml", "org.clulab.shaded")
+validNamespaces ++= Set("org", "pabeles")

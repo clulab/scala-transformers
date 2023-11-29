@@ -1,3 +1,4 @@
++ **0.6.1** - Shade EJML
 + **0.6.0** - Calculate with EJML rather than Breeze
 + **0.6.0** - Use sum instead of concat
 + **0.5.0** - Support Linux on aarch64
