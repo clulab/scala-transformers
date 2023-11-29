@@ -10,13 +10,16 @@ libraryDependencies ++= {
     case Some((2, minor)) if minor < 12 => "1.0"
     case _ => "2.1.0"
   }
+  val ejmlVersion = "0.41" // Use this older version for Java 8.
 
   Seq(
-//    "org.apache.commons"         % "commons-math3"      % "3.6.1",
-    "org.scalanlp"              %% "breeze"             % breezeVersion,
-    "org.ejml"                   % "ejml-core"          % "0.41", // for Java 8
-    "org.ejml"                   % "ejml-fdense"        % "0.41", // for Java 8
-    "org.ejml"                   % "ejml-simple"        % "0.41", // for Java 8
+    // Choose one of these.
+    /// "org.apache.commons"         % "commons-math3"      % "3.6.1",
+    "org.ejml"                   % "ejml-core"          % ejmlVersion,
+    "org.ejml"                   % "ejml-fdense"        % ejmlVersion,
+    "org.ejml"                   % "ejml-simple"        % ejmlVersion,
+    // "org.scalanlp"              %% "breeze"             % breezeVersion,
+
     "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.13.1",
     "org.slf4j"                  % "slf4j-api"          % "1.7.10"
   )
