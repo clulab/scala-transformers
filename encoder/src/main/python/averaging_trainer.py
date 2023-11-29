@@ -124,9 +124,9 @@ if __name__ == "__main__":
         ShortTaskDef("NER",        "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
         ShortTaskDef("POS",        "pos/",       "train.txt",    "dev.txt",    "test.txt"),
         ShortTaskDef("Chunking",   "chunking/",  "train.txt",    "test.txt",   "test.txt"),
-        ShortTaskDef("Deps Head",  "deps-wsj/",  "train.heads",  "dev.heads",  "test.heads"),
-        ShortTaskDef("Deps Label", "deps-wsj/",  "train.labels", "dev.labels", "test.labels", dual_mode=True)
-        #ShortTaskDef("Deps Head",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.heads",  "dev.heads",  "test.heads"),
-        #ShortTaskDef("Deps Label", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels", "dev.labels", "test.labels", dual_mode=True)
+        #ShortTaskDef("Deps Head",  "deps-wsj/",  "train.heads",  "dev.heads",  "test.heads"),
+        #ShortTaskDef("Deps Label", "deps-wsj/",  "train.labels", "dev.labels", "test.labels", dual_mode=True)
+        ShortTaskDef("Deps Head",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.heads",  "test.heads",  "test.heads"),
+        ShortTaskDef("Deps Label", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels", "test.labels", "test.labels", dual_mode=True)
     ])
     AveragingTrainer(tokenizer).train(tasks)
