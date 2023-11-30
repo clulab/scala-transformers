@@ -35,5 +35,8 @@ shadedDependencies ++= Set(
   "org.ejml" % "ejml-fdense" % "<ignored>",
   "org.ejml" % "ejml-simple" % "<ignored>"
 )
-shadingRules += ShadingRule.moveUnder("org.ejml", "org.clulab.shaded")
-validNamespaces ++= Set("org", "pabeles")
+shadingRules ++= Seq(
+  ShadingRule.moveUnder("org.ejml", "org.clulab.shaded"),
+  ShadingRule.moveUnder("pabeles.concurrency", "org.clulab.shaded")
+)
+validNamespaces ++= Set("org", "org.clulab")
