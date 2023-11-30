@@ -1,21 +1,18 @@
 package org.clulab.scala_transformers.encoder
 
-import breeze.linalg.`*`
-import breeze.linalg.argmax
-import breeze.linalg.DenseMatrix
-import breeze.linalg.DenseVector
+import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathColVector, Math}
 
 /** Implements one linear layer */
 class LinearLayer(
   val name: String,
   val dual: Boolean, 
-  val weights: DenseMatrix[Float], // dimensions (hidden state size x labels size)
-  val biasesOpt: Option[DenseVector[Float]], // column vector with length = labels size
+  val weights: MathMatrix, // dimensions (hidden state size x labels size)
+  val biasesOpt: Option[MathColVector], // column vector with length = labels size
   val labelsOpt: Option[Array[String]]
 ) {
 
   /** Forward pass for a single sentence */
-  def forward(inputSentence: DenseMatrix[Float]): DenseMatrix[Float] = {
+  def forward(inputSentence: MathMatrix): MathMatrix = {
     val batch = Array(inputSentence)
     forward(batch).head
   }
@@ -25,19 +22,19 @@ class LinearLayer(
    * @param inputBatch Each matrix in the batch has dimensions (sentence size x hidden state size)
    * @return Each output matrix has dimensions (sentence size x labels size)
    */
-  def forward(inputBatch: Array[DenseMatrix[Float]]): Array[DenseMatrix[Float]] = {
+  def forward(inputBatch: Array[MathMatrix]): Array[MathMatrix] = {
     inputBatch.map { input =>
       //println("INPUT:\n" + input)
-      val output = input * weights
+      val output = Math.mul(input, weights)
       //println("OUTPUT before bias:\n" + output)
-      for (b <- biasesOpt) output(*, ::) :+= b
+      for (b <- biasesOpt) Math.inplaceMatrixAddition(output, b)
       //println("OUTPUT after bias:\n" + output)
       output
     }
   }
 
   /** Predict the top label per token */
-  def predict(inputSentence: DenseMatrix[Float], 
+  def predict(inputSentence: MathMatrix,
               heads: Option[Array[Int]], 
               masks: Option[Array[Boolean]]): Array[String] = {
     val batchSentences = Array(inputSentence)
@@ -47,7 +44,7 @@ class LinearLayer(
   }
 
   /** Predict the top label for each token in each sentence in the batch */
-  def predict(inputBatch: Array[DenseMatrix[Float]], 
+  def predict(inputBatch: Array[MathMatrix],
               batchHeads: Option[Array[Array[Int]]],
               batchMasks: Option[Array[Array[Boolean]]]): Array[Array[String]] = {
     if (dual) predictDual(inputBatch, batchHeads, batchMasks)
@@ -55,7 +52,7 @@ class LinearLayer(
   }
 
   /** Predict all labels and their scores per token */
-  def predictWithScores(inputSentence: DenseMatrix[Float], 
+  def predictWithScores(inputSentence: MathMatrix,
                         heads: Option[Array[Array[Int]]], 
                         masks: Option[Array[Boolean]]): Array[Array[(String, Float)]] = {
     val batchSentences = Array(inputSentence)
@@ -65,7 +62,7 @@ class LinearLayer(
   }
 
   /** Predict all labels and their scores per token in each sentence in the batch */
-  def predictWithScores(inputBatch: Array[DenseMatrix[Float]], 
+  def predictWithScores(inputBatch: Array[MathMatrix],
                         batchHeads: Option[Array[Array[Array[Int]]]],
                         batchMasks: Option[Array[Array[Boolean]]]): Array[Array[Array[(String, Float)]]] = {
     if (dual) predictDualWithScores(inputBatch, batchHeads, batchMasks)
@@ -73,30 +70,28 @@ class LinearLayer(
   }
 
   def concatenateModifiersAndHeads(
-    sentenceHiddenStates: DenseMatrix[Float], 
-    headRelativePositions: Array[Int]): DenseMatrix[Float] = {
+    sentenceHiddenStates: MathMatrix,
+    headRelativePositions: Array[Int]): MathMatrix = {
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = number of tokens in the sentence; cols = hidden state size x 2
-    val concatMatrix = DenseMatrix.zeros[Float](rows = sentenceHiddenStates.rows, cols = 2 * sentenceHiddenStates.cols)
+    val concatMatrix = Math.zeros(rows = Math.rows(sentenceHiddenStates), cols = Math.cols(sentenceHiddenStates))
 
     // traverse all modifiers
-    for(i <- 0 until sentenceHiddenStates.rows) {
-      val modHiddenState = sentenceHiddenStates(i, ::)
+    for(i <- 0 until Math.rows(sentenceHiddenStates)) {
+      val modHiddenState = Math.row(sentenceHiddenStates, i)
       // what is the absolute position of the head token in the sentence?
       val rawHeadAbsPos = i + headRelativePositions(i)
       val headAbsolutePosition = 
-        if(rawHeadAbsPos >= 0 && rawHeadAbsPos < sentenceHiddenStates.rows) rawHeadAbsPos
+        if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
         else i // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
-      val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
-
-      // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
-      val concatState = DenseVector.vertcat(modHiddenState.t, headHiddenState.t).t
-
+      val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
       // row i in the concatenated matrix contains the embedding of modifier i and its head
-      concatMatrix(i, ::) :+= concatState
+      Math.inplaceMatrixAddition(concatMatrix, i, modHiddenState)
+      Math.inplaceMatrixAddition(concatMatrix, i, headHiddenState)
     }
     
+    //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
     concatMatrix
   }
 
@@ -105,34 +100,31 @@ class LinearLayer(
     *
     */
   def concatenateModifierAndHead(
-    sentenceHiddenStates: DenseMatrix[Float], 
-    modifierAbsolutePosition: Int,
-    headRelativePosition: Int): DenseMatrix[Float] = {
+      sentenceHiddenStates: MathMatrix,
+      modifierAbsolutePosition: Int,
+      headRelativePosition: Int): MathMatrix = {
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = 1; cols = hidden state size x 2
-    val concatMatrix = DenseMatrix.zeros[Float](rows = 1, cols = 2 * sentenceHiddenStates.cols)
-
+    val concatMatrix = Math.zeros(rows = 1, cols = Math.cols(sentenceHiddenStates))
     // embedding of the modifier
-    val modHiddenState = sentenceHiddenStates(modifierAbsolutePosition, ::)
+    val modHiddenState = Math.row(sentenceHiddenStates, modifierAbsolutePosition)
 
     // embedding of the head
     val rawHeadAbsPos = modifierAbsolutePosition + headRelativePosition
     val headAbsolutePosition = 
-      if(rawHeadAbsPos >= 0 && rawHeadAbsPos < sentenceHiddenStates.rows) rawHeadAbsPos
+      if (rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
       else modifierAbsolutePosition // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
-    val headHiddenState = sentenceHiddenStates(headAbsolutePosition, ::)
 
-    // concatenation of the modifier and head embeddings
-    // vector concatenation in Breeze operates over vertical vectors, hence the transposing here
-    val concatState = DenseVector.vertcat(modHiddenState.t, headHiddenState.t).t
-
-    concatMatrix(0, ::) :+= concatState
+    val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
+    //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
+    Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
+    Math.inplaceMatrixAddition(concatMatrix, 0, headHiddenState)
     concatMatrix
   }
 
   /** Predict the top label for each combination of modifier token and corresponding head token */
-  def predictDual(inputBatch: Array[DenseMatrix[Float]], 
+  def predictDual(inputBatch: Array[MathMatrix],
                   batchHeads: Option[Array[Array[Int]]] = None,
                   batchMasks: Option[Array[Array[Boolean]]] = None): Array[Array[String]] = {
     assert(batchHeads.isDefined)
@@ -146,9 +138,9 @@ class LinearLayer(
       // get the logits for the current sentence produced by this linear layer
       val logitsPerSentence = forward(Array(concatInput))(0)
       // one token per row; pick argmax per token
-      val bestLabels = Range(0, logitsPerSentence.rows).map { i =>
-        val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
-        val bestIndex = argmax(row.t)
+      val bestLabels = Range(0, Math.rows(logitsPerSentence)).map { i =>
+        val row = Math.row(logitsPerSentence, i) // picks line i from a 2D matrix
+        val bestIndex = Math.argmax(row)
 
         indexToLabel(bestIndex)
       }
@@ -163,7 +155,7 @@ class LinearLayer(
   // out dimensions: sentence in batch x token in sentence x label/score per token
   // batchHeads dimensions: sentence in batch x token in sentence x heads per token
   // labels are sorted in descending order of their scores
-  def predictDualWithScores(inputBatch: Array[DenseMatrix[Float]], 
+  def predictDualWithScores(inputBatch: Array[MathMatrix],
                             batchHeads: Option[Array[Array[Array[Int]]]] = None,
                             batchMasks: Option[Array[Array[Boolean]]] = None): Array[Array[Array[(String, Float)]]] = {
     assert(batchHeads.isDefined)
@@ -181,9 +173,9 @@ class LinearLayer(
           val concatInput = concatenateModifierAndHead(input, modifierAbsolutePosition, headRelativePosition)
           // get the logits for the current pair of modifier and head
           val logitsPerSentence = forward(Array(concatInput))(0)
-          val labelScores = logitsPerSentence(0, ::)
-          val bestIndex = argmax(labelScores.t)
-          val bestScore = labelScores(bestIndex)
+          val labelScores = Math.row(logitsPerSentence, 0)
+          val bestIndex = Math.argmax(labelScores)
+          val bestScore = Math.get(labelScores, bestIndex)
           val bestLabel = indexToLabel(bestIndex)
 
           // println(s"Top prediction for mod $modifierAbsolutePosition and relative head $headRelativePosition is $bestLabel with score $bestScore")
@@ -195,15 +187,15 @@ class LinearLayer(
     outputBatch                    
   }
 
-  def predictPrimal(inputBatch: Array[DenseMatrix[Float]]): Array[Array[String]] = {
+  def predictPrimal(inputBatch: Array[MathMatrix]): Array[Array[String]] = {
     val labels = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
     // predict best label per (subword) token
     val logits = forward(inputBatch)
     val outputBatch = logits.map { logitsPerSentence =>
       // one token per row; pick argmax per token
-      val bestLabels = Range(0, logitsPerSentence.rows).map { i =>
-        val row = logitsPerSentence(i, ::) // picks line i from a 2D matrix
-        val bestIndex = argmax(row.t)
+      val bestLabels = Range(0, Math.rows(logitsPerSentence)).map { i =>
+        val row = Math.row(logitsPerSentence, i) // picks line i from a 2D matrix
+        val bestIndex = Math.argmax(row)
 
         labels(bestIndex)
       }
@@ -216,15 +208,15 @@ class LinearLayer(
 
   // out dimensions: sentence in batch x token in sentence x label/score per token
   // labels are sorted in descending order of their scores
-  def predictPrimalWithScores(inputBatch: Array[DenseMatrix[Float]]): Array[Array[Array[(String, Float)]]] = {
+  def predictPrimalWithScores(inputBatch: Array[MathMatrix]): Array[Array[Array[(String, Float)]]] = {
     val labels = labelsOpt.getOrElse(throw new RuntimeException("ERROR: can't predict without labels!"))
     // predict best label per (subword) token
     val logits = forward(inputBatch)
     val outputBatch = logits.map { logitsPerSentence =>
       // one token per row; store scores for all labels for this token
-      val allLabels = Range(0, logitsPerSentence.rows).map { i =>
+      val allLabels = Range(0, Math.rows(logitsPerSentence)).map { i =>
         // picks line i from a 2D matrix and converts it to Array
-        val scores = logitsPerSentence(i, ::).t.toArray
+        val scores = Math.toArray(Math.row(logitsPerSentence, i))
         val labelsAndScores = labels.zip(scores)
 
         // keep scores in descending order (largest first) 

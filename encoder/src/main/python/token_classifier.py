@@ -223,7 +223,7 @@ class TokenClassificationHead(nn.Module):
         self.dropout = nn.Dropout(dropout_p)
         self.dual_mode = dual_mode
         self.classifier = nn.Linear(
-            hidden_size if not self.dual_mode else hidden_size * 2, 
+            hidden_size, # if not self.dual_mode else hidden_size * 2, # USE SUM
             num_labels
         )
         self.num_labels = num_labels
@@ -248,8 +248,11 @@ class TokenClassificationHead(nn.Module):
         head_states = sequence_output[torch.arange(sequence_output.shape[0]).unsqueeze(1), long_head_positions]
         #print(f"head_states.size = {head_states.size()}")
         # Concatenate the hidden states from modifier + head.
-        modifier_head_states = torch.cat([sequence_output, head_states], dim=2)
+        #modifier_head_states = torch.cat([sequence_output, head_states], dim=2)
+        modifier_head_states = torch.add(sequence_output, head_states) # USE SUM
         #print(f"modifier_head_states.size = {modifier_head_states.size()}")
+        #print("EXIT")
+        #exit(1)
         return modifier_head_states
 
     def forward(self, sequence_output, pooled_output, head_positions, labels=None, attention_mask=None, **kwargs):

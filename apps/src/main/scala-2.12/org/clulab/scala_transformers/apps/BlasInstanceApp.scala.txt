@@ -1,4 +1,4 @@
-package org.clulab.scala_transformers.encoder.apps
+package org.clulab.scala_transformers.apps
 
 import dev.ludovic.netlib.blas.{BLAS, JavaBLAS, NativeBLAS}
 
