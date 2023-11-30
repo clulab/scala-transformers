@@ -1,7 +1,7 @@
 package org.clulab.scala_transformers.encoder
 
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
-import breeze.linalg.DenseMatrix
+import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix}
 
 import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
@@ -13,12 +13,12 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
     * @param batchInputIds First dimension is batch size (1 for a single sentence); second is sentence size
     * @return Hidden states for the whole batch. The matrix dimension: rows = sentence size; columns = hidden state size
     */
-  def forward(batchInputIds: Array[Array[Long]]): Array[DenseMatrix[Float]] = {
+  def forward(batchInputIds: Array[Array[Long]]): Array[MathMatrix] = {
     val inputs = new JHashMap[String, OnnxTensor]()
     inputs.put("token_ids", OnnxTensor.createTensor(encoderEnvironment, batchInputIds))
 
-    val encoderOutput = encoderSession.run(inputs).get(0).getValue.asInstanceOf[Array[Array[Array[Float]]]]
-    val outputs = encoderOutput.map(BreezeUtils.mkRowMatrix(_))
+    val result: OrtSession.Result = encoderSession.run(inputs)
+    val outputs = Math.fromResult(result)
     outputs
   }
 
@@ -27,7 +27,7 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
    * @param inputIds Array of token ids for this sentence
    * @return Hidden states for this sentence. The matrix dimension: rows = sentence size; columns = hidden state size 
    */
-  def forward(inputIds: Array[Long]): DenseMatrix[Float] = {
+  def forward(inputIds: Array[Long]): MathMatrix = {
     val batchInputIds = Array(inputIds)
     forward(batchInputIds).head
   }

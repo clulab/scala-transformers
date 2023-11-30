@@ -2,7 +2,7 @@ name := "scala-transformers-encoder"
 description := "Provides a Scala interface to huggingface encoders"
 
 resolvers ++= Seq(
-  "Artifactory" at "https://artifactory.clulab.org/artifactory/sbt-release"
+//  "Artifactory" at "https://artifactory.clulab.org/artifactory/sbt-release"
 )
 
 libraryDependencies ++= {
@@ -10,12 +10,17 @@ libraryDependencies ++= {
     case Some((2, minor)) if minor < 12 => "1.0"
     case _ => "2.1.0"
   }
+  val ejmlVersion = "0.41" // Use this older version for Java 8.
 
   Seq(
-    "org.scalanlp"              %% "breeze"             % breezeVersion,
+    // Choose one of these.
+    /// "org.apache.commons"         % "commons-math3"      % "3.6.1",
+    "org.ejml"                   % "ejml-core"          % ejmlVersion,
+    "org.ejml"                   % "ejml-fdense"        % ejmlVersion,
+    "org.ejml"                   % "ejml-simple"        % ejmlVersion,
+    // "org.scalanlp"              %% "breeze"             % breezeVersion,
+
     "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.13.1",
-    //"org.clulab"                 % "roberta-onnx-model" % "0.0.2",
-    "org.clulab"                 % "deberta-onnx-model" % "0.0.3",
     "org.slf4j"                  % "slf4j-api"          % "1.7.10"
   )
 }
@@ -23,3 +28,15 @@ libraryDependencies ++= {
 fork := true
 
 // assembly / mainClass := Some("com.keithalcock.tokenizer.scalapy.apps.ExampleApp")
+
+enablePlugins(ShadingPlugin)
+shadedDependencies ++= Set(
+  "org.ejml" % "ejml-core"   % "<ignored>",
+  "org.ejml" % "ejml-fdense" % "<ignored>",
+  "org.ejml" % "ejml-simple" % "<ignored>"
+)
+shadingRules ++= Seq(
+  ShadingRule.moveUnder("org.ejml", "org.clulab.shaded"),
+  ShadingRule.moveUnder("pabeles.concurrency", "org.clulab.shaded")
+)
+validNamespaces ++= Set("org", "org.clulab")
