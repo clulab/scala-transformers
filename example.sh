@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sbt "encoder/runMain org.clulab.scala_transformers.encoder.apps.TokenClassifierExampleApp"
+sbt "apps/runMain org.clulab.scala_transformers.apps.TokenClassifierExampleApp"
