@@ -5,6 +5,8 @@ from transformers import AutoTokenizer
 __all__ = ["CluTokenizer"]
 
 class CluTokenizer:
+    
+    # FIXME: set use_fast based on availability of fast tokenizer
     @classmethod
     def from_pretrained(cls, name: str = Parameters.transformer_name, use_fast: bool = False) -> AutoTokenizer:
         # add_prefix_space is needed only for the roberta tokenizer

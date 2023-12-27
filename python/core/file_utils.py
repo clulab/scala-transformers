@@ -1,6 +1,6 @@
 
 from io import TextIOWrapper
-from processors.core import Parameters
+from processors.core.parameters import Parameters
 
 __all__ = ["FileUtils"]
 

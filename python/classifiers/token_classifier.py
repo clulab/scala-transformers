@@ -4,19 +4,18 @@
 import os
 import torch
 
-from processors.utils import FileUtils
-from processors.core import (Names, Parameters, Task, TensorFilter)
+from processors.core import (FileUtils, Names, Parameters, Task, TensorFilter)
 from torch import nn, Tensor
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
 from typing import Any, Callable, List, Optional, Union
 
 
-__all__ = ["TokenClassificationModel"]
+__all__ = ["TokenClassificationHead", "TokenClassificationModel"]
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
 class TokenClassificationModel(PreTrainedModel):    
-    def __init__(self, config: AutoConfig, transformer_name: str) -> None:
+    def __init__(self, config: AutoConfig, transformer_name: str = Parameters.transformer_name) -> None:
         super().__init__(config)
         self.encoder: AutoModel = AutoModel.from_pretrained(transformer_name, config = config) 
         self.config: AutoConfig = config
@@ -117,6 +116,25 @@ class TokenClassificationModel(PreTrainedModel):
         #  key = f"output_heads.{i}.classifier.weight"
         #  print(f"{key} = {self.state_dict()[key]}")
 
+    # NOTE: this will become from_pretrained()
+    @staticmethod
+    def _from_pretrained(pretrained_model_name_or_path: str, *model_args, **kwargs) -> None:
+        conf = AutoConfig.from_pretrained(pretrained_model_name_or_path)
+        model = TokenClassificationModel(config=conf, transformer_name=Parameters.transformer_name)
+        # FIXME: add default heads via add_heads
+        if os.path.isdir(pretrained_model_name_or_path):
+            print("Loading full model from pickle...")
+            checkpoint = torch.load(f"{pretrained_model_name_or_path}/pytorch_model.bin", map_location="cpu")
+            model.load_state_dict(checkpoint)    
+            print("Done loading.")
+            return model
+        # FIXME: implement me after publishing model to hfhub
+        # elif:
+        #     # retrieve from hub
+        else:
+            raise Exception(f"{pretrained_model_name_or_path} is not a valid local or remote checkpoint")
+
+    # FIXME: this implementation will be replaced by _from_pretrained once it is functioning
     def from_pretrained(self, pretrained_model_name_or_path: str, *model_args, **kwargs) -> None:
         # the line below is not needed. We initialize the weights from the pickle; the rest are default values
         # super().from_pretrained(pretrained_model_name_or_path, *model_args, **kwargs)
@@ -127,6 +145,7 @@ class TokenClassificationModel(PreTrainedModel):
             checkpoint = torch.load(f"{pretrained_model_name_or_path}/pytorch_model.bin", map_location="cpu")
             self.load_state_dict(checkpoint)    
             print("Done loading.")
+   
 
     def export_task(self, task_head, task: Task, task_checkpoint) -> None:
         numpy_weights = task_head.classifier.weight.cpu().detach().numpy()

@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-from processors.datasets import DataWrangler
+from processors.core.data_wrangler import DataWrangler
 from dataclasses import dataclass
 from transformers import AutoTokenizer
 from typing import Dict, List

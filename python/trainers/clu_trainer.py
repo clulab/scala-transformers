@@ -8,8 +8,7 @@ from processors.trainers.basic_trainer import BasicTrainer
 from processors.utils import CluTimer
 from processors.tokenizers import CluTokenizer
 from datasets import Dataset
-from processors.datasets import DualDataCollator
-from processors.core import (Names, Parameters, ShortTaskDef, Task)
+from processors.core import (DualDataCollator, Names, Parameters, ShortTaskDef, Task)
 from processors.classifiers import TokenClassificationModel
 from sklearn.metrics import accuracy_score
 from transformers import AutoTokenizer, EvalPrediction, TrainingArguments, Trainer
