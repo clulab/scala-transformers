@@ -1,8 +1,9 @@
 
-from parameters import Parameters
-from task import Task
+from processors.core import (Parameters, Task)
 from transformers import AutoTokenizer, AutoConfig
 from typing import List
+
+__all__ = ["BasicTrainer"]
 
 class BasicTrainer:
     def __init__(self, tokenizer: AutoTokenizer) -> None:

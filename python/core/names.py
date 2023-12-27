@@ -1,5 +1,7 @@
 # These are names that need to be coordinated between components.
 
+__all__ = ["Names"]
+
 class Names:
     ACCURACY = "accuracy"
     INPUT_IDS = "input_ids"

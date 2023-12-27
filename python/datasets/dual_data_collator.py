@@ -1,8 +1,10 @@
 import torch
 
-from names import Names
+from processors.core import Names
 from transformers import AutoTokenizer, DataCollatorForTokenClassification
 from typing import Any, Dict, List
+
+__all__ = ["DualDataCollator"]
 
 # A custom data collator that creates correct batches for all tasks by including the Names.HEAD_POSITIONS column as well
 class DualDataCollator(DataCollatorForTokenClassification):

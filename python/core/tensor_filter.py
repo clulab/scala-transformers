@@ -1,6 +1,8 @@
 from torch import Tensor
 from typing import Union
 
+__all__ = ["TensorFilter"]
+
 class TensorFilter():
     def __init__(self, predicate: Tensor) -> None:
         self.predicate: Tensor = predicate

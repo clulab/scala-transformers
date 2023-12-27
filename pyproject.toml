@@ -1,0 +1,166 @@
+[project]
+name = "cluprocessors"
+authors = [
+    {name="Keith Alcock", email="keith@lum.ai"},
+    {name="Mihai Surdeanu", email="surdeanu@gmail.com"},
+    {name="Gus Hahn-Powell", email="gus@parsertongue.org"}
+]
+description = "Python interface to CLU Processors"
+version = "0.1.0"
+dependencies=[
+    "Cython",
+    "numpy",
+    "torch==2.0.1", 
+    "torchvision==0.15.2", 
+    "beartype==0.15.0",
+    "transformers>=4.26",
+    "tokenizers",
+    "sentencepiece",
+    "datasets",
+    "tqdm",
+    "scikit-learn",
+    "pandas",
+    "typing_extensions", # see https://github.com/pydantic/pydantic/issues/5821#issuecomment-1559196859
+    "starlette",
+    "pydantic>=2.0.0",
+    "uvicorn",
+    "python-multipart",
+    "func_timeout"
+]
+# The Python program analysis pipeline does not currently work with Python 3.9
+# or 3.10. This may change in the future.
+requires-python = ">=3.8"
+license = {text="Apache 2.0"}
+dynamic = ["readme"]
+
+[project.optional-dependencies]
+# Dev dependencies.
+# - pytest: for running tests
+# - black: Autoformatting
+# - pygraphviz: for creating function network visualizations for debugging.
+#   Pygraphviz is often tricky to install, so we reserve it for the dev extras
+#   list.
+# - six: Required by auto-generated Swagger models
+dev = ["pytest", "pytest-cov", "pytest-xdist", "httpx", "black", "mypy", "coverage", "pygraphviz", "six"]
+
+demo = ["notebook"]
+
+gpu = [
+  "nvidia-cublas-cu11==11.10.3.66",
+  "nvidia-cuda-nvrtc-cu11==11.7.99",
+  "nvidia-cuda-runtime-cu11==11.7.99",
+  "nvidia-cudnn-cu11==8.5.0.96"
+]
+
+# project documentation generation
+doc = ["mkdocs==1.2.3", "pdoc3==0.10.0", "mkdocs-git-snippet==0.1.1", "mkdocs-git-revision-date-localized-plugin==0.11.1", "mkdocs-git-authors-plugin==0.6.3", "mkdocs-rtd-dropdown==1.0.2", "jinja2<3.1.0"]
+
+core = ["skema[img2mml]", "skema[isa]", "skema[tr]", "skema[metal]", "skema[llms]"]
+
+# see skema/img2mml/render_mml/mathpix_annotator
+annotations = ["matplotlib", "notebook"]
+
+# all extras
+all = ["cluprocessors[core]", "cluprocessors[dev]", "cluprocessors[doc]", "cluprocessors[demo]", "cluprocessors[gpu]"]
+
+[tool.setuptools.package-dir]
+"processors" = "python"
+
+# [tool.setuptools.packages]
+# find = {}  # Scan the project directory with the default parameters
+
+[tool.setuptools.package-data]
+# needed to ensure models are included in package/discoverable
+"*" = ["*.json", "vocab.txt", "*.pt", "*.png", "*.html", "*.yml", "*.yaml"]
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md"], content-type = "text/markdown"}
+# runnables
+[project.scripts]
+#skema-tree-sitter-build-fortran-grammar = "skema.program_analysis.CAST.fortran.build_tree_sitter_fortran:main"
+link_amr = "skema.metal.model_linker.link_amr:main"
+#parquet2json = "skema.text_reading.cosmos_integration:main"
+
+# Minimum requirements for the build system to execute.
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# pytest
+[tool.pytest.ini_options]
+markers = [
+    "ci_only: marks tests to only be run in CI (deselect with '-m \"not ci_only\"')"
+]
+minversion = "7.0"
+addopts = "-v --cov=skema --cov-report html:docs/coverage/python"
+testpaths = [
+    "python/tests",
+]
+
+# Configuration for Black.
+
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # The following are specific to Black, you probably don't want those.
+  | blib2to3
+  | tests/data
+  | profiling
+)/
+'''
+
+# mypy
+# see https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
+[tool.mypy]
+
+[[tool.mypy.overrides]]
+module = "clu_trainer"
+# This is for the line
+# np.argmax(eval_pred.predictions, axis=-1)
+disable_error_code = "call-arg"
+
+[[tool.mypy.overrides]]
+module = "datasets"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "evaluator"
+# This is for the line
+# pred_labels = torch.argmax(logits, axis=-1)
+disable_error_code = "call-arg"
+
+[[tool.mypy.overrides]]
+module = "numpy"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pandas"
+ignore_missing_imports = true
+
+
+[[tool.mypy.overrides]]
+module = "sklearn.metrics"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "token_classifier"
+no_implicit_optional = false
+
+[[tool.mypy.overrides]]
+module = "tqdm.notebook"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "transformers"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "transformers.modeling_outputs"
+ignore_missing_imports = true

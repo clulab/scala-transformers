@@ -6,6 +6,8 @@ import platform
 import random
 import torch 
 
+__all__ = ["Parameters"]
+
 class Parameters:
     avoid_cuda = False
     avoid_mps = False

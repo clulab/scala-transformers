@@ -4,13 +4,13 @@
 import torch
 
 from datasets import Dataset
-from names import Names
-from parameters import Parameters
-from task import Task
-from token_classifier import TokenClassificationModel
+from processors.core import (Names, Parameters, Task)
+from processors.classifiers import TokenClassificationModel
 from torch import IntTensor, Tensor
 from tqdm.notebook import tqdm
 from typing import Dict, List
+
+__all__ = ["Evaluator"]
 
 class Evaluator:
     def __init__(self, model: TokenClassificationModel) -> None:

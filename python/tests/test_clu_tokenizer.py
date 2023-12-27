@@ -1,6 +1,6 @@
 
-from clu_tokenizer import CluTokenizer
-from names import Names
+from processors.tokenizers import CluTokenizer
+from processors.names import Names
 
 def test_clu_tokenizer() -> None:
     words = [
@@ -11,9 +11,9 @@ def test_clu_tokenizer() -> None:
     ]
 
 
-    tokenizer = CluTokenizer.get_pretrained()
+    tokenizer = CluTokenizer.from_pretrained()
     for name in Names.TOKENIZER_NAMES:
-        tokenizer = CluTokenizer.get_pretrained(name)
+        tokenizer = CluTokenizer.from_pretrained(name)
         tokenized_words = tokenizer(words, is_split_into_words=True)
         ids_from_words = tokenized_words.input_ids
         tokens_from_words = tokenizer.convert_ids_to_tokens(ids_from_words)

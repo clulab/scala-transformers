@@ -3,6 +3,8 @@ import time
 from datetime import timedelta
 from typing import Callable
 
+__all__ = ["CluTimer"]
+
 class CluTimer:
     @classmethod
     def time(cls, func: Callable[[], None]) -> None:

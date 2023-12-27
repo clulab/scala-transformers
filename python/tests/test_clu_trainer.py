@@ -1,6 +1,6 @@
-from clu_tokenizer import CluTokenizer
-from clu_trainer import CluTrainer
-from task import ShortTaskDef, Task
+from processors.tokenizers import CluTokenizer
+from processors.trainers import CluTrainer
+from processors.core import ShortTaskDef, Task
 
 def test_true() -> None:
     assert True == True
@@ -9,7 +9,7 @@ def test_false() -> None:
     assert False != True
 
 def test_clu_trainer() -> None:
-    tokenizer = CluTokenizer.get_pretrained()
+    tokenizer = CluTokenizer.from_pretrained()
     tasks = Task.mk_tasks("data/", tokenizer, [
         ShortTaskDef("NER",       "conll-ner/", "train_small.txt",    "train_small.txt",  "train_small.txt"),
         ShortTaskDef("POS",             "pos/", "train_small.txt",    "train_small.txt",  "train_small.txt"),

@@ -4,18 +4,18 @@
 import numpy as np
 import pandas as pd
 
-from basic_trainer import BasicTrainer
-from clu_timer import CluTimer
-from clu_tokenizer import CluTokenizer
+from processors.trainers.basic_trainer import BasicTrainer
+from processors.utils import CluTimer
+from processors.tokenizers import CluTokenizer
 from datasets import Dataset
-from dual_data_collator import DualDataCollator
-from names import Names
-from parameters import Parameters
-from task import ShortTaskDef, Task
+from processors.datasets import DualDataCollator
+from processors.core import (Names, Parameters, ShortTaskDef, Task)
+from processors.classifiers import TokenClassificationModel
 from sklearn.metrics import accuracy_score
-from token_classifier import TokenClassificationModel
 from transformers import AutoTokenizer, EvalPrediction, TrainingArguments, Trainer
 from typing import Dict, List
+
+__all__ = ["CluTrainer"]
 
 class CluTrainer(BasicTrainer):
     def __init__(self, tokenizer: AutoTokenizer) -> None:
@@ -84,7 +84,7 @@ class CluTrainer(BasicTrainer):
 
 
 if __name__ == "__main__":
-    tokenizer = CluTokenizer.get_pretrained()
+    tokenizer = CluTokenizer.from_pretrained()
     # the tasks to learn
     tasks = Task.mk_tasks("data/", tokenizer, [
         ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),

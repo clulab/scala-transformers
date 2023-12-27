@@ -4,15 +4,15 @@
 import os
 import torch
 
-from file_utils import FileUtils
-from names import Names
-from tensor_filter import TensorFilter
-from parameters import Parameters
-from task import Task
+from processors.utils import FileUtils
+from processors.core import (Names, Parameters, Task, TensorFilter)
 from torch import nn, Tensor
 from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
 from typing import Any, Callable, List, Optional, Union
+
+
+__all__ = ["TokenClassificationModel"]
 
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
 class TokenClassificationModel(PreTrainedModel):    

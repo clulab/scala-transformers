@@ -1,10 +1,9 @@
-from clu_tokenizer import CluTokenizer
-from file_utils import FileUtils
-from names import Names
-from parameters import Parameters
+from processors.tokenizers import CluTokenizer
+from processors.utils import FileUtils
+from processors.core import (Names, Parameters)
 
 def run_document(in_file_name: str, out_file_name: str, tokenizer_name: str) -> None:
-    tokenizer = CluTokenizer.get_pretrained(tokenizer_name)
+    tokenizer = CluTokenizer.from_pretrained(tokenizer_name)
     with FileUtils.for_writing(out_file_name) as out_file:
         with FileUtils.for_reading(in_file_name) as in_file:
             for line in in_file:
@@ -29,6 +28,7 @@ def run_document(in_file_name: str, out_file_name: str, tokenizer_name: str) -> 
                 print(ids_from_words, file=out_file)
 
 def run_directory(directory_name: str, in_document_name: str) -> None:
+    # FIXME: use pathlib
     in_file_name = f"{directory_name}/{in_document_name}"
     for tokenizer_name in Names.TOKENIZER_NAMES:
         out_file_name = f"{directory_name}/{Parameters.get_model_name(tokenizer_name)}.txt"

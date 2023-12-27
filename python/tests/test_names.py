@@ -1,5 +1,5 @@
 
-from names import Names
+from processors.core import Names
 
 def test_global_names() -> None:
     # assert INPUT_IDS is None

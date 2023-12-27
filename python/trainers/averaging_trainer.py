@@ -3,15 +3,16 @@
 
 import os
 
-from basic_trainer import BasicTrainer
-from clu_tokenizer import CluTokenizer
+from processors.trainers.basic_trainer import BasicTrainer
+from processors.tokenizers import CluTokenizer
 from dataclasses import dataclass
-from evaluator import Evaluator
-from parameters import Parameters
-from task import ShortTaskDef, Task
-from token_classifier import TokenClassificationModel
+from processors.evaluation import Evaluator
+from processors.core import (Parameters, ShortTaskDef, Task)
+from processors.classifiers import TokenClassificationModel
 from transformers import AutoTokenizer, AutoConfig
 from typing import List
+
+__all__ = ["AveragingTrainer", "Checkpoint"]
 
 @dataclass
 class Checkpoint:
@@ -118,7 +119,7 @@ class AveragingTrainer(BasicTrainer):
             print(f"{key} = {model.state_dict()[key]}")
 
 if __name__ == "__main__":
-    tokenizer = CluTokenizer.get_pretrained()
+    tokenizer = CluTokenizer.from_pretrained()
     # the tasks to learn
     tasks = Task.mk_tasks("data/", tokenizer, [
         ShortTaskDef("NER",        "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
