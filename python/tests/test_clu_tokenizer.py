@@ -1,6 +1,6 @@
 
 from processors.tokenizers import CluTokenizer
-from processors.names import Names
+from processors.core import Names
 
 def test_clu_tokenizer() -> None:
     words = [
@@ -21,6 +21,7 @@ def test_clu_tokenizer() -> None:
         print(words)
         print(tokens_from_words)
         print(ids_from_words)
+        # FIXME: this "test" should have one or more assertions...
 
 
 if __name__ == "__main__":

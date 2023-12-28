@@ -8,7 +8,7 @@ class CluTokenizer:
     
     # FIXME: set use_fast based on availability of fast tokenizer
     @classmethod
-    def from_pretrained(cls, name: str = Parameters.transformer_name, use_fast: bool = False) -> AutoTokenizer:
+    def from_pretrained(cls, name: str = Parameters.transformer_name, use_fast: bool = True) -> AutoTokenizer:
         # add_prefix_space is needed only for the roberta tokenizer
         add_prefix_space = "roberta" in name.lower()
         # which transformer to use

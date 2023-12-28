@@ -12,7 +12,7 @@ from processors.core import (DualDataCollator, Names, Parameters, ShortTaskDef, 
 from processors.classifiers import TokenClassificationModel
 from sklearn.metrics import accuracy_score
 from transformers import AutoTokenizer, EvalPrediction, TrainingArguments, Trainer
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 __all__ = ["CluTrainer"]
 
@@ -21,12 +21,14 @@ class CluTrainer(BasicTrainer):
         super().__init__(tokenizer)
 
     # main function for training the MTL classifier
-    def train(self, tasks: List[Task]) -> None:
+    # FIXME: use of Parameters makes this difficult to customize (ex. num. epochs, etc.)
+    def train(self, tasks: List[Task], epochs: Optional[int] = None, batch_size: Optional[int] = None) -> None:
         # our own token classifier
         model = TokenClassificationModel(self.config, Parameters.transformer_name).add_heads(tasks)
         model.summarize_heads()
 
         # create the formal train/validation/test HF dataset
+        # FIXME: should this be sent to a device or will the HF Trainer handle it?
         train_ds = Dataset.from_pandas(pd.concat([task.train_df for task in tasks]))
         #validation_ds = Dataset.from_pandas(pd.concat([task.dev_df for task in tasks]))
         #test_ds = Dataset.from_pandas(pd.concat([task.test_df for task in tasks]))
@@ -38,17 +40,18 @@ class CluTrainer(BasicTrainer):
         training_args = TrainingArguments(
             output_dir=Parameters.model_name,
             log_level="error",
-            num_train_epochs=Parameters.epochs + 1,
-            per_device_train_batch_size=Parameters.batch_size,
-            per_device_eval_batch_size=Parameters.batch_size,
+            num_train_epochs=epochs or Parameters.epochs + 1,
+            per_device_train_batch_size=batch_size or Parameters.batch_size,
+            per_device_eval_batch_size=batch_size or Parameters.batch_size,
             save_strategy="epoch",
             #evaluation_strategy="epoch",
             #do_eval=True, 
             weight_decay=Parameters.weight_decay,
-            use_mps_device = Parameters.use_mps_device,
-            no_cuda = not Parameters.use_cuda_device
+            # NOTE: use_mps_device` is deprecated and will be removed in version 5.0 of 🤗 Transformers. `mps` device will be used by default if available similar to the way `cuda` device is used.
+            use_cpu=not Parameters.use_cuda_device
         )
         
+        # FIXME: have this use acccelerate
         trainer = Trainer(
             model=model,
             args=training_args,
@@ -85,12 +88,45 @@ class CluTrainer(BasicTrainer):
 if __name__ == "__main__":
     tokenizer = CluTokenizer.from_pretrained()
     # the tasks to learn
-    tasks = Task.mk_tasks("data/", tokenizer, [
-        ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
-        ShortTaskDef("Deps Head",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.heads",  "test.heads",  "test.heads"), # dev is included in train
-        ShortTaskDef("Deps Label", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels", "test.labels", "test.labels", dual_mode=True) # dev is included in train
+    tasks = Task.mk_tasks(
+        "data", 
+        tokenizer, [
+          ShortTaskDef(
+            "NER",
+            "conll-ner",
+            "train.txt",
+            "dev.txt",
+            "test.txt"
+          ),
+          ShortTaskDef(
+            "POS",
+            "pos",
+            "train.txt",
+            "dev.txt",
+            "test.txt"
+          ),
+          ShortTaskDef(
+            "Chunking",
+            "chunking",
+            "train.txt",
+            "test.txt",
+            "test.txt"
+          ), # this dataset has no dev
+          ShortTaskDef(
+            "Deps Head",
+            "deps-combined",
+            "wsjtrain-wsjdev-geniatrain-geniadev.heads",
+            "test.heads",
+            "test.heads"
+          ), # dev is included in train
+          ShortTaskDef(
+            "Deps Label",
+            "deps-combined",
+            "wsjtrain-wsjdev-geniatrain-geniadev.labels",
+            "test.labels",
+            "test.labels",
+            dual_mode=True
+          ) # dev is included in train
         #ShortTaskDef("Deps Head",  "deps-wsj/", "train.heads",  "dev.heads",  "test.heads"),
         #ShortTaskDef("Deps Label", "deps-wsj/", "train.labels", "dev.labels", "test.labels", dual_mode=True)
     ])

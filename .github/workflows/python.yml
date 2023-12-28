@@ -1,0 +1,82 @@
+name: Unit tests and project documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+#env:
+
+jobs:
+  docs:
+    name: "Run tests and generate project documentation"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest] #, macos-latest, windows-latest]
+        python-version: [ '3.11' ] 
+        # TODO: add rust-version 1.62
+        # exclude:
+        #   - os: macos-latest
+        #     python-version: '3.8'
+        #   - os: windows-latest
+        #     python-version: '3.6'
+
+    steps:
+    # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        #architecture: x64
+    - name: Display Python version
+      run: |
+        python -c "import sys; print(sys.version)"
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+    - name: Display Rust version
+      run: |
+        rustc --version
+
+    # Install dependencies
+    # - name: System-wide deps
+    #   run: |
+    #     sudo apt-get install -y graphviz \
+    #     libgraphviz-dev
+    # Install packages (for API doc gen)
+    - name: Install cluprocessors (Python)
+      working-directory: .
+      run: |
+        pip install ".[all]"
+
+    # docs (API)
+    # generate python docs using pdoc
+    - name: "Create documentation for Python components (API docs)"
+      run: |
+        pdoc --html -c latex_math=True --force --output-dir docs/api/python python
+
+    # test & code coverage (Python)
+    - name: "Unit tests and code coverage reports for Python components"
+      run: |
+        pytest -vvv
+   
+    # docs (other)
+    - name: "Create documentation (other)"
+      run: |
+        docker run -i -v "$GITHUB_WORKSPACE:/app" parsertongue/mkdocs:latest mkdocs build -c
+    - name: Deploy docs
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        # see https://docs.github.com/en/free-pro-team@latest/actions/reference/authentication-in-a-workflow#about-the-github_token-secret
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./site
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: ${{ github.event.head_commit.message }}

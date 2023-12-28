@@ -25,3 +25,8 @@ project/
 bert-base-cased-mtl/
 data/
 epoch_stats.txt
+
+# other
+.coverage
+.coverage*
+microsoft-deberta-v3-base-mtl/

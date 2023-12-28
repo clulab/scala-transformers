@@ -6,7 +6,7 @@ import pandas as pd
 from processors.core.file_utils import FileUtils
 from processors.core.names import Names
 from processors.core.parameters import Parameters
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from transformers import AutoTokenizer
 from typing import Any, Dict, List, Union
 

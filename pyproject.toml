@@ -5,27 +5,24 @@ authors = [
     {name="Mihai Surdeanu", email="surdeanu@gmail.com"},
     {name="Gus Hahn-Powell", email="gus@parsertongue.org"}
 ]
-description = "Python interface to CLU Processors"
+description = "Transformer-based Python interface to CLU Processors"
 version = "0.1.0"
 dependencies=[
     "Cython",
     "numpy",
-    "torch==2.0.1", 
-    "torchvision==0.15.2", 
-    "beartype==0.15.0",
-    "transformers>=4.26",
+    "torch>=2.1", 
+    "torchvision>=0.16", 
+    "transformers[torch]>=4.30",
+    "accelerate",
     "tokenizers",
     "sentencepiece",
     "datasets",
     "tqdm",
     "scikit-learn",
     "pandas",
+    "protobuf", # for fast tokenizer
     "typing_extensions", # see https://github.com/pydantic/pydantic/issues/5821#issuecomment-1559196859
-    "starlette",
     "pydantic>=2.0.0",
-    "uvicorn",
-    "python-multipart",
-    "func_timeout"
 ]
 # The Python program analysis pipeline does not currently work with Python 3.9
 # or 3.10. This may change in the future.
@@ -34,34 +31,25 @@ license = {text="Apache 2.0"}
 dynamic = ["readme"]
 
 [project.optional-dependencies]
-# Dev dependencies.
-# - pytest: for running tests
-# - black: Autoformatting
-# - pygraphviz: for creating function network visualizations for debugging.
-#   Pygraphviz is often tricky to install, so we reserve it for the dev extras
-#   list.
-# - six: Required by auto-generated Swagger models
-dev = ["pytest", "pytest-cov", "pytest-xdist", "httpx", "black", "mypy", "coverage", "pygraphviz", "six"]
 
 demo = ["notebook"]
 
 gpu = [
-  "nvidia-cublas-cu11==11.10.3.66",
-  "nvidia-cuda-nvrtc-cu11==11.7.99",
-  "nvidia-cuda-runtime-cu11==11.7.99",
-  "nvidia-cudnn-cu11==8.5.0.96"
+  "nvidia-cublas-cu11>=11.10", # .3.66
+  "nvidia-cuda-nvrtc-cu11>=11.7", # .99
+  "nvidia-cuda-runtime-cu11>=11.7", # .99
+  "nvidia-cudnn-cu11>=8.5" # .0.96
 ]
 
 # project documentation generation
 doc = ["mkdocs==1.2.3", "pdoc3==0.10.0", "mkdocs-git-snippet==0.1.1", "mkdocs-git-revision-date-localized-plugin==0.11.1", "mkdocs-git-authors-plugin==0.6.3", "mkdocs-rtd-dropdown==1.0.2", "jinja2<3.1.0"]
 
-core = ["skema[img2mml]", "skema[isa]", "skema[tr]", "skema[metal]", "skema[llms]"]
+core = []
 
-# see skema/img2mml/render_mml/mathpix_annotator
-annotations = ["matplotlib", "notebook"]
+dev = ["pytest", "pytest-cov", "pytest-xdist", "httpx", "black", "mypy", "coverage", "pygraphviz", "six", "cluprocessors[doc]", "cluprocessors[demo]"]
 
 # all extras
-all = ["cluprocessors[core]", "cluprocessors[dev]", "cluprocessors[doc]", "cluprocessors[demo]", "cluprocessors[gpu]"]
+all = ["cluprocessors[core]", "cluprocessors[dev]", "cluprocessors[gpu]"]
 
 [tool.setuptools.package-dir]
 "processors" = "python"
@@ -75,11 +63,11 @@ all = ["cluprocessors[core]", "cluprocessors[dev]", "cluprocessors[doc]", "clupr
 
 [tool.setuptools.dynamic]
 readme = {file = ["README.md"], content-type = "text/markdown"}
+
 # runnables
 [project.scripts]
-#skema-tree-sitter-build-fortran-grammar = "skema.program_analysis.CAST.fortran.build_tree_sitter_fortran:main"
-link_amr = "skema.metal.model_linker.link_amr:main"
-#parquet2json = "skema.text_reading.cosmos_integration:main"
+clu-proc-run-docs = "processors.apps.run_documents:main"
+clu-proc-save-pretrained = "processors.apps.save_pretrained:main"
 
 # Minimum requirements for the build system to execute.
 [build-system]
@@ -92,7 +80,7 @@ markers = [
     "ci_only: marks tests to only be run in CI (deselect with '-m \"not ci_only\"')"
 ]
 minversion = "7.0"
-addopts = "-v --cov=skema --cov-report html:docs/coverage/python"
+addopts = "-v --cov=processors --cov-report html:docs/coverage/python"
 testpaths = [
     "python/tests",
 ]
@@ -121,7 +109,7 @@ extend-exclude = '''
 [tool.mypy]
 
 [[tool.mypy.overrides]]
-module = "clu_trainer"
+module = "processors.trainers.clu_trainer"
 # This is for the line
 # np.argmax(eval_pred.predictions, axis=-1)
 disable_error_code = "call-arg"
@@ -131,7 +119,7 @@ module = "datasets"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "evaluator"
+module = "processors.evaluation"
 # This is for the line
 # pred_labels = torch.argmax(logits, axis=-1)
 disable_error_code = "call-arg"

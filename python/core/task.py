@@ -7,9 +7,11 @@ from processors.core.data_wrangler import DataWrangler
 from dataclasses import dataclass
 from transformers import AutoTokenizer
 from typing import Dict, List
+import pathlib
 
 __all__ = ["LongTaskDef", "ShortTaskDef", "Task"]
 
+# FIXME: for greater consistency, these should be reworked to use the datasets library to construct DS partitions from multiple files
 @dataclass
 class LongTaskDef:
     task_id: int
@@ -30,13 +32,13 @@ class ShortTaskDef:
     dual_mode: bool = False
 
     def to_long_task_def(self, task_id: int, global_base_dir: str, tokenizer: AutoTokenizer) -> LongTaskDef:
-        base_dir = f"{global_base_dir}{self.local_base_dir}"
+        base_dir = (pathlib.Path(global_base_dir) / (self.local_base_dir)).resolve()
         return LongTaskDef(
             task_id,
             self.task_name,
-            f"{base_dir}{self.train_file_name}", 
-            f"{base_dir}{self.dev_file_name}",
-            f"{base_dir}{self.test_file_name}",
+            (pathlib.Path(base_dir) / self.train_file_name).resolve(), 
+            (pathlib.Path(base_dir) / self.dev_file_name).resolve(),
+            (pathlib.Path(base_dir) / self.test_file_name).resolve(),
             tokenizer,
             self.dual_mode
         )
