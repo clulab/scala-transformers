@@ -1,6 +1,7 @@
 package org.clulab.scala_transformers.encoder
 
 import org.clulab.scala_transformers.encoder.math.Mathematics.{MathMatrix, MathColVector, Math}
+import LinearLayer._
 
 /** Implements one linear layer */
 class LinearLayer(
@@ -75,7 +76,15 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = number of tokens in the sentence; cols = hidden state size x 2
-    val concatMatrix = Math.zeros(rows = Math.rows(sentenceHiddenStates), cols = Math.cols(sentenceHiddenStates))
+    val concatMatrix = 
+      if(USE_CONCAT) 
+        Math.zeros(
+          rows = Math.rows(sentenceHiddenStates), 
+          cols = 2 * Math.cols(sentenceHiddenStates))
+      else 
+        Math.zeros(
+          rows = Math.rows(sentenceHiddenStates), 
+          cols = Math.cols(sentenceHiddenStates))
 
     // traverse all modifiers
     for(i <- 0 until Math.rows(sentenceHiddenStates)) {
@@ -86,9 +95,15 @@ class LinearLayer(
         if(rawHeadAbsPos >= 0 && rawHeadAbsPos < Math.rows(sentenceHiddenStates)) rawHeadAbsPos
         else i // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
       val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
+
       // row i in the concatenated matrix contains the embedding of modifier i and its head
-      Math.inplaceMatrixAddition(concatMatrix, i, modHiddenState)
-      Math.inplaceMatrixAddition(concatMatrix, i, headHiddenState)
+      if(USE_CONCAT) {
+        val concatState = Math.vertcat(modHiddenState, headHiddenState)
+        Math.inplaceMatrixAddition(concatMatrix, i, concatState)
+      } else {
+        Math.inplaceMatrixAddition(concatMatrix, i, modHiddenState)
+        Math.inplaceMatrixAddition(concatMatrix, i, headHiddenState)
+      }
     }
     
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
@@ -106,7 +121,11 @@ class LinearLayer(
 
     // this matrix concatenates the hidden states of modifier + corresponding head
     // rows = 1; cols = hidden state size x 2
-    val concatMatrix = Math.zeros(rows = 1, cols = Math.cols(sentenceHiddenStates))
+    val concatMatrix = 
+      if(USE_CONCAT)
+        Math.zeros(rows = 1, cols = 2 * Math.cols(sentenceHiddenStates))
+      else
+        Math.zeros(rows = 1, cols = Math.cols(sentenceHiddenStates))
     // embedding of the modifier
     val modHiddenState = Math.row(sentenceHiddenStates, modifierAbsolutePosition)
 
@@ -117,9 +136,15 @@ class LinearLayer(
       else modifierAbsolutePosition // if the absolute position is invalid (e.g., root node or incorrect prediction) duplicate the mod embedding
 
     val headHiddenState = Math.row(sentenceHiddenStates, headAbsolutePosition)
+
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
-    Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
-    Math.inplaceMatrixAddition(concatMatrix, 0, headHiddenState)
+    if(USE_CONCAT) {
+      val concatState = Math.vertcat(modHiddenState, headHiddenState)
+      Math.inplaceMatrixAddition(concatMatrix, 0, concatState)
+    } else {
+      Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
+      Math.inplaceMatrixAddition(concatMatrix, 0, headHiddenState)
+    }
     concatMatrix
   }
 
@@ -231,6 +256,10 @@ class LinearLayer(
 }
 
 object LinearLayer {
+
+  // If true, it concatenates the embeddings of head and modifier in dual mode
+  // Otherwise, it sums them up
+  val USE_CONCAT = true
 
   def fromFiles(layerDir: String): LinearLayer = {
     val linearLayerLayout = new LinearLayerLayout(layerDir)

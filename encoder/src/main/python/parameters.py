@@ -50,6 +50,10 @@ class Parameters:
     # the encoding used by default for reading and writing files       
     encoding = "UTF-8"
 
+    # use concatenation or sum in dual mode
+    use_concat: bool = True
+
+
     def get_model_name(transformer_name: str) -> str:
         return f"{transformer_name.replace('/', '-')}-mtl"
 
