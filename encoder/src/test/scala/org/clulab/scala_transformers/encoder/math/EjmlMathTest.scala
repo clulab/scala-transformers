@@ -168,7 +168,7 @@ class EjmlMathTest extends Test {
     }
   }
 
-  it should "cat" in {
+  it should "horcat" in {
     val leftVectorValues = Array(1f, 2f, 3f)
     val rightVectorValues = Array(2f, 4f, 6f)
     val leftVector = mkRowVector(leftVectorValues)

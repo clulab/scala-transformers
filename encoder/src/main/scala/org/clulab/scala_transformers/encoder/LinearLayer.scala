@@ -98,7 +98,7 @@ class LinearLayer(
 
       // row i in the concatenated matrix contains the embedding of modifier i and its head
       if(USE_CONCAT) {
-        val concatState = Math.vertcat(modHiddenState, headHiddenState)
+        val concatState = Math.horcat(modHiddenState, headHiddenState)
         Math.inplaceMatrixAddition(concatMatrix, i, concatState)
       } else {
         Math.inplaceMatrixAddition(concatMatrix, i, modHiddenState)
@@ -139,7 +139,7 @@ class LinearLayer(
 
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
     if(USE_CONCAT) {
-      val concatState = Math.vertcat(modHiddenState, headHiddenState)
+      val concatState = Math.horcat(modHiddenState, headHiddenState)
       Math.inplaceMatrixAddition(concatMatrix, 0, concatState)
     } else {
       Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
