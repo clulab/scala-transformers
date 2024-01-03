@@ -139,7 +139,7 @@ class LinearLayer(
 
     //println(s"concatMatrix size ${concatMatrix.rows} x ${concatMatrix.cols}")
     if(USE_CONCAT) {
-      val concatState = Math.vertcat(modHiddenState, headHiddenState)
+      val concatState = Math.horcat(modHiddenState, headHiddenState)
       Math.inplaceMatrixAddition(concatMatrix, 0, concatState)
     } else {
       Math.inplaceMatrixAddition(concatMatrix, 0, modHiddenState)
