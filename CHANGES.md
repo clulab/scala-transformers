@@ -1,3 +1,4 @@
++ **0.7.0** - Use concat by default, but allow build-time change to sum via USE_CONCAT
 + **0.6.2** - Shade additional package internal to EJML
 + **0.6.1** - Shade EJML
 + **0.6.0** - Calculate with EJML rather than Breeze
@@ -8,3 +9,4 @@
 + **0.3.0** - Include some tokenizers as resources and only fall back to network if necessary
 + **0.2.0** - Faster version using JNI
 + **0.1.0** - Initial version using the J4rs library
++ 
