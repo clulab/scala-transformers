@@ -83,6 +83,8 @@ object EjmlMath extends Math {
     colVector.getNumRows
   }
 
+  // This is supposed to put two column vectors on top of each other to make one
+  // longer column vector.  This is done by concatenating rows.
   def vertcat(leftColVector: MathColVector, rightColVector: MathColVector): MathColVector = {
     assert(isColVector(leftColVector))
     assert(isColVector(rightColVector))
@@ -105,6 +107,8 @@ object EjmlMath extends Math {
     result
   }
 
+  // This is supposed to put two row vectors beside each other to make one
+  // longer row vector.  This is done by concatenating columns.
   def horcat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector = {
     assert(isRowVector(leftRowVector))
     assert(isRowVector(rightRowVector))

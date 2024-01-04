@@ -4,8 +4,8 @@ import org.clulab.scala_transformers.encoder.TokenClassifier
 
 object TokenClassifierExampleApp extends App {
   // Choose one of these.
-  val tokenClassifier = TokenClassifier.fromFiles("../microsoft-deberta-v3-base-mtl/avg_export")
-  // val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/microsoft_deberta_v3_base_mtl/avg_export")
+  // val tokenClassifier = TokenClassifier.fromFiles("../microsoft-deberta-v3-base-mtl/avg_export")
+  val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/microsoft_deberta_v3_base_mtl/avg_export")
   // val tokenClassifier = TokenClassifier.fromFiles("../models/google_electra_small_discriminator_mtl/avg_export")
   // val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/google_electra_small_discriminator_mtl/avg_export")
   // val tokenClassifier = TokenClassifier.fromFiles("../models/roberta_base_mtl/avg_export")
