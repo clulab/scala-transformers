@@ -90,8 +90,12 @@ if __name__ == "__main__":
         ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
         ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
         ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
-        ShortTaskDef("Deps Head",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.heads",  "test.heads",  "test.heads"), # dev is included in train
-        ShortTaskDef("Deps Label", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels", "test.labels", "test.labels", dual_mode=True) # dev is included in train
+        #ShortTaskDef("Hexa Term", "deps-wsj/", "train.labels.hexaterms", "dev.labels.hexaterms", "test.labels.hexaterms"),
+        #ShortTaskDef("Hexa NonTerm", "deps-wsj/", "train.labels.hexanonterms", "dev.labels.hexanonterms", "test.labels.hexanonterms"),
+        ShortTaskDef("Hexa Term",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexaterms",  "test.labels.hexaterms",  "test.labels.hexaterms"), # dev is included in train
+        ShortTaskDef("Hexa NonTerm", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexanonterms", "test.labels.hexanonterms", "test.labels.hexanonterms") # dev is included in train
+        #ShortTaskDef("Deps Head",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.heads",  "test.heads",  "test.heads"), # dev is included in train
+        #ShortTaskDef("Deps Label", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels", "test.labels", "test.labels", dual_mode=True) # dev is included in train
         #ShortTaskDef("Deps Head",  "deps-wsj/", "train.heads",  "dev.heads",  "test.heads"),
         #ShortTaskDef("Deps Label", "deps-wsj/", "train.labels", "dev.labels", "test.labels", dual_mode=True)
     ])
