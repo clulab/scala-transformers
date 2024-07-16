@@ -1,3 +1,4 @@
+import org.clulab.sbt.BuildUtils
 import org.clulab.sbt.DependencyFilter
 import org.clulab.sbt.DependencyId
 
@@ -34,11 +35,28 @@ ThisBuild / pomPostProcess := {
 }
 // ThisBuild / publishMavenStyle := true // no longer applicable in sbt 1.6.2+
 ThisBuild / publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+  if (BuildUtils.artifactory) {
+    val realm = "Artifactory Realm"
+    val provider = "https://artifactory.clulab.org/artifactory/"
+    val repository = "sbt-release-local"
+    val details =
+        if (isSnapshot.value) ";build.timestamp=" + new java.util.Date().getTime
+        else ""
+    val location = provider + repository + details
+
+    Some(realm at location)
+  }
+  else {
+    val realm = if (isSnapshot.value) "snapshots" else "releases"
+    val provider = "https://oss.sonatype.org/"
+    val repository = ""
+    val details =
+        if (isSnapshot.value) "content/repositories/snapshots"
+        else "service/local/staging/deploy/maven2"
+    val location = provider + repository + details
+
+    Some(realm at location)
+  }
 }
 ThisBuild / scmInfo := Some(
   ScmInfo(
