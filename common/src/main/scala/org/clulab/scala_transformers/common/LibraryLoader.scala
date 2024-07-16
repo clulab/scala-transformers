@@ -64,19 +64,19 @@ object LibraryLoader {
     val loadedFromPwd = {
       // Try current directory first.
       val location = System.getProperty("user.dir")
-      println("Checking " + location + " for " + resourceName + "...")
+      println(s"Checking $location for $resourceName...")
       loadFromFile(System.getProperty("user.dir"), resourceName)
     }
     val loadedFromHome = !loadedFromPwd && {
       // Try home directory next.
       val location = System.getProperty("user.home")
-      println("Checking " + location + " for " + resourceName + "...")
+      println(s"Checking $location for $resourceName...")
       loadFromFile(location, resourceName);
     }
     val loadedFromResource = !loadedFromPwd && !loadedFromHome && {
       // Attempt to load from the resource via the tmp directory.
       val tempFile = mkTempFile(resourceName)
-      println("Extracting resource " + resourceName + " to " + tempFile.getAbsolutePath + "...")
+      println(s"Extracting resource $resourceName to ${tempFile.getAbsolutePath}...")
 
       // Load the jnilib from the JARed resource file, and write it to the temp file.
       // We've anticipated the name and used it for the resource, but that could go wrong.
