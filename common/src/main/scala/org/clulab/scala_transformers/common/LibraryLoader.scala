@@ -1,6 +1,7 @@
 package org.clulab.scala_transformers.common
 
 import java.io.{FileInputStream, FileOutputStream}
+import scala.sys.process._
 
 object LibraryLoader {
   val label = "[Tokenizer] "
@@ -14,6 +15,12 @@ object LibraryLoader {
 
   def loadFromFile(pathname: String): Boolean = {
     try {
+      // run ldd pathname and capture output
+      if (new File(pathname).exists) {
+        val cmd = s"ldd $pathname"
+        val output = cmd.!!
+        println(output)
+      }
       System.load(pathname)
       println("Loading rust interface from " + pathname + "...")
       true
