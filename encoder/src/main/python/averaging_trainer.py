@@ -83,12 +83,13 @@ class AveragingTrainer(BasicTrainer):
         main_model = self.load_model(checkpoints[0], config, tasks)
         print("Done loading.")
 
-        self.print_some_params(main_model, "before averaging:")
+        # TODO: update print
+        # self.print_some_params(main_model, "before averaging:")
 
         for i in range(1, len(checkpoints)):  # Skip 0, which is the main_model.
             print(f"Loading satellite checkpoint[{i}] {checkpoints[i]}...")
             satellite_model = self.load_model(checkpoints[i], config, tasks)
-            self.print_some_params(satellite_model, "satellite model:")
+            #self.print_some_params(satellite_model, "satellite model:") # TODO
 
             print("Adding its parameter weights to the main model...")
             for key, value in main_model.state_dict().items():
@@ -96,7 +97,7 @@ class AveragingTrainer(BasicTrainer):
                     value.data += satellite_model.state_dict()[key].data.clone()
             print("Done adding")
 
-        self.print_some_params(main_model, "after summing:")
+        # self.print_some_params(main_model, "after summing:") # TODO
         if len(checkpoints) > 1:
             print("Computing average weights...")
             for value in main_model.state_dict().values():
@@ -104,7 +105,7 @@ class AveragingTrainer(BasicTrainer):
                     value.data /= len(checkpoints)
             print("Done computing.")
         
-        self.print_some_params(main_model, "after averaging:")
+        # self.print_some_params(main_model, "after averaging:") # TODO
         print("Saving averaged model...")
         main_model.save_pretrained(path_to_save)
         main_model.export_model(tasks, tokenizer, path_to_export)

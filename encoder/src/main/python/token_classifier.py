@@ -129,8 +129,8 @@ class TokenClassificationModel(PreTrainedModel):
             print("Done loading.")
 
     def export_task(self, task_head, task: Task, task_checkpoint) -> None:
-        numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
-        numpy_bias = task_head.classifier.bias.cpu().detach().numpy()
+        numpy_weights = task_head.classifier[2].weight.cpu().detach().numpy()
+        numpy_bias = task_head.classifier[2].bias.cpu().detach().numpy()
         labels = task.labels
         #print(f"Shape of weights: {numpy_weights.shape}")
         #print(f"Weights are:\n{numpy_weights}")
@@ -220,25 +220,30 @@ class TokenClassificationModel(PreTrainedModel):
 class TokenClassificationHead(nn.Module):
     def __init__(self, hidden_size: int, num_labels: int, task_id, dual_mode: bool=False, dropout_p: float=0.1):
         super().__init__()
-        self.dropout = nn.Dropout(dropout_p)
+        #self.dropout = nn.Dropout(dropout_p)
         self.dual_mode = dual_mode
-        self.classifier = nn.Linear(
-            hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
-            num_labels
-        )
+        self.classifier = nn.Sequential(
+            nn.ReLU(),
+            nn.Dropout(dropout_p),
+            nn.Linear(
+              hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
+              num_labels
+            )
+          )
         self.num_labels = num_labels
         self.task_id = task_id
         self._init_weights()
 
     def _init_weights(self):
-        self.classifier.weight.data.normal_(mean=0.0, std=0.02)
-        # torch.nn.init.xavier_normal_(self.classifier.weight.data)
-        if self.classifier.bias is not None:
-            self.classifier.bias.data.zero_()    
+      print("Nothing to initialize here.")
+  #      self.classifier.weight.data.normal_(mean=0.0, std=0.02)
+  #      torch.nn.init.xavier_normal_(self.classifier.weight.data)
+  #      if self.classifier.bias is not None:
+  #        self.classifier.bias.data.zero_()    
             
     def summarize(self, task_id):
         print(f"Task {self.task_id} with {self.num_labels} labels.")
-        print(f"Dropout is {self.dropout}")
+        #print(f"Dropout is {self.dropout}")
         print(f"Classifier layer is {self.classifier}")
 
     def concatenate(self, sequence_output, head_positions):
@@ -258,8 +263,9 @@ class TokenClassificationHead(nn.Module):
         #print(f"sequence_output size = {sequence_output.size()}")
         sequence_output_for_classification = sequence_output if not self.dual_mode else self.concatenate(sequence_output, head_positions)
 
-        sequence_output_dropout = self.dropout(sequence_output_for_classification)
-        logits = self.classifier(sequence_output_dropout)
+        #sequence_output_dropout = self.dropout(sequence_output_for_classification)
+        #logits = self.classifier(sequence_output_dropout)
+        logits = self.classifier(sequence_output_for_classification)
         
         loss = None
         if labels is not None:
