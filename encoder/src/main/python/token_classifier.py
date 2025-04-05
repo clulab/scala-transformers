@@ -14,6 +14,9 @@ from transformers import AutoConfig, AutoModel, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import TokenClassifierOutput
 from typing import Any, Callable, List, Optional, Union
 
+# This global variable indicates the position of the linear layer in TokenClassificationHead.classifier
+linear_pos = 1
+
 # This class is adapted from: https://towardsdatascience.com/how-to-create-and-train-a-multi-task-transformer-model-18c54a146240
 class TokenClassificationModel(PreTrainedModel):    
     def __init__(self, config: AutoConfig, transformer_name: str) -> None:
@@ -112,9 +115,10 @@ class TokenClassificationModel(PreTrainedModel):
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
         torch.save(self.state_dict(), f"{save_directory}/pytorch_model.bin")
         print("pickle saving done.")
-        #super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
+
+        # some optional debugging prints:
         #for i in range(5):
-        #  key = f"output_heads.{i}.classifier.weight"
+        #  key = f"output_heads.{i}.classifier[linear_pos].weight"
         #  print(f"{key} = {self.state_dict()[key]}")
 
     def from_pretrained(self, pretrained_model_name_or_path: str, *model_args, **kwargs) -> None:
@@ -129,8 +133,8 @@ class TokenClassificationModel(PreTrainedModel):
             print("Done loading.")
 
     def export_task(self, task_head, task: Task, task_checkpoint) -> None:
-        numpy_weights = task_head.classifier.weight.cpu().detach().numpy()
-        numpy_bias = task_head.classifier.bias.cpu().detach().numpy()
+        numpy_weights = task_head.classifier[linear_pos].weight.cpu().detach().numpy()
+        numpy_bias = task_head.classifier[linear_pos].bias.cpu().detach().numpy()
         labels = task.labels
         #print(f"Shape of weights: {numpy_weights.shape}")
         #print(f"Weights are:\n{numpy_weights}")
@@ -220,25 +224,31 @@ class TokenClassificationModel(PreTrainedModel):
 class TokenClassificationHead(nn.Module):
     def __init__(self, hidden_size: int, num_labels: int, task_id, dual_mode: bool=False, dropout_p: float=0.1):
         super().__init__()
-        self.dropout = nn.Dropout(dropout_p)
+        #self.dropout = nn.Dropout(dropout_p)
         self.dual_mode = dual_mode
-        self.classifier = nn.Linear(
-            hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
-            num_labels
-        )
+        # make sure to adjust linear_pos if the position of Linear here changes!
+        self.classifier = nn.Sequential(
+            # nn.ReLU(), # it works better wo/ a nonlinearity here
+            nn.Dropout(dropout_p),
+            nn.Linear(
+              hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
+              num_labels
+            )
+          )
         self.num_labels = num_labels
         self.task_id = task_id
         self._init_weights()
 
     def _init_weights(self):
-        self.classifier.weight.data.normal_(mean=0.0, std=0.02)
-        # torch.nn.init.xavier_normal_(self.classifier.weight.data)
-        if self.classifier.bias is not None:
-            self.classifier.bias.data.zero_()    
+      print("Nothing to initialize here.")
+      self.classifier[linear_pos].weight.data.normal_(mean=0.0, std=0.02)
+      #torch.nn.init.xavier_normal_(self.classifier[linear_pos].weight.data)
+      if self.classifier[linear_pos].bias is not None:
+        self.classifier[linear_pos].bias.data.zero_()    
             
     def summarize(self, task_id):
         print(f"Task {self.task_id} with {self.num_labels} labels.")
-        print(f"Dropout is {self.dropout}")
+        #print(f"Dropout is {self.dropout}")
         print(f"Classifier layer is {self.classifier}")
 
     def concatenate(self, sequence_output, head_positions):
@@ -250,16 +260,12 @@ class TokenClassificationHead(nn.Module):
         # Concatenate the hidden states from modifier + head.
         modifier_head_states = torch.cat([sequence_output, head_states], dim=2) if Parameters.use_concat else torch.add(sequence_output, head_states) 
         #print(f"modifier_head_states.size = {modifier_head_states.size()}")
-        #print("EXIT")
-        #exit(1)
         return modifier_head_states
 
     def forward(self, sequence_output, pooled_output, head_positions, labels=None, attention_mask=None, **kwargs):
         #print(f"sequence_output size = {sequence_output.size()}")
         sequence_output_for_classification = sequence_output if not self.dual_mode else self.concatenate(sequence_output, head_positions)
-
-        sequence_output_dropout = self.dropout(sequence_output_for_classification)
-        logits = self.classifier(sequence_output_dropout)
+        logits = self.classifier(sequence_output_for_classification)
         
         loss = None
         if labels is not None:
