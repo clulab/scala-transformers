@@ -1,12 +1,13 @@
 package org.clulab.scala_transformers.encoder
 
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
+import org.clulab.scala_transformers.encoder.math.Mathematics
 import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix}
 
 import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
 
-class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession) {
+class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession, nonLin: Option[NonLinearity] = None) {
   /**
     * Runs the inference using a transformer encoder over a batch of sentences
     *
@@ -19,6 +20,19 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
 
     val result: OrtSession.Result = encoderSession.run(inputs)
     val outputs = Math.fromResult(result)
+
+    if(nonLin.isDefined) {
+      for (matrix <- outputs) {
+        for (i <- 0 until Math.rows(matrix)) {
+          val row = Math.row(matrix, i)
+          for (j <- 0 until Math.cols(matrix)) {
+            val orig = Math.get(row, j)
+            Math.set(row, j, nonLin.get.compute(orig))
+          }
+        }
+      }
+    }
+
     outputs
   }
 
@@ -36,8 +50,10 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
 object Encoder {
   val ortEnvironment = OrtEnvironment.getEnvironment
 
+  // val nonLinearity = Some(new ReLU())
+
   protected def fromSession(ortSession: OrtSession): Encoder =
-      new Encoder(ortEnvironment, ortSession)
+      new Encoder(ortEnvironment, ortSession, None) // nonLinearity // ms: skipping the nonlinearity is better
 
   protected def ortSessionFromFile(fileName: String): OrtSession =
       ortEnvironment.createSession(fileName, new OrtSession.SessionOptions)

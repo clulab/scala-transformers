@@ -132,6 +132,11 @@ object EjmlMath extends Math {
     rowVector.get(index)
   }
 
+  def set(rowVector: MathRowVector, index: Int, value: MathValue): Unit = {
+    assert(isRowVector(rowVector))
+    rowVector.set(index, value)
+  }
+
   def mkMatrixFromRows(values: Array[Array[MathValue]]): MathRowMatrix = {
     new FMatrixRMaj(values)
   }

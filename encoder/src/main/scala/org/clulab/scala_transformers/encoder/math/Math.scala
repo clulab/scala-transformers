@@ -23,6 +23,7 @@ trait Math {
   def horcat(leftRowVector: MathRowVector, rightRowVector: MathRowVector): MathRowVector
   def toArray(rowVector: MathRowVector): Array[MathValue]
   def get(rowVector: MathRowVector, index: Int): MathValue
+  def set(rowVector: MathRowVector, index: Int, value: MathValue): Unit
   def mkMatrixFromRows(values: Array[Array[MathValue]]): MathRowMatrix
   // For this, the array is specified in column-major order,
   // but it should be converted to the normal representation.
