@@ -6,7 +6,7 @@ trait NonLinearity {
   def compute(input: MathValue): MathValue
 }
 
-class ReLU extends NonLinearity {
+object ReLU extends NonLinearity {
   override def compute(input: MathValue): MathValue = {
     scala.math.max(0, input)
   }
