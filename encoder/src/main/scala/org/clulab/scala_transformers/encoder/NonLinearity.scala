@@ -1,8 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.encoder.math.EjmlMath.MathValue
-
-import java.lang
+import org.clulab.scala_transformers.encoder.math.Mathematics.MathValue
 
 trait NonLinearity {
   def compute(input: MathValue): MathValue
@@ -10,6 +8,6 @@ trait NonLinearity {
 
 class ReLU extends NonLinearity {
   override def compute(input: MathValue): MathValue = {
-    lang.Float.max(0, input)
+    scala.math.max(0, input)
   }
 }

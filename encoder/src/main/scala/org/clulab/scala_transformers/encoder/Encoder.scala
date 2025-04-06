@@ -7,7 +7,7 @@ import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix}
 import java.io.DataInputStream
 import java.util.{HashMap => JHashMap}
 
-class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession, nonLin: Option[NonLinearity] = None) {
+class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSession, nonLinOpt: Option[NonLinearity] = None) {
   /**
     * Runs the inference using a transformer encoder over a batch of sentences
     *
@@ -21,18 +21,11 @@ class Encoder(val encoderEnvironment: OrtEnvironment, val encoderSession: OrtSes
     val result: OrtSession.Result = encoderSession.run(inputs)
     val outputs = Math.fromResult(result)
 
-    if(nonLin.isDefined) {
-      for (matrix <- outputs) {
-        for (i <- 0 until Math.rows(matrix)) {
-          val row = Math.row(matrix, i)
-          for (j <- 0 until Math.cols(matrix)) {
-            val orig = Math.get(row, j)
-            Math.set(row, j, nonLin.get.compute(orig))
-          }
-        }
+    nonLinOpt.foreach { nonLin =>
+      outputs.foreach { matrix =>
+        Math.map(matrix, nonLin.compute)
       }
     }
-
     outputs
   }
 

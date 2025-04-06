@@ -100,6 +100,17 @@ object EjmlMath extends Math {
     new FMatrixRMaj(rows, cols)
   }
 
+  override def map(matrix: MathRowMatrix, f: MathValue => MathValue): Unit = {
+    val iterator = matrix.iterator(true, 0, 0, matrix.getNumRows, matrix.getNumCols)
+
+    while (iterator.hasNext) {
+      val oldValue = iterator.next()
+      val newValue = f(oldValue)
+
+      iterator.set(newValue)
+    }
+  }
+
   def row(matrix: MathRowMatrix, index: Int): MathRowVector = {
     val result = SimpleMatrix.wrap(matrix).rows(index, index + 1).getMatrix[FMatrixRMaj]
 

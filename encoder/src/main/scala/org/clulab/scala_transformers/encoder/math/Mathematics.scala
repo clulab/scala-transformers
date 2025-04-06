@@ -7,6 +7,7 @@ object Mathematics {
   // val Math = CommonsMath
   // val Math = CluMath
 
+  type MathValue = Math.MathValue
   type MathMatrix = Math.MathRowMatrix
   type MathColVector = Math.MathColVector
   type MathRowVector = Math.MathRowVector
