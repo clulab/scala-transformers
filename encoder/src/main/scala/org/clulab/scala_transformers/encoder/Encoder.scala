@@ -1,7 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
 import ai.onnxruntime.{OnnxTensor, OrtEnvironment, OrtSession}
-import org.clulab.scala_transformers.encoder.math.Mathematics
 import org.clulab.scala_transformers.encoder.math.Mathematics.{Math, MathMatrix}
 
 import java.io.DataInputStream
