@@ -1,4 +1,4 @@
-name := "scala-transformers-tokenizer"
+name := "maven-scala-transformers-tokenizer"
 description := "Provides a Scala interface to huggingface tokenizers written in Rust"
 
 resolvers ++= Seq(

@@ -11,7 +11,7 @@ val scala3   = scala31
 ThisBuild / crossScalaVersions := Seq(scala212, scala211, scala213, scala3)
 ThisBuild / scalaVersion := scala212
 
-name := "scala-transformers"
+name := "maven-scala-transformers"
 
 lazy val root = (project in file("."))
   .aggregate(apps, common, tokenizer, encoder)

@@ -1,4 +1,4 @@
-name := "scala-transformers-apps"
+name := "maven-scala-transformers-apps"
 description := "Houses apps, particularly those having extra library dependencies"
 
 resolvers ++= Seq(

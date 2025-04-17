@@ -1,4 +1,4 @@
-name := "scala-transformers-common"
+name := "maven-scala-transformers-common"
 description := "Supports subprojects with common code"
 
 resolvers ++= Seq(

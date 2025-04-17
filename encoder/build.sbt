@@ -1,4 +1,4 @@
-name := "scala-transformers-encoder"
+name := "maven-scala-transformers-encoder"
 description := "Provides a Scala interface to huggingface encoders"
 
 resolvers ++= Seq(
