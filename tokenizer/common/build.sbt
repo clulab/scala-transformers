@@ -1,4 +1,4 @@
-name := "scala-transformers-tokenizer"
+name := "scala-transformers-tokenizer-common"
 description := "Provides a Scala interface to huggingface tokenizers written in Rust"
 
 resolvers ++= Seq(

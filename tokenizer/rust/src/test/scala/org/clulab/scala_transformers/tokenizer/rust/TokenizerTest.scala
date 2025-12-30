@@ -1,5 +1,6 @@
-package org.clulab.scala_transformers.tokenizer
+package org.clulab.scala_transformers.tokenizer.rust
 
+import org.clulab.scala_transformers.tokenizer.LongTokenization
 import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.transformers.test.Test
 

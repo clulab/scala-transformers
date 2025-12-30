@@ -14,7 +14,7 @@ ThisBuild / scalaVersion := scala212
 name := "scala-transformers"
 
 lazy val root = (project in file("."))
-  .aggregate(apps, common, tokenizer, encoder)
+  .aggregate(apps, common, commonTokenizer, rustTokenizer, encoder)
   .settings(
     publish / skip := true
   )
@@ -27,8 +27,19 @@ lazy val apps = project
 
 lazy val common = project
 
-lazy val tokenizer = project
-  .dependsOn(common % "compile -> compile; test -> test")
+lazy val commonTokenizer = (project in file("tokenizer/common"))
+
+lazy val rustTokenizer = (project in file("tokenizer/rust"))
+  .dependsOn(
+    commonTokenizer % "compile -> compile; test -> test",
+    common % "compile -> compile; test -> test"
+  )
+
+//lazy val scalaTokenizer = (project in file("tokenizer/scala"))
+//  .dependsOn(
+//    commonTokenizer % "compile -> compile; test -> test",
+//    common % "compile -> compile; test -> test"
+//  )
 
 lazy val encoder = project
-  .dependsOn(tokenizer % "compile -> compile; test -> test")
+  .dependsOn(rustTokenizer % "compile -> compile; test -> test")

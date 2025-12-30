@@ -1,4 +1,4 @@
-package org.clulab.scala_transformers.tokenizer
+package org.clulab.scala_transformers.tokenizer.rust
 
 import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
 import org.clulab.transformers.test.Test
@@ -25,7 +25,7 @@ class SentencesTest extends Test {
     it should s"reproduce results for $tokenizerName on $kind" in {
       val addPrefixSpace = tokenizerName.contains("roberta")
       val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
-      val inFileName = s"../tokenizer/src/test/resources/$kind/$modelName.txt"
+      val inFileName = s"../rust/src/test/resources/$kind/$modelName.txt"
       val source = Source.fromFile(inFileName)(Codec.UTF8)
 
       try {

@@ -1,7 +1,6 @@
 package org.clulab.scala_transformers.encoder
 
-import org.clulab.scala_transformers.tokenizer.Tokenizer
-import org.clulab.scala_transformers.tokenizer.LongTokenization
+import org.clulab.scala_transformers.tokenizer.{LongTokenization, Tokenizing}
 
 /** 
  * Implements the inference step of a token classifier for multi-task learning
@@ -26,7 +25,7 @@ class TokenClassifier(
   val encoder: Encoder, 
   val maxTokens: Int, 
   val tasks: Array[LinearLayer],
-  val tokenizer: Tokenizer
+  val tokenizer: Tokenizing
   ) {
 
   /**

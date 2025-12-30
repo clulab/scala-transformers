@@ -1,6 +1,7 @@
 package org.clulab.scala_transformers.encoder
 
 import org.clulab.scala_transformers.tokenizer.jni.ScalaJniTokenizer
+//import org.clulab.scala_transformers.tokenizer.json.MicrosoftDebertaV3BaseTokenizer
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.File
@@ -45,6 +46,7 @@ abstract class TokenClassifierFactory(val tokenClassifierLayout: TokenClassifier
     tasks: Array[LinearLayer]): TokenClassifier = {
 
     val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
+//    val tokenizer = new MicrosoftDebertaV3BaseTokenizer(tokenizerName, addPrefixSpace)
 
     new TokenClassifier(encoder, encoderMaxTokens, tasks, tokenizer)
   }
