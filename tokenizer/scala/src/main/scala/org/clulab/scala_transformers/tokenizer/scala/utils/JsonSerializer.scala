@@ -21,12 +21,10 @@ trait JsonDeserializer[T, J <: JValue] {
       case _ => None
     }
   }
-}
 
-trait JsonIndexedDeserializer[T, J <: JValue] {
-  implicit val formats: DefaultFormats.type = DefaultFormats
+  def mkDeserializationError(anyRef: AnyRef, name: String, value: String): RuntimeException = {
+    val className = anyRef.getClass.getSimpleName
 
-  def deserialize(index: Int, jValue: J): T = deserializeOpt(index, jValue).get
-
-  def deserializeOpt(index: Int, jValue: J): Option[T]
+    throw new RuntimeException(s"""The $className could not deal with a "$name" of "$value".""")
+  }
 }

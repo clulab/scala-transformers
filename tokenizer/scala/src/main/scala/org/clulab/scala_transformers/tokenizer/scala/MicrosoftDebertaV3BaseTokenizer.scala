@@ -3,7 +3,7 @@ package org.clulab.scala_transformers.tokenizer.scala
 import org.clulab.scala_transformers.tokenizer.scala.utils.JsonDeserializer
 import org.clulab.scala_transformers.tokenizer.{Tokenization, Tokenizing}
 import org.json4s.jackson.JsonMethods
-import org.json4s.{DefaultFormats, JArray, JObject, JValue}
+import org.json4s.{DefaultFormats, JArray, JObject}
 
 import scala.io.{Codec, Source}
 import scala.util.Using
@@ -104,6 +104,42 @@ object Sequence extends JsonDeserializer[Sequence, JObject] {
   }
 }
 
+object Single extends JsonDeserializer[SingleItem, JObject] {
+
+  def deserialize(jObject: JObject): SingleItem = {
+    val specialTokenOpt = (jObject \ "SpecialToken").extractOpt[JObject].map { jObject =>
+      SpecialToken.deserialize(jObject)
+    }
+    val sequenceOpt = (jObject \ "Sequence").extractOpt[JObject].map { jObject =>
+      Sequence.deserialize(jObject)
+    }
+
+    (specialTokenOpt, sequenceOpt) match {
+      case (Some(specialToken), None) => specialToken
+      case (None, Some(sequence)) => sequence
+      case _ => throw new RuntimeException("Could not deserialize the Single.")
+    }
+  }
+}
+
+object Pair extends JsonDeserializer[PairItem, JObject] {
+
+  def deserialize(jObject: JObject): PairItem = {
+    val specialTokenOpt = (jObject \ "SpecialToken").extractOpt[JObject].map { jObject =>
+      SpecialToken.deserialize(jObject)
+    }
+    val sequenceOpt = (jObject \ "Sequence").extractOpt[JObject].map { jObject =>
+      Sequence.deserialize(jObject)
+    }
+
+    (specialTokenOpt, sequenceOpt) match {
+      case (Some(specialToken), None) => specialToken
+      case (None, Some(sequence)) => sequence
+      case _ => throw new RuntimeException("Could not deserialize the Pair.")
+    }
+  }
+}
+
 class PostProcessor(val single: Seq[SingleItem], val pair: Seq[PairItem], val specialTokens: Map[String, SpecialTokens]) {
   val typ = PostProcessor.typ
 }
@@ -114,34 +150,10 @@ object PostProcessor extends JsonDeserializer[PostProcessor, JObject] {
   def deserialize(jObject: JObject): PostProcessor = {
     val typ = (jObject \ "type").extract[String]
     val single = (jObject \ "single").extract[JArray].arr.map { jValue =>
-      val jObject = jValue.extract[JObject]
-      val specialTokenOpt = (jObject \ "SpecialToken").extractOpt[JObject].map { jObject =>
-        SpecialToken.deserialize(jObject)
-      }
-      val sequenceOpt = (jObject \ "Sequence").extractOpt[JObject].map { jObject =>
-        Sequence.deserialize(jObject)
-      }
-
-      (specialTokenOpt, sequenceOpt) match {
-        case (Some(specialToken), None) => specialToken
-        case (None, Some(sequence)) => sequence
-        case _ => throw new RuntimeException("Could not deserialize the PostProcessor.")
-      }
+      Single.deserialize(jValue.extract[JObject])
     }
     val pair = (jObject \ "pair").extract[JArray].arr.map { jValue =>
-      val jObject = jValue.extract[JObject]
-      val specialTokenOpt = (jObject \ "SpecialToken").extractOpt[JObject].map { jObject =>
-        SpecialToken.deserialize(jObject)
-      }
-      val sequenceOpt = (jObject \ "Sequence").extractOpt[JObject].map { jObject =>
-        Sequence.deserialize(jObject)
-      }
-
-      (specialTokenOpt, sequenceOpt) match {
-        case (Some(specialToken), None) => specialToken
-        case (None, Some(sequence)) => sequence
-        case _ => throw new RuntimeException("Could not deserialize the PostProcessor.")
-      }
+      Pair.deserialize(jValue.extract[JObject])
     }
     val specialTokens = (jObject \ "special_tokens").extract[JObject].obj.map { jField =>
       val key = jField._1
@@ -190,7 +202,7 @@ object PreTokenizerGroup extends JsonDeserializer[PreTokenizerGroup, JObject] {
 
       typ match {
         case Metaspace.typ => Metaspace.deserialize(jObject)
-        case _ => throw new RuntimeException("Could not deserialize PreTokenizerGroup.")
+        case _ => throw mkDeserializationError(this, "type", typ)
       }
     }
     require(typ == this.typ)
@@ -278,7 +290,7 @@ object Normalizer extends JsonDeserializer[Normalizer, JObject] {
         case Strip.typ => Strip.deserialize(jObject)
         case Replace.typ => Replace.deserialize(jObject)
         case Precompiled.typ => Precompiled.deserialize(jObject)
-        case _ => throw new RuntimeException("Could not deserialize Normalizer.")
+        case _ => throw mkDeserializationError(this, "type", typ)
       }
     }
 
@@ -352,7 +364,9 @@ object JsonTokenizer extends JsonDeserializer[JsonTokenizer, JObject] {
 class MicrosoftDebertaV3BaseTokenizer(val name: String, val jsonTokenizer: JsonTokenizer) extends ScalaTokenizer(name) {
 
   // Get the name of the tokenizer.json file to read in.
-  override def tokenize(words: Array[String]): Tokenization = null // jsonTokenizer.tokenize(words)
+  override def tokenize(words: Array[String]): Tokenization = {
+    ???
+  } // jsonTokenizer.tokenize(words)
 }
 
 object MicrosoftDebertaV3BaseTokenizer extends ScalaTokenizerConstructor {

@@ -10,6 +10,8 @@ libraryDependencies ++= {
   val json4sVersion = "3.5.5"
 
   Seq(
+    // Collections
+    "org.scala-lang.modules" %% "scala-collection-compat" % "2.11.0",
     // JSON
     "org.json4s"             %% "json4s-core"             % json4sVersion,
     "org.json4s"             %% "json4s-jackson"          % json4sVersion
