@@ -5,12 +5,12 @@ import org.clulab.scala_transformers.tokenizer.Tokenizing
 import scala.collection.mutable.{HashMap => MutableHashMap}
 import scala.ref.WeakReference
 
-abstract class ScalaTokenizer(name: String) extends Tokenizing {
-  def resourceName = s"/org/clulab/scala_transformers/tokenizer/scala/$name/tokenizer.json"
-}
+abstract class ScalaTokenizer(name: String) extends Tokenizing
 
 abstract class ScalaTokenizerConstructor {
   def construct(): ScalaTokenizer
+
+  def resourceName(name: String) = s"org/clulab/scala_transformers/tokenizer/scala/$name/tokenizer.json"
 }
 
 object UnknownTokenizer extends ScalaTokenizerConstructor {

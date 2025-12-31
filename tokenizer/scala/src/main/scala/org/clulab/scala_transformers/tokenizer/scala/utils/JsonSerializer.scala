@@ -11,9 +11,16 @@ trait JsonSerializer[T <: JValue] {
 trait JsonDeserializer[T, J <: JValue] {
   implicit val formats: DefaultFormats.type = DefaultFormats
 
-  def deserialize(jValue: J): T = deserializeOpt(jValue).get
+  def deserialize(jValue: J): T
 
-  def deserializeOpt(jValue: J): Option[T]
+  def deserializeOpt(jValue: J): Option[T] = {
+    try {
+      Some(deserialize(jValue))
+    }
+    catch {
+      case _ => None
+    }
+  }
 }
 
 trait JsonIndexedDeserializer[T, J <: JValue] {
