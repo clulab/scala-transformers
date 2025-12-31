@@ -1,7 +1,6 @@
-package org.clulab.scala_transformers.tokenizer.scala
+package org.clulab.scala_transformers.tokenizer.scala.tokenizers
 
 import org.clulab.scala_transformers.tokenizer.Tokenizing
-
 import scala.collection.mutable.{HashMap => MutableHashMap}
 import scala.ref.WeakReference
 

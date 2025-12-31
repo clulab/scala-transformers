@@ -1,5 +1,6 @@
 package org.clulab.scala_transformers.tokenizer.scala
 
+import org.clulab.scala_transformers.tokenizer.scala.tokenizers.ScalaTokenizer
 import org.clulab.transformers.test.Test
 
 import java.io.File

@@ -18,13 +18,20 @@ trait JsonDeserializer[T, J <: JValue] {
       Some(deserialize(jValue))
     }
     catch {
-      case _ => None
+      case _: Throwable => None
     }
   }
 
-  def mkDeserializationError(anyRef: AnyRef, name: String, value: String): RuntimeException = {
+  def mkTypeError(anyRef: AnyRef, value: String): RuntimeException = {
     val className = anyRef.getClass.getSimpleName
 
-    throw new RuntimeException(s"""The $className could not deal with a "$name" of "$value".""")
+    new RuntimeException(s"""The $className could not deal with a "type" of "$value".""")
+  }
+
+  def mkKeyError(anyRef: AnyRef, keys: String*): RuntimeException = {
+    val className = anyRef.getClass.getSimpleName
+    val keyStrings = keys.mkString("\"", "\", \"", "\"")
+
+    new RuntimeException(s"""The $className could not find an entry for any of $keyStrings.""")
   }
 }
