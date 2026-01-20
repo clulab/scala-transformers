@@ -41,8 +41,15 @@ lazy val scalaTokenizer = (project in file("tokenizer/scala"))
     common % "compile -> compile; test -> test"
   )
 
-lazy val encoder = project
+lazy val testTokenizer = (project in file("tokenizer/test"))
   .dependsOn(
     rustTokenizer % "compile -> compile; test -> test",
     scalaTokenizer % "compile -> compile; test -> test"
+  )
+
+lazy val encoder = project
+  .dependsOn(
+    rustTokenizer % "compile -> compile; test -> test",
+    scalaTokenizer % "compile -> compile; test -> test",
+    testTokenizer % "compile -> compile; test -> test"
   )
