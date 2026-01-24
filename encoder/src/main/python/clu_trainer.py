@@ -94,6 +94,7 @@ if __name__ == "__main__":
         #ShortTaskDef("Hexa NonTerm", "deps-wsj/", "train.labels.hexanonterms", "dev.labels.hexanonterms", "test.labels.hexanonterms"),
         ShortTaskDef("Hexa Term",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexaterms",  "test.labels.hexaterms",  "test.labels.hexaterms"), # dev is included in train
         ShortTaskDef("Hexa NonTerm", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexanonterms", "test.labels.hexanonterms", "test.labels.hexanonterms"), # dev is included in train
-        ShortTaskDef("GGP", "bc2geneMention/", "train.txt", "dev.txt", "dev.txt")
+        # ShortTaskDef("GGP", "bc2geneMention/", "train.txt", "dev.txt", "dev.txt") # from the BC2 Gene Mention task
+        ShortTaskDef("PMC", "europepmc-corpus/", "train-dev.tsv.post", "test.tsv.post", "test.tsv.post")
     ])
     CluTrainer(tokenizer).train(tasks)
