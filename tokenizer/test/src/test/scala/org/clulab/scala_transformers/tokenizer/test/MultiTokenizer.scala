@@ -20,7 +20,8 @@ class ExternalTokenizer(pythonProcess: PythonProcess) extends Tokenizing {
 class MultiTokenizer(name: String, addPrefixSpace: Boolean = false) extends Tokenizing {
 //  println(new File(".").getAbsolutePath)
   val pythonCwd = "./"
-  val pythonCmd = ".venv/Scripts/python.exe"
+//  val pythonCmd = ".venv/Scripts/python.exe"
+  val pythonCmd = ".venv/bin/python3"
   val pythonDir = "tokenizer/test/src/test/python/"
   val pythonFile = "tokeneyes.py"
 

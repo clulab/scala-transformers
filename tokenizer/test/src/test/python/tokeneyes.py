@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(name, add_prefix_space=add_prefix_spac
 
 def printTokenization(tokenization):
   input_ids = tokenization["input_ids"]
-  word_ids = [word_id if word_id != None else -1 for word_id in tokenization.word_ids()]
+  word_ids = [word_id if word_id != None else -1 for word_id in tokenization.word_ids()] if use_fast else [-1 for _ in input_ids]
   tokens = tokenizer.convert_ids_to_tokens(input_ids)
   print("4")
   print(" ".join([str(input_id) for input_id in input_ids]))
