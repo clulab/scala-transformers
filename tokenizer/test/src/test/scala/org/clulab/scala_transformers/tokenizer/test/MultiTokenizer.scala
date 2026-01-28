@@ -34,6 +34,7 @@ class MultiTokenizer(name: String, addPrefixSpace: Boolean = false) extends Toke
 
     new ExternalTokenizer(pythonProcess)
   }
+  // This is the fast one with word_ids.
   val rustThruPythonTokenizer = {
     val pythonProcess = new PythonProcess(
       pythonCwd, pythonCmd,
@@ -46,21 +47,26 @@ class MultiTokenizer(name: String, addPrefixSpace: Boolean = false) extends Toke
   // val scalaTokenizer = null
   val rustThruScalaTokenizer  = ScalaJniTokenizer(name, addPrefixSpace)
   val tokenizers = Seq(
-    /*pythonTokenizer,*/ rustThruPythonTokenizer, rustThruScalaTokenizer
+    rustThruPythonTokenizer, pythonTokenizer, rustThruScalaTokenizer
   )
 
   override def tokenize(words: Array[String]): Tokenization = {
     val tokenizations = tokenizers.map(_.tokenize(words))
 
-    tokenizations.tail.foreach { tokenization =>
+    tokenizations.tail.zipWithIndex.foreach { case (tokenization, index) =>
       tokenizations.head.tokenIds.zip(tokenization.tokenIds).foreach { case (left, right) =>
-        left == right
+        assert(left == right)
       }
-      tokenizations.head.wordIds.zip(tokenization.wordIds).foreach { case (left, right) =>
-        left == right
-      }
+      if (index == 0) // If it is not the pythonTokenizer.
+        tokenizations.head.wordIds.zip(tokenization.wordIds).foreach { case (_, right) =>
+          assert(right == -1)
+        }
+      else
+        tokenizations.head.wordIds.zip(tokenization.wordIds).foreach { case (left, right) =>
+          assert(left == right)
+        }
       tokenizations.head.tokens.zip(tokenization.tokens).foreach { case (left, right) =>
-        left == right
+        assert(left == right)
       }
     }
 
