@@ -1,0 +1,13 @@
+[package]
+name = "tokeneyes"
+version = "0.1.0"
+authors = ["Keith <keith@keithalcock.com>"]
+edition = "2018"
+
+[[bin]]
+name = "keith"
+path = "src/tokeneyes.rs"
+
+[dependencies]
+tokenizers = "0.13.3"
+
