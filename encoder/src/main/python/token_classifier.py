@@ -28,7 +28,7 @@ class TokenClassificationModel(PreTrainedModel):
 
     def add_heads(self, tasks: List[Task]) -> "TokenClassificationModel":
         for task in tasks:
-            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, self.config.hidden_dropout_prob)
+            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, 0.0) # TODO: dropout disabled #self.config.hidden_dropout_prob)
             # ModuleDict requires keys to be strings
             self.output_heads[str(task.task_id)] = head
         # initialize the weights in all heads
@@ -109,7 +109,13 @@ class TokenClassificationModel(PreTrainedModel):
     ) -> None:
         print(f"Saving model to folder {save_directory}")
         print("super.save_pretrained started...")
-        super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
+        super().save_pretrained(
+                save_directory = save_directory, 
+                is_main_process = is_main_process, 
+                state_dict = state_dict, 
+                push_to_hub = False, 
+                max_shard_size = max_shard_size, 
+                **kwargs)
         print("super.save_pretrained done.")
         print("Saving pickle of complete model...")
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html

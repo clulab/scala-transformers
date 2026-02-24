@@ -6,7 +6,7 @@ import pandas as pd
 from file_utils import FileUtils
 from names import Names
 from parameters import Parameters
-from tqdm.notebook import tqdm
+#from tqdm.notebook import tqdm
 from transformers import AutoTokenizer
 from typing import Any, Dict, List, Union
 
@@ -161,7 +161,7 @@ class DataWrangler:
         
         with FileUtils.for_reading(filename) as file:
             sentence = Sentence()
-            for line in tqdm(file):
+            for line in file:
                 tokens = line.strip().split()
                 if tokens:
                     word = tokens[0] # tokens

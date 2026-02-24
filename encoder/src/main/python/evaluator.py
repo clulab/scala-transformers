@@ -9,7 +9,7 @@ from parameters import Parameters
 from task import Task
 from token_classifier import TokenClassificationModel
 from torch import IntTensor, Tensor
-from tqdm.notebook import tqdm
+#from tqdm.notebook import tqdm
 from typing import Dict, List
 
 class Evaluator:
@@ -35,7 +35,7 @@ class Evaluator:
         predictions = []
         golds = []
         with torch.no_grad():
-            for _, data in tqdm(enumerate(dataset, 0)):
+            for _, data in enumerate(dataset, 0):
                 predict_dict = self.data_to_tensor(data)
                 #print("INPUT:")
                 #print(predict_dict)
