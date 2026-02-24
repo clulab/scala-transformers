@@ -238,7 +238,8 @@ class TokenClassificationHead(nn.Module):
             nn.Dropout(dropout_p),
             nn.Linear(
               hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
-              num_labels
+              num_labels,
+              dtype=torch.float16
             )
           )
         self.num_labels = num_labels
