@@ -21,14 +21,14 @@ linear_pos = 1
 class TokenClassificationModel(PreTrainedModel):    
     def __init__(self, config: AutoConfig, transformer_name: str) -> None:
         super().__init__(config)
-        self.encoder: AutoModel = AutoModel.from_pretrained(transformer_name, config = config) 
+        self.encoder: AutoModel = AutoModel.from_pretrained(transformer_name, torch_dtype=torch.float, config = config) # need the float type here because some transformers default to fp16
         self.config: AutoConfig = config
         self.output_heads: nn.ModuleDict = nn.ModuleDict() # these are initialized in add_heads
         self.training_mode: bool = True
 
     def add_heads(self, tasks: List[Task]) -> "TokenClassificationModel":
         for task in tasks:
-            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, 0.0) # TODO: dropout disabled #self.config.hidden_dropout_prob)
+            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, 0.1) # TODO: dropout disabled #self.config.hidden_dropout_prob) Mihai will fix later
             # ModuleDict requires keys to be strings
             self.output_heads[str(task.task_id)] = head
         # initialize the weights in all heads
@@ -203,7 +203,8 @@ class TokenClassificationModel(PreTrainedModel):
             do_constant_folding=True,
             input_names = input_names,
             output_names = output_names,
-            opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
+            # opset 13 not compatible with newer transformers
+            # opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
             dynamic_axes = {"token_ids": {1: "sent length"}}
         )
 
@@ -239,7 +240,7 @@ class TokenClassificationHead(nn.Module):
             nn.Linear(
               hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
               num_labels,
-              dtype=torch.float16
+              dtype=torch.float # need dtype here because some transformers prefer fp16, which we don't want (just to be extra safe here)
             )
           )
         self.num_labels = num_labels

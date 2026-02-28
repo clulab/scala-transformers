@@ -8,8 +8,8 @@ resolvers ++= Seq(
 libraryDependencies ++= {
   Seq(
     // Models version 0.1.0 work when LinearLayer.USE_CONCAT == true.
-    "org.clulab"     % "deberta-onnx-model" % "0.1.0",
-    "org.clulab"     % "roberta-onnx-model" % "0.1.0",
+    //"org.clulab"     % "deberta-onnx-model" % "0.1.0",
+    //"org.clulab"     % "roberta-onnx-model" % "0.1.0",
 
     // Models version 0.2.0 work when LinearLayer.USE_CONCAT == false.
     // Models of different versions cannot be combined into a single project
