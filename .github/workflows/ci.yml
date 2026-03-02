@@ -18,10 +18,10 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: Setup sbt
-      uses: sbt/setup-sbt@v1
-      with:
-        sbt-version: 1.7.1
+#    - name: Setup sbt
+#      uses: sbt/setup-sbt@v1
+#      with:
+#        sbt-version: 1.7.1
 
     - name: Run tests
       run: sbt ++test
