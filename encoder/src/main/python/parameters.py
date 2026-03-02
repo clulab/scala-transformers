@@ -46,6 +46,7 @@ class Parameters:
     # transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
     # transformer_name: str = "google/electra-small-discriminator"
     transformer_name: str = "microsoft/deberta-v3-base" 
+    # transformer_name: str = "answerdotai/ModernBERT-base"
 
     # the encoding used by default for reading and writing files       
     encoding = "UTF-8"

@@ -14,8 +14,8 @@ object TokenClassifierExampleApp extends App {
   //val words = Seq("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
   //val words = Seq("John", "Doe", "went", "to", "China", ".")
   //val words = Seq("John", "Doe", "went", "to", "China", ".")
-  //val words = Seq("Ras1", "has", "phosphorylated", "Mek2", ".")
-  val words = Seq("Jack", "Doe", "and", "John", "Doe", "were", "friends", "in", "yyy", "zzz", ".")
+  val words = Seq("Ras1", "has", "phosphorylated", "Mek2", ".")
+  //val words = Seq("Jack", "Doe", "and", "John", "Doe", "were", "friends", "in", "yyy", "zzz", ".")
 
   println(s"Words: ${words.mkString(", ")}")
 
