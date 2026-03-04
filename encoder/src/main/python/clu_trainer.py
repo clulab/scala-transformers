@@ -88,15 +88,15 @@ if __name__ == "__main__":
     tokenizer = CluTokenizer.get_pretrained()
     # the tasks to learn
     tasks = Task.mk_tasks("data/", tokenizer, [
-        ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
-        #ShortTaskDef("Hexa Term", "deps-wsj/", "train.labels.hexaterms", "dev.labels.hexaterms", "test.labels.hexaterms"),
-        #ShortTaskDef("Hexa NonTerm", "deps-wsj/", "train.labels.hexanonterms", "dev.labels.hexanonterms", "test.labels.hexanonterms"),
-        ShortTaskDef("Hexa Term",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexaterms",  "test.labels.hexaterms",  "test.labels.hexaterms"), # dev is included in train
-        ShortTaskDef("Hexa NonTerm", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexanonterms", "test.labels.hexanonterms", "test.labels.hexanonterms") # dev is included in train
+        #ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
+        #ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
+        #ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
+        ##ShortTaskDef("Hexa Term", "deps-wsj/", "train.labels.hexaterms", "dev.labels.hexaterms", "test.labels.hexaterms"),
+        ##ShortTaskDef("Hexa NonTerm", "deps-wsj/", "train.labels.hexanonterms", "dev.labels.hexanonterms", "test.labels.hexanonterms"),
+        #ShortTaskDef("Hexa Term",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexaterms",  "test.labels.hexaterms",  "test.labels.hexaterms"), # dev is included in train
+        #ShortTaskDef("Hexa NonTerm", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexanonterms", "test.labels.hexanonterms", "test.labels.hexanonterms") # dev is included in train
         # ShortTaskDef("GGP", "bc2geneMention/", "train.txt", "dev.txt", "dev.txt") # from the BC2 Gene Mention task
         # ShortTaskDef("PMC", "europepmc-corpus/", "train-dev.tsv.post", "test.tsv.post", "test.tsv.post")
-        #ShortTaskDef("BC2GM", "bc2/", "train-dev.txt", "test.txt", "test.txt")
+        ShortTaskDef("BC2GM", "bc2/", "train-dev.txt", "test.txt", "test.txt")
     ])
     CluTrainer(tokenizer).train(tasks)
