@@ -45,9 +45,9 @@ class CluTrainer(BasicTrainer):
             save_strategy="epoch",
             #evaluation_strategy="epoch",
             #do_eval=True, 
-            weight_decay=Parameters.weight_decay,
-            use_mps_device = Parameters.use_mps_device,
-            no_cuda = not Parameters.use_cuda_device
+            weight_decay=Parameters.weight_decay
+            # use_mps_device = Parameters.use_mps_device,
+            # no_cuda = not Parameters.use_cuda_device
         )
         
         trainer = Trainer(
@@ -55,9 +55,9 @@ class CluTrainer(BasicTrainer):
             args=training_args,
             data_collator=data_collator,
             # compute_metrics=lambda eval_pred: self.compute_metrics(eval_pred),
-            train_dataset=train_ds,
+            train_dataset=train_ds
             #eval_dataset=validation_ds,
-            tokenizer=self.tokenizer
+            #tokenizer=self.tokenizer
         )
         
         CluTimer.time(
@@ -82,21 +82,22 @@ class CluTrainer(BasicTrainer):
         # return computed metrics
         return {Names.ACCURACY: accuracy_score(y_true, y_pred)}
 
+import torch
 
 if __name__ == "__main__":
+    print("torch.__version__ = ", torch.__version__)
+    print("torch.version.cuda = ", torch.version.cuda)
+    torch.cuda.init()
+    torch.cuda.empty_cache()
+
     tokenizer = CluTokenizer.get_pretrained()
     # the tasks to learn
     tasks = Task.mk_tasks("data/", tokenizer, [
-        ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
-        ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
-        #ShortTaskDef("Hexa Term", "deps-wsj/", "train.labels.hexaterms", "dev.labels.hexaterms", "test.labels.hexaterms"),
-        #ShortTaskDef("Hexa NonTerm", "deps-wsj/", "train.labels.hexanonterms", "dev.labels.hexanonterms", "test.labels.hexanonterms"),
-        ShortTaskDef("Hexa Term",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexaterms",  "test.labels.hexaterms",  "test.labels.hexaterms"), # dev is included in train
-        ShortTaskDef("Hexa NonTerm", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexanonterms", "test.labels.hexanonterms", "test.labels.hexanonterms") # dev is included in train
-        #ShortTaskDef("Deps Head",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.heads",  "test.heads",  "test.heads"), # dev is included in train
-        #ShortTaskDef("Deps Label", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels", "test.labels", "test.labels", dual_mode=True) # dev is included in train
-        #ShortTaskDef("Deps Head",  "deps-wsj/", "train.heads",  "dev.heads",  "test.heads"),
-        #ShortTaskDef("Deps Label", "deps-wsj/", "train.labels", "dev.labels", "test.labels", dual_mode=True)
+        #ShortTaskDef("NER",       "conll-ner/", "train.txt",    "dev.txt",    "test.txt"),
+        #ShortTaskDef("POS",             "pos/", "train.txt",    "dev.txt",    "test.txt"),
+        #ShortTaskDef("Chunking",   "chunking/", "train.txt",    "test.txt",   "test.txt"), # this dataset has no dev
+        #ShortTaskDef("Hexa Term",  "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexaterms",  "test.labels.hexaterms",  "test.labels.hexaterms"), # dev is included in train
+        #ShortTaskDef("Hexa NonTerm", "deps-combined/", "wsjtrain-wsjdev-geniatrain-geniadev.labels.hexanonterms", "test.labels.hexanonterms", "test.labels.hexanonterms") # dev is included in train
+        ShortTaskDef("BC2GM", "bc2/", "train-dev.txt", "test.txt", "test.txt")
     ])
     CluTrainer(tokenizer).train(tasks)

@@ -21,7 +21,7 @@ linear_pos = 1
 class TokenClassificationModel(PreTrainedModel):    
     def __init__(self, config: AutoConfig, transformer_name: str) -> None:
         super().__init__(config)
-        self.encoder: AutoModel = AutoModel.from_pretrained(transformer_name, config = config) 
+        self.encoder: AutoModel = AutoModel.from_pretrained(transformer_name, torch_dtype=torch.float, config = config) 
         self.config: AutoConfig = config
         self.output_heads: nn.ModuleDict = nn.ModuleDict() # these are initialized in add_heads
         self.training_mode: bool = True
@@ -109,7 +109,15 @@ class TokenClassificationModel(PreTrainedModel):
     ) -> None:
         print(f"Saving model to folder {save_directory}")
         print("super.save_pretrained started...")
-        super().save_pretrained(save_directory, is_main_process, state_dict, save_function, push_to_hub, max_shard_size, safe_serialization, **kwargs)
+        super().save_pretrained(
+                save_directory = save_directory,
+                is_main_process = is_main_process, 
+                state_dict = state_dict, 
+                save_function = save_function, 
+                push_to_hub = False, 
+                max_shard_size = max_shard_size, 
+                safe_serialization = safe_serialization, 
+                **kwargs)
         print("super.save_pretrained done.")
         print("Saving pickle of complete model...")
         # https://pytorch.org/tutorials/beginner/saving_loading_models.html
@@ -197,7 +205,7 @@ class TokenClassificationModel(PreTrainedModel):
             do_constant_folding=True,
             input_names = input_names,
             output_names = output_names,
-            opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
+            # opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
             dynamic_axes = {"token_ids": {1: "sent length"}}
         )
 
@@ -232,7 +240,8 @@ class TokenClassificationHead(nn.Module):
             nn.Dropout(dropout_p),
             nn.Linear(
               hidden_size * 2 if (self.dual_mode and Parameters.use_concat) else hidden_size,
-              num_labels
+              num_labels,
+              dtype=torch.float
             )
           )
         self.num_labels = num_labels

@@ -33,8 +33,8 @@ class Parameters:
     ignore_index: int = -100
 
     # training settings
-    epochs: int = 20
-    batch_size: int = 2 # batch size of 8 works with both bert-large and bert-base
+    epochs: int = 1
+    batch_size: int = 8 # batch size of 8 works with both bert-large and bert-base
     weight_decay: float = 0.01
 
     # which transformer to use
