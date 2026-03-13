@@ -33,6 +33,7 @@ class Parameters:
     ignore_index: int = -100
 
     # training settings
+    dropout_p = 0.1 # dropout in the head linear layers
     epochs: int = 1
     batch_size: int = 8 # batch size of 8 works with both bert-large and bert-base
     weight_decay: float = 0.01

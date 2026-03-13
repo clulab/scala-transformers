@@ -28,7 +28,7 @@ class TokenClassificationModel(PreTrainedModel):
 
     def add_heads(self, tasks: List[Task]) -> "TokenClassificationModel":
         for task in tasks:
-            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, self.config.hidden_dropout_prob)
+            head = TokenClassificationHead(self.encoder.config.hidden_size, task.num_labels, task.task_id, task.dual_mode, Parameters.dropout_p)
             # ModuleDict requires keys to be strings
             self.output_heads[str(task.task_id)] = head
         # initialize the weights in all heads
