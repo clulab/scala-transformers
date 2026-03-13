@@ -13,7 +13,9 @@ object TokenClassifierCoNLLApp extends App {
   val fileName = "../test.txt"
   val pw = new PrintWriter(fileName + ".conll")
 
-  val tokenClassifier = TokenClassifier.fromFiles("../answerdotai-ModernBERT-base-mtl/avg_export") // "../microsoft-deberta-v3-base-mtl/avg_export")
+  //val tokenClassifier = TokenClassifier.fromFiles("../answerdotai-ModernBERT-base-mtl/avg_export")
+  val tokenClassifier = TokenClassifier.fromFiles("../microsoft-deberta-v3-base-mtl/avg_export")
+
   val goldDoc = ColumnsToDocument.readFromFile(fileName, WORD_POS, LABEL_POS)
   val sentences = goldDoc.sentences
   println(s"Read a doc with ${sentences.length} sentences.")
