@@ -55,9 +55,9 @@ class CluTrainer(BasicTrainer):
             args=training_args,
             data_collator=data_collator,
             # compute_metrics=lambda eval_pred: self.compute_metrics(eval_pred),
-            train_dataset=train_ds
+            train_dataset=train_ds,
             #eval_dataset=validation_ds,
-            #tokenizer=self.tokenizer
+            processing_class=self.tokenizer # this used to be "tokenizer = ..." in transformers 4
         )
         
         CluTimer.time(
