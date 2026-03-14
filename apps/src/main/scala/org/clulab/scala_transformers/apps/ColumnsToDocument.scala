@@ -67,6 +67,6 @@ object ColumnsToDocument {
     }
     logger.debug(s"Loaded ${sentences.size} sentences.")
 
-    new Document(sentences)
+    new Document(sentences.toSeq)
   }
 }
