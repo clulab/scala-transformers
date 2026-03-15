@@ -3,6 +3,7 @@
 
 import numpy as np
 import pandas as pd
+import inspect
 
 from basic_trainer import BasicTrainer
 from clu_timer import CluTimer
@@ -49,16 +50,22 @@ class CluTrainer(BasicTrainer):
             # use_mps_device = Parameters.use_mps_device,
             # no_cuda = not Parameters.use_cuda_device
         )
-        
-        trainer = Trainer(
+
+        trainer_kwargs = dict(
             model=model,
             args=training_args,
             data_collator=data_collator,
-            # compute_metrics=lambda eval_pred: self.compute_metrics(eval_pred),
             train_dataset=train_ds,
-            #eval_dataset=validation_ds,
-            processing_class=self.tokenizer # this used to be "tokenizer = ..." in transformers 4
         )
+
+        # the Trainer c'tor changed in v5
+        params = inspect.signature(Trainer.__init__).parameters
+        if "processing_class" in params:
+            trainer_kwargs["processing_class"] = tokenizer # transformers v5+
+        else:
+            trainer_kwargs["tokenizer"] = tokenizer # transformers v4
+
+        trainer = Trainer(**trainer_kwargs)
         
         CluTimer.time(
             lambda: trainer.train()
