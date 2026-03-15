@@ -34,7 +34,7 @@ class Parameters:
 
     # training settings
     dropout_p = 0.1 # dropout in the head linear layers
-    epochs: int = 1
+    epochs: int = 50
     batch_size: int = 8 # batch size of 8 works with both bert-large and bert-base
     weight_decay: float = 0.01
 
@@ -46,7 +46,9 @@ class Parameters:
     # transformer_name: str = "xlm-roberta-base" 
     # transformer_name: str = "google/bert_uncased_L-4_H-512_A-8" 
     # transformer_name: str = "google/electra-small-discriminator"
-    transformer_name: str = "microsoft/deberta-v3-base" 
+    # transformer_name: str = "microsoft/deberta-v3-base" 
+    transformer_name: str = "thomas-sounack/BioClinical-ModernBERT-base"
+    # transformer_name: str = "thomas-sounack/BioClinical-ModernBERT-large"
 
     # the encoding used by default for reading and writing files       
     encoding = "UTF-8"
