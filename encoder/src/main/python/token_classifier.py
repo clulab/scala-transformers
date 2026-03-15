@@ -203,6 +203,7 @@ class TokenClassificationModel(PreTrainedModel):
             checkpoint,
             export_params=True,
             do_constant_folding=True,
+            external_data=False,
             input_names = input_names,
             output_names = output_names,
             # opset_version=13, # see: https://chadrick-kwag.net/error-fix-onnxruntime-type-error-type-tensorint64-of-input-parameter-of-operatormin-in-node-is-invalid/
