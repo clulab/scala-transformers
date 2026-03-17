@@ -5,16 +5,22 @@ import org.clulab.transformers.test.Test
 
 import scala.io.{Codec, Source}
 
+// The output files were originally created with run_documents.py so that
+// the results of the Python tokenizer can be compared to this one.
+// Add use_fast=False to CluTokenizer.get_pretrained in clu_tokenizer.py
+// to ensure that the Python tokenizer is being used.
 class SentencesTest extends Test {
   // See also names.py.
   val tokenizerNames = Seq(
     "bert-base-cased",
     "distilbert-base-cased",
-    "roberta-base",
-    "xlm-roberta-base",
     "google/bert_uncased_L-4_H-512_A-8",
     "google/electra-small-discriminator",
-    "microsoft/deberta-v3-base"
+    "microsoft/deberta-v3-base",
+    "microsoft/deberta-v3-large",
+    "roberta-base",
+    "thomas-sounack/BioClinical-ModernBERT-base",
+    "xlm-roberta-base"
   )
 
   behavior of "Tokenizer"
