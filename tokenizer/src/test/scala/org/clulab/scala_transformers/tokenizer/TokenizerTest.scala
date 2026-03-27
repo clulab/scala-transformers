@@ -8,23 +8,6 @@ class TokenizerTest extends Test {
 
   behavior of "Tokenizer"
 
-  it should "tokenize with the distilbert-base-cased tokenizer" in {
-    val tokenizer = ScalaJniTokenizer("distilbert-base-cased")
-    val tokenization = tokenizer.tokenize(words)
-
-    val expectedTokens = Array("[CLS]", "EU", "rejects", "German", "call", "to", "boycott", "British", "la", "##mb", ".", "[SEP]")
-    val actualTokens = tokenization.tokens
-    actualTokens should contain theSameElementsInOrderAs expectedTokens
-
-    val expectedTokenIds = Array(101, 7270, 22961, 1528, 1840, 1106, 21423, 1418, 2495, 12913, 119, 102)
-    val actualTokenIds = tokenization.tokenIds
-    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
-
-    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 7, 8, -1)
-    val actualWordIds = tokenization.wordIds
-    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
-  }
-
   it should "tokenize with the bert-base-cased tokenizer" in {
     val tokenizer = ScalaJniTokenizer("bert-base-cased")
     val tokenization = tokenizer.tokenize(words)
@@ -42,20 +25,95 @@ class TokenizerTest extends Test {
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
 
-  it should "tokenize with the xlm-robert-base tokenizer" in {
-    val tokenizer = ScalaJniTokenizer("xlm-roberta-base")
+  it should "tokenize with the distilbert-base-cased tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("distilbert-base-cased")
     val tokenization = tokenizer.tokenize(words)
 
-    val expectedTokens = Array("<s>", "_EU", "_re", "ject", "s", "_German", "_call", "_to", "_boy", "cot", "t", "_British", "_la", "mb", "_", ".", "</s>")
+    val expectedTokens = Array("[CLS]", "EU", "rejects", "German", "call", "to", "boycott", "British", "la", "##mb", ".", "[SEP]")
+    val actualTokens = tokenization.tokens
+    actualTokens should contain theSameElementsInOrderAs expectedTokens
+
+    val expectedTokenIds = Array(101, 7270, 22961, 1528, 1840, 1106, 21423, 1418, 2495, 12913, 119, 102)
+    val actualTokenIds = tokenization.tokenIds
+    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
+
+    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 7, 8, -1)
+    val actualWordIds = tokenization.wordIds
+    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
+  }
+
+  it should "tokenize with the google/bert_uncased_L-4_H-512_A-8 tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("google/bert_uncased_L-4_H-512_A-8", addPrefixSpace = false)
+    val tokenization = tokenizer.tokenize(words)
+
+    // The special symbols are not added and words are broken up.  I think this was added later.
+    val expectedTokens = Array("[CLS]", "eu", "rejects", "german", "call", "to", "boycott", "british", "lamb", ".", "[SEP]")
+      .map(word => word.replace('_', '\u2581'))
+    val actualTokens = tokenization.tokens
+    actualTokens should contain theSameElementsInOrderAs expectedTokens
+
+    val expectedTokenIds = Array(101, 7327, 19164, 2446, 2655, 2000, 17757, 2329, 12559, 1012, 102)
+    val actualTokenIds = tokenization.tokenIds
+    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
+
+    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, -1)
+    val actualWordIds = tokenization.wordIds
+    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
+  }
+
+  it should "tokenize with the google/electra-small-discriminator tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("google/electra-small-discriminator", addPrefixSpace = false)
+    val tokenization = tokenizer.tokenize(words)
+
+    // The special symbols are not added and words are broken up.  I think this was added later.
+    val expectedTokens = Array("[CLS]", "eu", "rejects", "german", "call", "to", "boycott", "british", "lamb", ".", "[SEP]")
+      .map(word => word.replace('_', '\u2581'))
+    val actualTokens = tokenization.tokens
+    actualTokens should contain theSameElementsInOrderAs expectedTokens
+
+    val expectedTokenIds = Array(101, 7327, 19164, 2446, 2655, 2000, 17757, 2329, 12559, 1012, 102)
+    val actualTokenIds = tokenization.tokenIds
+    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
+
+    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, -1)
+    val actualWordIds = tokenization.wordIds
+    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
+  }
+
+  it should "tokenize with the microsoft/deberta-v3-base tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("microsoft/deberta-v3-base", addPrefixSpace = false)
+    val tokenization = tokenizer.tokenize(words)
+
+    // The special symbols are not added and words are broken up.  I think this was added later.
+    val expectedTokens = Array("[CLS]", "_EU", "_rejects", "_German", "_call", "_to", "_boycott", "_British", "_lamb", "_.", "[SEP]")
         .map(word => word.replace('_', '\u2581'))
     val actualTokens = tokenization.tokens
     actualTokens should contain theSameElementsInOrderAs expectedTokens
 
-    val expectedTokenIds = Array(0, 3747, 456, 75161, 7, 30839, 11782, 47, 25299, 47924, 18, 56101, 21, 6492, 6, 5, 2)
+    val expectedTokenIds = Array(1, 2805, 27144, 2324, 660, 264, 20007, 1668, 12649, 323, 2)
     val actualTokenIds = tokenization.tokenIds
     actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
 
-    val expectedWordIds = Array(-1, 0, 1, 1, 1, 2, 3, 4, 5, 5, 5, 6, 7, 7, 8, 8, -1)
+    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, -1)
+    val actualWordIds = tokenization.wordIds
+    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
+  }
+
+  it should "tokenize with the microsoft/deberta-v3-large tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("microsoft/deberta-v3-large", addPrefixSpace = false)
+    val tokenization = tokenizer.tokenize(words)
+
+    // The special symbols are not added and words are broken up.  I think this was added later.
+    val expectedTokens = Array("[CLS]", "_EU", "_rejects", "_German", "_call", "_to", "_boycott", "_British", "_lamb", "_.", "[SEP]")
+      .map(word => word.replace('_', '\u2581'))
+    val actualTokens = tokenization.tokens
+    actualTokens should contain theSameElementsInOrderAs expectedTokens
+
+    val expectedTokenIds = Array(1, 2805, 27144, 2324, 660, 264, 20007, 1668, 12649, 323, 2)
+    val actualTokenIds = tokenization.tokenIds
+    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
+
+    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, -1)
     val actualWordIds = tokenization.wordIds
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
@@ -65,7 +123,7 @@ class TokenizerTest extends Test {
     val tokenization = tokenizer.tokenize(words)
 
     val expectedTokens = Array("<s>", "_EU", "_rejects", "_German", "_call", "_to", "_boycott", "_British", "_lamb", "_.", "</s>")
-        .map(word => word.replace('_', '\u0120'))
+      .map(word => word.replace('_', '\u0120'))
     val actualTokens = tokenization.tokens
     actualTokens should contain theSameElementsInOrderAs expectedTokens
 
@@ -98,21 +156,38 @@ class TokenizerTest extends Test {
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
 
-  it should "tokenize with the microsoft/deberta-v3-base tokenizer" in {
-    val tokenizer = ScalaJniTokenizer("microsoft/deberta-v3-base", addPrefixSpace = false)
+  it should "tokenize with the thomas-sounack/BioClinical-ModernBERT-base tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("thomas-sounack/BioClinical-ModernBERT-base")
     val tokenization = tokenizer.tokenize(words)
 
-    // The special symbols are not added and words are broken up.  I think this was added later.
-    val expectedTokens = Array("[CLS]", "_EU", "_rejects", "_German", "_call", "_to", "_boycott", "_British", "_lamb", "_.", "[SEP]")
-        .map(word => word.replace('_', '\u2581'))
+    val expectedTokens = Array("[CLS]", "EU", "reject", "s", "German", "call", "to", "boy", "cott", "British", "l", "amb", ".", "[SEP]")
+      .map(word => word.replace('_', '\u2581'))
     val actualTokens = tokenization.tokens
     actualTokens should contain theSameElementsInOrderAs expectedTokens
 
-    val expectedTokenIds = Array(1, 2805, 27144, 2324, 660, 264, 20007, 1668, 12649, 323, 2)
+    val expectedTokenIds = Array(50281, 30476, 49844, 84, 22353, 4065, 936, 14889, 22869, 22832, 77, 1369, 15, 50282)
     val actualTokenIds = tokenization.tokenIds
     actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
 
-    val expectedWordIds = Array(-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, -1)
+    val expectedWordIds = Array(-1, 0, 1, 1, 2, 3, 4, 5, 5, 6, 7, 7, 8, -1)
+    val actualWordIds = tokenization.wordIds
+    actualWordIds should contain theSameElementsInOrderAs expectedWordIds
+  }
+
+  it should "tokenize with the xlm-robert-base tokenizer" in {
+    val tokenizer = ScalaJniTokenizer("xlm-roberta-base")
+    val tokenization = tokenizer.tokenize(words)
+
+    val expectedTokens = Array("<s>", "_EU", "_re", "ject", "s", "_German", "_call", "_to", "_boy", "cot", "t", "_British", "_la", "mb", "_", ".", "</s>")
+      .map(word => word.replace('_', '\u2581'))
+    val actualTokens = tokenization.tokens
+    actualTokens should contain theSameElementsInOrderAs expectedTokens
+
+    val expectedTokenIds = Array(0, 3747, 456, 75161, 7, 30839, 11782, 47, 25299, 47924, 18, 56101, 21, 6492, 6, 5, 2)
+    val actualTokenIds = tokenization.tokenIds
+    actualTokenIds should contain theSameElementsInOrderAs expectedTokenIds
+
+    val expectedWordIds = Array(-1, 0, 1, 1, 1, 2, 3, 4, 5, 5, 5, 6, 7, 7, 8, 8, -1)
     val actualWordIds = tokenization.wordIds
     actualWordIds should contain theSameElementsInOrderAs expectedWordIds
   }
