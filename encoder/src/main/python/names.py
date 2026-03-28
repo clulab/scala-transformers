@@ -10,9 +10,11 @@ class Names:
     TOKENIZER_NAMES = [
         "bert-base-cased",
         "distilbert-base-cased",
-        "roberta-base",
-        "xlm-roberta-base",
         "google/bert_uncased_L-4_H-512_A-8",
         "google/electra-small-discriminator",
-        "microsoft/deberta-v3-base"
+        "microsoft/deberta-v3-base",
+        "microsoft/deberta-v3-large",
+        "roberta-base",
+        "thomas-sounack/BioClinical-ModernBERT-base",
+        "xlm-roberta-base"
     ]

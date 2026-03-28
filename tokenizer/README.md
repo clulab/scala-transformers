@@ -2,12 +2,13 @@
 
 ## Scala
 
-This subproject (the one in this tokenizer directory) should work on the four supported platforms without further measure (such as installation of Rust).  A build file is included for `sbt`, and `IntelliJ` is able to import it.  The pre-compiled library files in the [resources directory](./src/main/resources) will be used:
+This subproject (the one in this tokenizer directory) should work on the five supported platforms without further measure (such as installation of Rust).  A build file is included for `sbt`, and `IntelliJ` is able to import it.  The pre-compiled library files in the [resources directory](./src/main/resources) will be used:
 
-* apple-librust_tokenizer.jnilib is for Macs with Apple processors
-* intel-librust_tokenizer.jnilib is for Macs with Intel processors
-* librust_tokenizer.so is built for Linux with Intel processors
-* rust_tokenizer.dll works under Windows for Intel processors
+* [apple-librust_tokenizer.jnilib](./src/main/resources/apple-librust_tokenizer.jnilib) is for Macs running MacOS with Apple processors
+* [intel-librust_tokenizer.jnilib](./src/main/resources/intel-librust_tokenizer.jnilib) is for Macs running MacOS with Intel processors
+* [apple-librust_tokenizer.so](./src/main/resources/apple-librust_tokenizer.so) is built for Linux runnin on Apple processors
+* [intel-librust_tokenizer.so](./src/main/resources/intel-librust_tokenizer.so) is built for Linux running on Intel processors
+* [rust_tokenizer.dll](./src/main/resources/rust_tokenizer.dll) works under Windows for Intel processors
 
 Additionally, the [tokenizer subdirectory](./src/main/resources/org/clulab/scala_transformers/tokenizer) includes a collection of pretrained Hugging Face tokenizers in serialized form.  Some of the tokenizers are available from the [Hugging Face website](https://huggingface.co/), but including them here allows the library to function without a network connection.  Other tokenizers are not directly available from the website.  These have been downloaded in their Python representation, converted to Rust format, and added to the resources.  In this way the library is also independent of Python at runtime.  The currently included tokenizers are
 
@@ -18,6 +19,7 @@ Additionally, the [tokenizer subdirectory](./src/main/resources/org/clulab/scala
 * [google/bert_uncased_L-4_H-512_A-8](https://huggingface.co/google/bert_uncased_L-4_H-512_A-8)
 * [google/electra-small-discriminator](https://huggingface.co/google/electra-small-discriminator)
 * [microsoft/deberta-v3-base](https://huggingface.co/microsoft/deberta-v3-base)
+* [microsoft/deberta-v3-large](https://huggingface.co/microsoft/deberta-v3-large)
 
 For instructions on adding more, see the [encoder README](../encoder/README.md).
 

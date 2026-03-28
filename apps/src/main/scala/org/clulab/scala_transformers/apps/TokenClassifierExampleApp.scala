@@ -4,7 +4,8 @@ import org.clulab.scala_transformers.encoder.TokenClassifier
 
 object TokenClassifierExampleApp extends App {
   // Choose one of these.
-  val tokenClassifier = TokenClassifier.fromFiles("../microsoft-deberta-v3-base-mtl/avg_export")
+  val tokenClassifier = TokenClassifier.fromFiles("../thomas-sounack-BioClinical-ModernBERT-base-mtl/avg_export")
+  // val tokenClassifier = TokenClassifier.fromFiles("../microsoft-deberta-v3-base-mtl/avg_export")
   //val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/microsoft_deberta_v3_base_mtl/avg_export")
   // val tokenClassifier = TokenClassifier.fromFiles("../models/google_electra_small_discriminator_mtl/avg_export")
   // val tokenClassifier = TokenClassifier.fromResources("/org/clulab/scala_transformers/models/google_electra_small_discriminator_mtl/avg_export")
@@ -14,8 +15,8 @@ object TokenClassifierExampleApp extends App {
   //val words = Seq("EU", "rejects", "German", "call", "to", "boycott", "British", "lamb", ".")
   //val words = Seq("John", "Doe", "went", "to", "China", ".")
   //val words = Seq("John", "Doe", "went", "to", "China", ".")
-  //val words = Seq("Ras1", "has", "phosphorylated", "Mek2", ".")
-  val words = Seq("Jack", "Doe", "and", "John", "Doe", "were", "friends", "in", "yyy", "zzz", ".")
+  val words = Seq("Ras1", "has", "phosphorylated", "the", "Mek2", "protein", ".")
+  //val words = Seq("Jack", "Doe", "and", "John", "Doe", "were", "friends", "in", "yyy", "zzz", ".")
 
   println(s"Words: ${words.mkString(", ")}")
 
