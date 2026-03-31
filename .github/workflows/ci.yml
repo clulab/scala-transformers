@@ -21,4 +21,4 @@ jobs:
       with:
         sbt-version: 1.7.1
     - name: Run tests
-      run: sbt ++test
+      run: sbt +test
