@@ -48,7 +48,7 @@ ThisBuild / publishTo := {
   }
   else {
     val realm = if (isSnapshot.value) "snapshots" else "releases"
-    val provider = "https://oss.sonatype.org/"
+    val provider = "https://central.sonatype.org/"
     val repository = ""
     val details =
         if (isSnapshot.value) "content/repositories/snapshots"
