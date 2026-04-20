@@ -16,7 +16,6 @@ __pycache__
 # sbt
 .bsp
 target/
-project/
 
 # Mac
 .DS_Store
