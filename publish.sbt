@@ -47,15 +47,10 @@ ThisBuild / publishTo := {
     Some(realm at location)
   }
   else {
-    val realm = if (isSnapshot.value) "snapshots" else "releases"
-    val provider = "https://central.sonatype.org/"
-    val repository = ""
-    val details =
-        if (isSnapshot.value) "content/repositories/snapshots"
-        else "service/local/staging/deploy/maven2"
-    val location = provider + repository + details
-
-    Some(realm at location)
+    if (isSnapshot.value)
+      Some("central-snapshots" at "https://central.sonatype.com/repository/maven-snapshots/")
+    else
+      localStaging.value
   }
 }
 ThisBuild / scmInfo := Some(
