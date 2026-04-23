@@ -59,3 +59,4 @@ ThisBuild / scmInfo := Some(
     s"scm:git@github.com:clulab/$publication.git"
   )
 )
+
