@@ -1,3 +1,4 @@
++ **0.7.2** - Adjusted to make it friendly for reach-lite. Added support for transformers v5 and more encoders.
 + **0.7.0** - Use concat by default, but allow build-time change to sum via USE_CONCAT
 + **0.6.2** - Shade additional package internal to EJML
 + **0.6.1** - Shade EJML
