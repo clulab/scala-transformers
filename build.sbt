@@ -32,7 +32,7 @@ lazy val common = project
 lazy val tokenizer = project
   .dependsOn(common % "compile -> compile; test -> test")
   .settings(
-    publish / skip := true // This is too large to publish reliably.  Use extra release commands.
+//    publish / skip := true // This is too large to publish reliably.  Use extra release commands.
   )  
  
 lazy val encoder = project

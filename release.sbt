@@ -23,7 +23,7 @@ val releaseStepCommands: Seq[String] = {
   println()
   strings
 }
-
+/*
 releaseProcess := Seq[ReleaseStep](
   inquireVersions,
   runClean,
@@ -34,8 +34,8 @@ releaseProcess := Seq[ReleaseStep](
   releaseStepCommandAndRemaining("sonaUpload"),     // log on to publish
   // releaseStepCommandAndRemaining("sonaRelease"), // automatically publish
 )
+*/
 
-/*
 releaseProcess := Seq[ReleaseStep](
   inquireVersions,
   setReleaseVersion,
@@ -45,4 +45,4 @@ releaseProcess := Seq[ReleaseStep](
   commitNextVersion,
 //  pushChanges
 )
-*/
+
