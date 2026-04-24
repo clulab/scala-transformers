@@ -1,12 +1,12 @@
 import ReleaseTransformations._
 
+// Latest version numbers were updated on 20216-04-24.
 val scala211 = "2.11.12" // up to 2.11.12
-val scala212 = "2.12.18" // up to 2.12.18
-val scala213 = "2.13.12" // up to 2.13.12
-val scala30  = "3.0.2"   // up to 3.0.2
+val scala212 = "2.12.21" // up to 2.12.21
+val scala213 = "2.13.18" // up to 2.13.18
 val scala31  = "3.1.3"   // up to 3.1.3
-val scala32  = "3.2.2"   // up to 3.2.2
-val scala33  = "3.3.1"   // up to 3.3.1
+// Only the LTS versions are listed next.
+val scala33  = "3.3.7"   // up to 3.3.7
 val scala3   = scala31
 
 val releaseStepCommands: Seq[String] = {
@@ -23,16 +23,22 @@ val releaseStepCommands: Seq[String] = {
   println()
   strings
 }
+
 /*
 releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
   inquireVersions,
   runClean,
   runTest,
   setReleaseVersion,
   commitReleaseVersion,
+//tagRelease,
   releaseStepCommandAndRemaining("+publishSigned"),   
   releaseStepCommandAndRemaining("sonaUpload"),     // log on to publish
   // releaseStepCommandAndRemaining("sonaRelease"), // automatically publish
+//setNextVersion,
+//commitNextVersion,
+  // pushChanges
 )
 */
 
@@ -46,3 +52,5 @@ releaseProcess := Seq[ReleaseStep](
 //  pushChanges
 )
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+Global / useGpg := false // GPG doesn't need to be installed, particularly for Windows.
