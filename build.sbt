@@ -14,7 +14,7 @@ ThisBuild / versionScheme := Some("early-semver")
 name := "scala-transformers"
 
 lazy val root = (project in file("."))
-  .aggregate(apps, common, tokenizer, encoder)
+  .aggregate(apps, common, tokenizer, encoder, resources)
   .settings(
     crossScalaVersions := Nil,
     publish / skip := true
@@ -28,8 +28,20 @@ lazy val apps = project
 
 lazy val common = project
 
+lazy val resources = project
+  .settings(
+    crossPaths := false, // This is a resource only and is independent of Scala version.
+    autoScalaLibrary := false,
+    Compile / packageBin / publishArtifact := true,  // Do include the resources.
+    Compile / packageDoc / publishArtifact := false, // There is no documentation.
+    Compile / packageSrc / publishArtifact := false, // There is no source code.
+    Test / packageBin / publishArtifact := false,
+    // Let’s remove any repositories for optional dependencies in our artifact.
+    pomIncludeRepository := { _ => false }
+  )
+
 lazy val tokenizer = project
-  .dependsOn(common % "compile -> compile; test -> test")
+  .dependsOn(common % "compile -> compile; test -> test", resources)
   .settings(
 //    publish / skip := true // This is too large to publish reliably.  Use extra release commands.
   )  

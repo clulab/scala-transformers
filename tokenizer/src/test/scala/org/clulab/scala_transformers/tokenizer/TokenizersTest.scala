@@ -6,7 +6,7 @@ import org.clulab.transformers.test.Test
 class TokenizersTest extends Test {
   val tokenizerNames = Seq(
     // This is a local file.  Use ../ for sbt.
-    "../tokenizer/src/main/resources/org/clulab/scala_transformers/tokenizer/bert-base-cased/tokenizer.json",
+    "../resources/src/main/resources/org/clulab/scala_transformers/tokenizer/bert-base-cased/tokenizer.json",
     // These are all resources.
     // See also names.py.
     "bert-base-cased",
@@ -25,7 +25,7 @@ class TokenizersTest extends Test {
   behavior of "Tokenizer"
 
   def test(tokenizerName: String): Unit = {
-    it should s"""created a working "$tokenizerName" tokenizer""" in {
+    it should s"""create a working "$tokenizerName" tokenizer""" in {
       val addPrefixSpace = tokenizerName.contains("roberta")
       val tokenizer = ScalaJniTokenizer(tokenizerName, addPrefixSpace)
 
