@@ -19,6 +19,6 @@ jobs:
     - name: Setup sbt
       uses: sbt/setup-sbt@v1
       with:
-        sbt-version: 1.7.1
+        sbt-runner-version: 1.12.9
     - name: Run tests
       run: sbt +test
