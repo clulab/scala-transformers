@@ -17,4 +17,4 @@ releaseProcess := Seq[ReleaseStep](
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
-Global / useGpg := false // GPG doesn't need to be installed, particularly for Windows.
+// Global / useGpg := false // GPG doesn't need to be installed, particularly for Windows.
