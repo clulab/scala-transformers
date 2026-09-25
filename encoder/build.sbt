@@ -20,7 +20,7 @@ libraryDependencies ++= {
     "org.ejml"                   % "ejml-simple"        % ejmlVersion,
     // "org.scalanlp"              %% "breeze"             % breezeVersion,
 
-    "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.22.0",
+    "com.microsoft.onnxruntime"  % "onnxruntime"        % "1.20.0",
     "org.slf4j"                  % "slf4j-api"          % "1.7.10"
   )
 }
